@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/layout_default_padding"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/dialog_reservation_label_library"
+        android:text="@string/dialog_reservation_options_library_header"
+        android:textSize="@dimen/label_form_title_def_size"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Spinner
+        android:id="@+id/dialog_reservation_spinner_library"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/form_header_default_margin"/>
+
+    <TextView
+        android:id="@+id/dialog_reservation_label_volume"
+        android:text="@string/dialog_reservation_options_volume_header"
+        android:textSize="@dimen/label_form_title_def_size"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Spinner
+        android:id="@+id/dialog_reservation_spinner_volume"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/form_header_default_margin"/>
+
+    <TextView
+        android:id="@+id/dialog_reservation_label_year"
+        android:text="@string/dialog_reservation_options_year_header"
+        android:textSize="@dimen/label_form_title_def_size"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Spinner
+        android:id="@+id/dialog_reservation_spinner_year"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/form_header_default_margin"/>
+
+    <TextView
+        android:id="@+id/dialog_reservation_label_edition"
+        android:text="@string/dialog_reservation_options_edition_header"
+        android:textSize="@dimen/label_form_title_def_size"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Spinner
+        android:id="@+id/dialog_reservation_spinner_edition"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/form_header_default_margin"/>
+
+    <TextView
+        android:id="@+id/dialog_reservation_label_support"
+        android:text="@string/dialog_reservation_options_support_header"
+        android:textSize="@dimen/label_form_title_def_size"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Spinner
+        android:id="@+id/dialog_reservation_spinner_support"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/form_header_default_margin"/>
+
+    <TextView
+        android:id="@+id/dialog_reservation_label_error"
+        android:text="@string/dialog_reservation_options_error_message"
+        android:textSize="@dimen/label_form_title_def_size"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/holo_red_dark"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone" />
+
+</LinearLayout>

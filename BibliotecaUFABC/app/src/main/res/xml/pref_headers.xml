@@ -1,0 +1,39 @@
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- These settings headers are only used on tablets. -->
+
+    <header
+        android:fragment="com.nintersoft.bibliotecaufabc.SettingsActivity$GeneralPreferenceFragment"
+        android:icon="@drawable/ic_pref_info"
+        android:title="@string/pref_header_general"
+        android:summary="@string/pref_summary_general"/>
+
+    <header
+        android:fragment="com.nintersoft.bibliotecaufabc.SettingsActivity$NotificationPreferenceFragment"
+        android:icon="@drawable/ic_pref_notifications"
+        android:title="@string/pref_header_notifications"
+        android:summary="@string/pref_description_notifications"/>
+
+    <header
+        android:fragment="com.nintersoft.bibliotecaufabc.SettingsActivity$PrivacyPreferenceFragment"
+        android:icon="@drawable/ic_menu_login"
+        android:title="@string/pref_header_privacy"
+        android:summary="@string/pref_summary_privacy"/>
+
+    <header
+        android:icon="@drawable/ic_pref_bug_report"
+        android:title="@string/pref_header_bug_report"
+        android:summary="@string/pref_summary_bug_report" >
+
+        <intent android:action="android.intent.action.SENDTO"
+            android:data="@string/pref_summary_bug_intent_data">
+            <!--suppress AndroidElementNotAllowed -->
+            <extra android:name="android.intent.extra.SUBJECT"
+                android:value="@string/pref_summary_bug_intent_extra_subject"/>
+            <!--suppress AndroidElementNotAllowed -->
+            <extra android:name="android.intent.extra.TEXT"
+                android:value="@string/pref_summary_bug_intent_extra_message"/>
+        </intent>
+    </header>
+
+</preference-headers>

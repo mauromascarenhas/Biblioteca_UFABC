@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- General -->
+    <string name="key_general_leave_warning">key_general_leave_warning</string>
+    <string name="key_general_share_app_enabled">key_general_share_app</string>
+
+    <!-- Privacy -->
+    <string name="key_privacy_cache_main_content">key_privacy_cache_main_content</string>
+
+    <string name="key_privacy_store_password">key_privacy_store_password</string>
+    <string name="key_privacy_login_username">key_privacy_login_username</string>
+    <string name="key_privacy_login_password">key_privacy_login_password</string>
+
+    <!-- Notification -->
+    <string name="key_notification_enable_warning">key_notification_enable_warning</string>
+    <string name="key_notification_warning_delay">key_notification_warning_delay</string>
+</resources>

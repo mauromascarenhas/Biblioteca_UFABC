@@ -1,0 +1,248 @@
+<resources>
+    <string name="app_name">UFABC Library</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="nav_header_title">UFABC Library</string>
+    <string name="nav_header_subtitle">Tools and resources</string>
+
+    <string name="nav_menu_tools">Online tools</string>
+    <string name="nav_menu_renewal">Renewals</string>
+    <string name="nav_menu_reservation">Reservations</string>
+    <string name="nav_menu_settings">Settings</string>
+    <string name="nav_menu_search">Search for books, articles&#8230;</string>
+    <string name="nav_menu_search_min">Search</string>
+
+    <string name="nav_menu_login">Login (UFABC)</string>
+    <string name="nav_menu_logout">(Logout) %1$s</string>
+
+    <string name="nav_menu_misc">Miscellaneous</string>
+    <string name="nav_menu_share">Share this app!</string>
+    <string name="nav_menu_leave">Quit</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="action_save">Save filters</string>
+
+    <string name="title_activity_login">Sign in (UFABC)</string>
+
+    <string name="snack_message_loaded_newest">The newest acquisitions have already been loaded!</string>
+    <string name="snack_message_loading_newest">Loading newest acquisitions&#8230;</string>
+    <string name="snack_message_loaded_more_items">Additional books have already been loaded!</string>
+    <string name="snack_message_refreshing_newest">Refreshing newest acquisitions&#8230;</string>
+    <string name="snack_message_loading_more_items">Loading more books&#8230;</string>
+    <string name="snack_message_loading_main_error">Error while retrieving data from server.\nDetails: %1$s.</string>
+
+    <string name="snack_button_reload">Reload</string>
+
+    <string name="intent_share_book">Share book using&#8230;</string>
+    <string name="intent_share_app">Share UFABC Library using&#8230;</string>
+
+    <string name="share_book_structure">
+        "Book/Work: %1$s\n"
+        "Author: %2$s\n"
+        "Available at (URL): %3$s"
+    </string>
+
+    <string name="share_app_structure">
+        "UFABC Library app is available at Google Play Store!\n"
+        "Download it from: https://play.google.com/store/apps/details?id=com.nintersoft.bibliotecaufabc"
+    </string>
+
+    <string name="dialog_reservation_options_title">Reservation setup</string>
+    <string name="dialog_server_response_title">Library server response</string>
+    <string name="dialog_filter_changed_title">Change detected</string>
+    <string name="dialog_input_title_search">Search query</string>
+    <string name="dialog_warning_title">Warning</string>
+    <string name="dialog_error_title">Error</string>
+    <string name="dialog_ops_title">Oops</string>
+
+    <string name="dialog_reservation_options_library_header">Library</string>
+    <string name="dialog_reservation_options_edition_header">Edition</string>
+    <string name="dialog_reservation_options_support_header">Support</string>
+    <string name="dialog_reservation_options_volume_header">Volume</string>
+    <string name="dialog_reservation_options_year_header">Year</string>
+
+    <string name="dialog_warning_message_loading_server_response">Waiting for server response&#8230;</string>
+    <string name="dialog_warning_message_loading_reservation">Preparing reservation options&#8230;</string>
+    <string name="dialog_reservation_options_error_message">Every field must have a valid selection!</string>
+    <string name="dialog_warning_message_external_link">You are about to open the following external link: %1$s</string>
+    <string name="dialog_warning_message_no_results">
+        "Unfortunately anything matched to your search query. "
+        "Would you like to try a new search with different terms?"
+    </string>
+    <string name="dialog_reservation_error_message">
+        "An error has occurred during the process of reservation.\n\n"
+        "Details: %1$s\n\n"
+        "You may try again as soon as the issue is fixed."
+    </string>
+    <string name="dialog_filter_changed_message">
+        "It has been detected changes in the search filters. "
+        "Would you like to perform a new search with the same query and those new settings?\n"
+        "(Keep in mind that the filters will not be affected)"
+    </string>
+
+    <string name="dialog_button_search">Search</string>
+    <string name="dialog_button_submit">Submit</string>
+    <string name="dialog_button_cancel">Cancel</string>
+    <string name="dialog_button_yes">Yes</string>
+    <string name="dialog_button_no">No</string>
+    <string name="dialog_button_ok">OK</string>
+
+    <string name="label_login_loading">Connecting to the university\'s server&#8230;</string>
+    <string name="label_login_username">Username:</string>
+    <string name="label_login_password">Password:</string>
+    <string name="edit_login_username_placeholder">username@xxxufabc.edu.br</string>
+    <string name="edit_login_password_placeholder">password</string>
+    <string name="bt_login_login">Login</string>
+    <string name="bt_login_retrieve">Retrieve password</string>
+    <string name="bt_login_try_again">Try again</string>
+
+    <string name="label_login_connection_error">
+        "It seems that an error has occurred while we tried to connect to the"
+        "university\'s servers.\n\n"
+        "Error details: %1$s.\n\n"
+        "You can try to connect again as soon as the issue is fixed (It is going to return to"
+        "the login form)."
+    </string>
+
+    <string name="edt_error_form_field_empty">This field cannot be empty</string>
+
+    <string name="title_activity_search">Search</string>
+    <string name="title_activity_search_results">Results for: %1$s</string>
+    <string name="label_search_loading">Loading search results&#8230;</string>
+
+    <string name="label_search_connection_error">
+        "It seems that an error has occurred while we tried to communicate with"
+        "university\'s servers.\n\n"
+        "Error details: %1$s.\n\n"
+        "You may try to get search results as soon as the issue is fixed."
+    </string>
+
+    <string name="card_image_description">Photo of the book cover</string>
+
+    <string name="button_search_reload">Reload</string>
+
+    <string name="title_activity_settings">Settings</string>
+
+    <string name="label_search_filter_field">Field (of search)</string>
+    <string name="label_search_filter_filter">Filter (patrimony)</string>
+    <string name="label_search_filter_library">Library</string>
+
+    <string name="button_search_filter_show_hide">Show/Hide filters</string>
+
+    <string name="label_renewal_loading">Loading books available for renewal&#8230;</string>
+    <string name="label_no_renewal_username">There is no open circulation for %1$s at the moment.</string>
+
+    <string name="label_renewal_connection_error">
+        "It seems that an error has occurred while we tried to communicate with"
+        "university\'s servers.\n\n"
+        "Error details: %1$s.\n\n"
+        "You may try to get the books available for renewal as soon as the issue is fixed."
+    </string>
+
+    <string name="button_renewal_reload">Reload</string>
+
+    <string name="info_icon_renewal">Information icon</string>
+
+    <string name="button_card_reservation_remove">Delete</string>
+    <string name="button_card_renewal_renew">Renew it</string>
+
+    <string name="label_reservation_loading">Loading reserved books&#8230;</string>
+    <string name="label_no_reservation_username">There is no book reserved for %1$s at the moment.</string>
+
+    <string name="label_reservation_connection_error">
+        "It seems that an error has occurred while we tried to communicate with"
+        "university\'s servers.\n\n"
+        "Error details: %1$s.\n\n"
+        "You may try to get the reserved books list as soon as the issue is fixed."
+    </string>
+
+    <string name="button_reservation_reload">Reload</string>
+
+    <string name="action_share_books">Share book</string>
+
+    <string name="label_book_details_loading">Loading book details&#8230;</string>
+    <string name="label_book_details_available_header">Available copies</string>
+    <string name="label_book_details_available_details">[ %1$s ] - %2$s</string>
+    <string name="label_book_details_available_counting_sep">of</string>
+    <string name="label_book_details_connection_error">
+        "It seems that an error has occurred while we tried to communicate with"
+        "university\'s servers.\n\n"
+        "Error details: %1$s.\n\n"
+        "You may try to get the book details as soon as the issue is fixed."
+    </string>
+
+    <string name="button_book_details_reserve">Reserve it!</string>
+    <string name="button_book_details_try_again">Try again</string>
+
+    <string name="book_details_image_description">Picture of the book cover</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Privacy settings -->
+    <string name="pref_header_privacy">Privacy</string>
+    <string name="pref_summary_privacy">Control which kinds of data this application can store.</string>
+
+    <string name="pref_group_local_storage">Storage settings</string>
+    <string name="pref_title_keep_cache">Keep content cache</string>
+    <string name="pref_description_keep_cache">If unchecked, the application will clear its cache as soon as
+        it is closed. It will reset current connections and temporary data as well.</string>
+
+    <string name="pref_group_login_storage">Login options</string>
+    <string name="pref_title_store_password">Store password</string>
+    <string name="pref_description_store_password">Allows the application to store your login data.
+        It makes the login process a bit faster for you. (See Privacy Policy for more details)</string>
+
+    <string name="pref_title_login_username">Username</string>
+    <string name="pref_title_login_password">Password</string>
+
+    <!-- Bug report settings -->
+    <string name="pref_header_bug_report">Bug report</string>
+    <string name="pref_summary_bug_report">Send us an email reporting possible issues so as to we can help you troubleshoot them.</string>
+
+    <string name="pref_summary_bug_intent_data">mailto:support@nintersoft.com</string>
+    <string name="pref_summary_bug_intent_extra_subject">[ BUG REPORT ] UFABC Library</string>
+    <string name="pref_summary_bug_intent_extra_message">
+        "Hello.\n\n"
+        "Please, explain us what is going wrong with the application.\n"
+        "If necessary, you can also attach screenshots as well."
+    </string>
+
+    <!-- General settings -->
+    <string name="pref_header_general">General</string>
+    <string name="pref_summary_general">Manage general application-wise global behaviours</string>
+
+    <string name="pref_title_leave_waning">Show application warnings</string>
+    <string name="pref_description_leave_waning">Sets whether the application must display a warning if
+        a URL opening operation is requested.
+    </string>
+
+    <string name="pref_title_share_app">Share app button</string>
+    <string name="pref_description_share_app">Would you like to keep \"Share this app!\" into your navigation
+    drawer?</string>
+
+    <!-- Example settings for Notifications -->
+    <string name="pref_header_notifications">Notifications</string>
+    <string name="pref_description_notifications">Configure settings for book renewal alarms</string>
+
+    <string name="pref_title_enable_renewal_warning">Enable renewal warnings</string>
+    <string name="pref_description_enable_renewal_warning">Enable warnings for books which are supposed to be renewed.
+    (Must be refreshed at least once a week).</string>
+
+    <string name="pref_notification_shift">Notification schedule backward shift</string>
+    <string-array name="pref_notification_shift_options">
+        <item>No offset</item>
+        <item>One day</item>
+        <item>Two days</item>
+        <item>Three days</item>
+    </string-array>
+    <string-array name="pref_notification_shift_values">
+        <item>0</item>
+        <item>-1</item>
+        <item>-2</item>
+        <item>-3</item>
+    </string-array>
+
+</resources>

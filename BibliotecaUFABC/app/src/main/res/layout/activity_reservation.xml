@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/reservation_holder_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_vertical"
+    android:layout_gravity="center_vertical"
+    tools:context=".ReservationActivity">
+
+    <LinearLayout
+        android:id="@+id/reservation_loading_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/form_items_default_margin"
+            android:text="@string/label_reservation_loading"/>
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list_reservation_results"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <LinearLayout
+        android:id="@+id/reservation_error_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/reservation_connection_error_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_reservation_connection_error"/>
+
+        <Button
+            android:id="@+id/button_reservation_reload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/form_items_default_margin"
+            android:text="@string/button_reservation_reload"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/no_reservation_books_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:layout_margin="@dimen/form_header_default_margin"
+        android:gravity="center">
+
+        <TextView
+            android:drawableTop="@drawable/ic_info_message"
+            android:drawablePadding="@dimen/form_items_default_margin"
+
+            android:id="@+id/no_reservation_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="@dimen/label_form_title_def_size"
+            android:text="@string/label_no_reservation_username"/>
+
+    </LinearLayout>
+
+</LinearLayout>

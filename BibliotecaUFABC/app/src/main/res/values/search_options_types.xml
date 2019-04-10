@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="search_options_types">
+        <item>Every patrimony</item>
+        <item>Directory</item>
+        <item>Handout</item>
+        <item>Presentation</item>
+        <item>Congress/Event article</item>
+        <item>Periodic article</item>
+        <item>Audio</item>
+        <item>Book\'s chapter</item>
+        <item>Catalogue</item>
+        <item>Decree</item>
+        <item>Digital</item>
+        <item>Dissertation</item>
+        <item>Specialization</item>
+        <item>Event/Congress</item>
+        <item>Fascicle</item>
+        <item>Photo/Image</item>
+        <item>Newspaper</item>
+        <item>Legislation</item>
+        <item>Book</item>
+        <item>Digital book</item>
+        <item>Electronic magnifier</item>
+        <item>Manuscript</item>
+        <item>Map</item>
+        <item>ARI Material</item>
+        <item>Technical norm</item>
+        <item>Class notes</item>
+        <item>Other</item>
+        <item>Paper</item>
+        <item>Seem</item>
+        <item>Academic periodic</item>
+        <item>Report</item>
+        <item>Resolution</item>
+        <item>Magazine</item>
+        <item>Thesis</item>
+        <item>Video</item>
+    </string-array>
+</resources>
