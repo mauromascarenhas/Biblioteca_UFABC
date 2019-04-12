@@ -4,6 +4,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
@@ -16,7 +17,10 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.nintersoft.bibliotecaufabc.bookproperties.BookRenewalProperties;
+import com.nintersoft.bibliotecaufabc.book_renewal_model.BookRenewalContract;
+import com.nintersoft.bibliotecaufabc.book_renewal_model.BookRenewalDAO;
+import com.nintersoft.bibliotecaufabc.book_renewal_model.BookRenewalDatabase;
+import com.nintersoft.bibliotecaufabc.book_renewal_model.BookRenewalProperties;
 import com.nintersoft.bibliotecaufabc.constants.GlobalConstants;
 import com.nintersoft.bibliotecaufabc.jsinterface.RenewalJSInterface;
 import com.nintersoft.bibliotecaufabc.viewadapter.RenewalBookAdapter;
@@ -38,6 +42,7 @@ public class RenewalActivity extends AppCompatActivity {
     private LinearLayout layout_loading;
     private LinearLayout layout_no_books;
 
+    private BookRenewalDAO dao;
     private RenewalBookAdapter adapter;
     private ArrayList<BookRenewalProperties> availableBooks;
 
@@ -51,9 +56,16 @@ public class RenewalActivity extends AppCompatActivity {
         setupInterface(false);
         setupBookList();
         setListeners();
+
+        GlobalConstants.scheduleBookNotification(getApplicationContext(), 5000, 31, null);
+        GlobalConstants.scheduleBookNotification(getApplicationContext(), 10000, 10, null);
+        GlobalConstants.cancelScheduledNotification(getApplicationContext(), 31);
     }
 
     private void bindComponents(){
+        dao = Room.databaseBuilder(this,
+                BookRenewalDatabase.class, BookRenewalContract.DB_NAME).allowMainThreadQueries().build().bookRenewalDAO();
+
         result_list = findViewById(R.id.list_renewal_results);
         layout_error = findViewById(R.id.renewal_error_layout);
         layout_holder = findViewById(R.id.renewal_holder_layout);
@@ -154,6 +166,7 @@ public class RenewalActivity extends AppCompatActivity {
                 JSONObject jsBook = jsResultsArr.getJSONObject(i);
 
                 BookRenewalProperties newBook = new BookRenewalProperties();
+                newBook.setId(i);
                 newBook.setTitle(jsBook.getString("title"));
                 newBook.setLibrary(jsBook.getString("library"));
                 newBook.setPatrimony(jsBook.getString("patrimony"));
@@ -163,6 +176,7 @@ public class RenewalActivity extends AppCompatActivity {
                 availableBooks.add(newBook);
             }
             adapter.notifyDataSetChanged();
+            bindAlarms();
         }catch (JSONException e){
             e.printStackTrace();
         }
@@ -209,5 +223,14 @@ public class RenewalActivity extends AppCompatActivity {
         builder.setMessage(parsed.toString());
         builder.setPositiveButton(R.string.dialog_button_ok, null);
         builder.create().show();
+    }
+
+    private void bindAlarms(){
+        GlobalConstants.cancelExistingScheduledAlarms(this, dao);
+
+        dao.removeAll();
+        for (BookRenewalProperties b: availableBooks) dao.insert(b);
+
+        GlobalConstants.scheduleRenewalAlarms(this, dao);
     }
 }

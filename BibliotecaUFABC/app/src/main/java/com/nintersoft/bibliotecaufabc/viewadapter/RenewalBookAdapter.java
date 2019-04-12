@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.nintersoft.bibliotecaufabc.R;
 import com.nintersoft.bibliotecaufabc.RenewalActivity;
-import com.nintersoft.bibliotecaufabc.bookproperties.BookRenewalProperties;
+import com.nintersoft.bibliotecaufabc.book_renewal_model.BookRenewalProperties;
 
 import java.util.ArrayList;
 

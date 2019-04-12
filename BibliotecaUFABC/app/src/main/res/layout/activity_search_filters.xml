@@ -31,8 +31,6 @@
             android:layout_marginTop="@dimen/form_items_default_margin"
             android:textSize="@dimen/label_form_title_def_size"/>
 
-        <!--TODO: SHOW/HIDE COMPONENTS-->
-
         <Button
             android:id="@+id/button_toggle_filters"
             android:text="@string/button_search_filter_show_hide"

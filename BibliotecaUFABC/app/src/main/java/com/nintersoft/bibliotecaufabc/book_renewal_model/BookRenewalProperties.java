@@ -1,14 +1,38 @@
-package com.nintersoft.bibliotecaufabc.bookproperties;
+package com.nintersoft.bibliotecaufabc.book_renewal_model;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = BookRenewalContract.BookRenewalItems.TABLE_NAME)
 public class BookRenewalProperties {
+    @PrimaryKey()
+    @ColumnInfo(name = BookRenewalContract.BookRenewalItems._ID)
+    private long id;
+
+    @ColumnInfo(name = BookRenewalContract.BookRenewalItems.COLUMN_NAME_DATE)
     private String date;
+
+    @ColumnInfo(name = BookRenewalContract.BookRenewalItems.COLUMN_NAME_TITLE)
     private String title;
+
+    @ColumnInfo(name = BookRenewalContract.BookRenewalItems.COLUMN_NAME_LIBRARY)
     private String library;
+
+    @ColumnInfo(name = BookRenewalContract.BookRenewalItems.COLUMN_NAME_PATRIMONY)
     private String patrimony;
+
+    @ColumnInfo(name = BookRenewalContract.BookRenewalItems.COLUMN_NAME_RENEWAL_LINK)
     private String renewalLink;
 
     public BookRenewalProperties(){
     }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public long getId(){return id;}
 
     public String getTitle() {
         return title;

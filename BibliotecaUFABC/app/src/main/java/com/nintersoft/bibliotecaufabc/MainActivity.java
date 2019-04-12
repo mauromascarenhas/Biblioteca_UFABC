@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         bindComponents();
+        GlobalConstants.createNotificationChannel(getApplicationContext());
         loadPreferences();
         setWebViewSettings();
         setupBookList();
@@ -99,8 +100,11 @@ public class MainActivity extends AppCompatActivity
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         GlobalConstants.showShare = pref.getBoolean(getString(R.string.key_general_share_app_enabled), true);
         GlobalConstants.keepCache = pref.getBoolean(getString(R.string.key_privacy_cache_main_content), true);
+        GlobalConstants.ringAlarm = pref.getBoolean(getString(R.string.key_notification_enable_warning), true);
         GlobalConstants.showExtWarning = pref.getBoolean(getString(R.string.key_general_leave_warning), true);
         GlobalConstants.storeUserFormData = pref.getBoolean(getString(R.string.key_privacy_store_password), true);
+
+        GlobalConstants.ringAlarmOffset = Integer.parseInt(pref.getString(getString(R.string.key_notification_warning_delay), "0"));
 
         applyPreferences(pref);
     }
