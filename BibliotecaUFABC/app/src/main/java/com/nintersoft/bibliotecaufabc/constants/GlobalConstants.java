@@ -8,6 +8,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
 import android.os.Build;
 import android.os.SystemClock;
 import android.webkit.WebSettings;
@@ -125,8 +126,9 @@ public class GlobalConstants {
         builder.setSmallIcon(R.drawable.ic_default_book)
                 .setContentTitle(context.getString(R.string.notification_book_renewal_title))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setVibrate(new long[] {1000, 1000, 1000, 1000})
+                .setVibrate(new long[] {1000, 1000})
                 .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setAutoCancel(true);
         if (message == null)
                 builder.setContentText(context.getString(R.string.notification_book_renewal_content))
