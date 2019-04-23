@@ -5,6 +5,7 @@ import android.webkit.JavascriptInterface;
 
 import com.nintersoft.bibliotecaufabc.RenewalActivity;
 
+@SuppressWarnings("unused")
 public class RenewalJSInterface {
     private Context mContext;
 

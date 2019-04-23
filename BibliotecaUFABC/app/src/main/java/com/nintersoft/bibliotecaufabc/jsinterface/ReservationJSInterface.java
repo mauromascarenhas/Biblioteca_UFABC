@@ -5,6 +5,7 @@ import android.webkit.JavascriptInterface;
 
 import com.nintersoft.bibliotecaufabc.ReservationActivity;
 
+@SuppressWarnings("unused")
 public class ReservationJSInterface {
     private Context mContext;
 

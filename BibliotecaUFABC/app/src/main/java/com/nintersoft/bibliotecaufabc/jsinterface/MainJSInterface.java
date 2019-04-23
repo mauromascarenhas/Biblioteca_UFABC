@@ -5,6 +5,7 @@ import android.webkit.JavascriptInterface;
 
 import com.nintersoft.bibliotecaufabc.MainActivity;
 
+@SuppressWarnings("unused")
 public class MainJSInterface {
     private Context mContext;
 

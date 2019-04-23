@@ -5,6 +5,7 @@ import android.webkit.JavascriptInterface;
 
 import com.nintersoft.bibliotecaufabc.LoginActivity;
 
+@SuppressWarnings("unused")
 public class LoginJSInterface {
     private Context mContext;
 

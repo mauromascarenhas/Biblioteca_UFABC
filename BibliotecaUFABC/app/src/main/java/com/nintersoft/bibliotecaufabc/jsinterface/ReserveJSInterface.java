@@ -6,6 +6,7 @@ import android.webkit.JavascriptInterface;
 
 import com.nintersoft.bibliotecaufabc.BookViewerActivity;
 
+@SuppressWarnings("unused")
 public class ReserveJSInterface {
     private Context mContext;
 

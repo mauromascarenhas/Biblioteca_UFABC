@@ -5,6 +5,7 @@ import android.webkit.JavascriptInterface;
 
 import com.nintersoft.bibliotecaufabc.SearchActivity;
 
+@SuppressWarnings("unused")
 public class SearchJSInterface {
     private Context mContext;
 

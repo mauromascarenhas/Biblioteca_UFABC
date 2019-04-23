@@ -5,6 +5,7 @@ import android.webkit.JavascriptInterface;
 
 import com.nintersoft.bibliotecaufabc.BookViewerActivity;
 
+@SuppressWarnings("unused")
 public class DetailsJSInterface {
     private Context mContext;
 
