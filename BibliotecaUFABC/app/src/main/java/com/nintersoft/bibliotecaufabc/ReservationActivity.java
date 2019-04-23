@@ -17,8 +17,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nintersoft.bibliotecaufabc.bookproperties.BookReservationProperties;
-import com.nintersoft.bibliotecaufabc.constants.GlobalConstants;
+import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
 import com.nintersoft.bibliotecaufabc.jsinterface.ReservationJSInterface;
+import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
 import com.nintersoft.bibliotecaufabc.viewadapter.ReservationBookAdapter;
 import com.nintersoft.bibliotecaufabc.webviewclients.ReservationWebClient;
 
@@ -125,7 +126,7 @@ public class ReservationActivity extends AppCompatActivity {
     @SuppressLint("AddJavascriptInterface")
     private void setWebViewSettings(){
         dataSource = new WebView(this);
-        GlobalConstants.configureStandardWebView(dataSource);
+        GlobalFunctions.configureStandardWebView(dataSource);
         dataSource.setWebViewClient(new ReservationWebClient(this));
         dataSource.addJavascriptInterface(new ReservationJSInterface(this), "js_api");
         dataSource.loadUrl(GlobalConstants.URL_LIBRARY_RESERVATION);

@@ -9,7 +9,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.nintersoft.bibliotecaufabc.MainActivity;
-import com.nintersoft.bibliotecaufabc.constants.GlobalConstants;
+import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
 
 import androidx.annotation.RequiresApi;
 
@@ -52,8 +52,8 @@ public class MainWebClient extends WebViewClient {
         }
 
         String script = String.format("javascript: %1$s\ncheckLoginStatus();\ngetNewestBooks();",
-                GlobalConstants.getScriptFromAssets(mContext, "javascript/main_scraper.js"));
-        GlobalConstants.executeScript(view, script);
+                GlobalFunctions.getScriptFromAssets(mContext, "javascript/main_scraper.js"));
+        GlobalFunctions.executeScript(view, script);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)

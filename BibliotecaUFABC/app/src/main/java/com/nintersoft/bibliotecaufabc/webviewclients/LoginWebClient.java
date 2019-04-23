@@ -3,15 +3,14 @@ package com.nintersoft.bibliotecaufabc.webviewclients;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Build;
-import android.util.Log;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.nintersoft.bibliotecaufabc.LoginActivity;
-import com.nintersoft.bibliotecaufabc.R;
-import com.nintersoft.bibliotecaufabc.constants.GlobalConstants;
+import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
+import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
 
 import androidx.annotation.RequiresApi;
 
@@ -58,8 +57,8 @@ public class LoginWebClient extends WebViewClient {
             }
 
             String script = String.format("javascript: %1$s \ncheckForErrors();",
-                    GlobalConstants.getScriptFromAssets(mContext, "javascript/login_scraper.js"));
-            GlobalConstants.executeScript(view, script);
+                    GlobalFunctions.getScriptFromAssets(mContext, "javascript/login_scraper.js"));
+            GlobalFunctions.executeScript(view, script);
         }
         else if (url.contains(GlobalConstants.URL_LIBRARY_HOME)){
             if (login_home_finished < 1){
@@ -68,8 +67,8 @@ public class LoginWebClient extends WebViewClient {
             }
 
             String script = String.format("javascript: %1$s \ngetUsername();",
-                    GlobalConstants.getScriptFromAssets(mContext, "javascript/login_scraper.js"));
-            GlobalConstants.executeScript(view, script);
+                    GlobalFunctions.getScriptFromAssets(mContext, "javascript/login_scraper.js"));
+            GlobalFunctions.executeScript(view, script);
         }
     }
 

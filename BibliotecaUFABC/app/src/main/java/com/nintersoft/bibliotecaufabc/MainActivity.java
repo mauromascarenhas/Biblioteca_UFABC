@@ -15,8 +15,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.nintersoft.bibliotecaufabc.bookproperties.BookProperties;
-import com.nintersoft.bibliotecaufabc.constants.GlobalConstants;
+import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
 import com.nintersoft.bibliotecaufabc.jsinterface.MainJSInterface;
+import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
 import com.nintersoft.bibliotecaufabc.viewadapter.SearchBookAdapter;
 import com.nintersoft.bibliotecaufabc.webviewclients.MainWebClient;
 
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         bindComponents();
-        GlobalConstants.createNotificationChannel(getApplicationContext());
+        GlobalFunctions.createNotificationChannel(getApplicationContext());
         loadPreferences();
         setWebViewSettings();
         setupBookList();
@@ -131,7 +132,7 @@ public class MainActivity extends AppCompatActivity
     private void setWebViewSettings(){
         dataSource = new WebView(this);
         dataClient = new MainWebClient(this);
-        GlobalConstants.configureStandardWebView(dataSource);
+        GlobalFunctions.configureStandardWebView(dataSource);
 
         dataSource.setWebViewClient(dataClient);
         dataSource.addJavascriptInterface(new MainJSInterface(this), "js_api");

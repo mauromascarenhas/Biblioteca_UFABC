@@ -9,7 +9,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.nintersoft.bibliotecaufabc.BookViewerActivity;
-import com.nintersoft.bibliotecaufabc.constants.GlobalConstants;
+import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
+import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
 
 import androidx.annotation.RequiresApi;
 
@@ -54,9 +55,9 @@ public class ReserveWebClient extends WebViewClient {
             }
 
             String script = String.format("javascript: %1$s\ndetectAction()",
-                    GlobalConstants.getScriptFromAssets(mContext,
+                    GlobalFunctions.getScriptFromAssets(mContext,
                             "javascript/reserve_scraper.js"));
-            GlobalConstants.executeScript(view, script);
+            GlobalFunctions.executeScript(view, script);
         }
     }
 

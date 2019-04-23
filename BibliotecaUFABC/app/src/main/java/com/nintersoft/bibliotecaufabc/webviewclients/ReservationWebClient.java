@@ -9,7 +9,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.nintersoft.bibliotecaufabc.ReservationActivity;
-import com.nintersoft.bibliotecaufabc.constants.GlobalConstants;
+import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
+import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
 
 import androidx.annotation.RequiresApi;
 
@@ -53,8 +54,8 @@ public class ReservationWebClient extends WebViewClient {
             }
 
             String script = String.format("javascript: %1$s \ngetCancellationMessage();",
-                    GlobalConstants.getScriptFromAssets(mContext, "javascript/reservation_scraper.js"));
-            GlobalConstants.executeScript(view, script);
+                    GlobalFunctions.getScriptFromAssets(mContext, "javascript/reservation_scraper.js"));
+            GlobalFunctions.executeScript(view, script);
             reservation_page_finished = 0;
         }
         else if (url.contains(GlobalConstants.URL_LIBRARY_RESERVATION)){
@@ -64,8 +65,8 @@ public class ReservationWebClient extends WebViewClient {
             }
 
             String script = String.format("javascript: %1$s \ngetReservations();",
-                    GlobalConstants.getScriptFromAssets(mContext, "javascript/reservation_scraper.js"));
-            GlobalConstants.executeScript(view, script);
+                    GlobalFunctions.getScriptFromAssets(mContext, "javascript/reservation_scraper.js"));
+            GlobalFunctions.executeScript(view, script);
             confirmation_page_finished = 0;
         }
     }

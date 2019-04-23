@@ -15,7 +15,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.nintersoft.bibliotecaufabc.BookViewerActivity;
 import com.nintersoft.bibliotecaufabc.R;
 import com.nintersoft.bibliotecaufabc.bookproperties.BookProperties;
-import com.nintersoft.bibliotecaufabc.constants.GlobalConstants;
+import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
 
 import java.util.ArrayList;
 

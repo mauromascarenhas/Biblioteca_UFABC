@@ -9,7 +9,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.nintersoft.bibliotecaufabc.SearchActivity;
-import com.nintersoft.bibliotecaufabc.constants.GlobalConstants;
+import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
+import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
 
 import androidx.annotation.RequiresApi;
 
@@ -54,9 +55,9 @@ public class SearchWebClient extends WebViewClient {
 
             String searchQuery = ((SearchActivity) mContext).getSearchData();
             String script = String.format("javascript: %1$s\ndocumentReady();\nperformSearch(\"%2$s\");",
-                    GlobalConstants.getScriptFromAssets(mContext, "javascript/search_scraper.js"),
+                    GlobalFunctions.getScriptFromAssets(mContext, "javascript/search_scraper.js"),
                     searchQuery);
-            GlobalConstants.executeScript(view, script);
+            GlobalFunctions.executeScript(view, script);
             search_home_finished++;
         }
         else if (url.contains(GlobalConstants.URL_LIBRARY_SEARCH)){
@@ -67,8 +68,8 @@ public class SearchWebClient extends WebViewClient {
 
             ((SearchActivity)mContext).setupInterface(true);
             String script = String.format("javascript: %1$s\ngetSearchResults();",
-                    GlobalConstants.getScriptFromAssets(mContext, "javascript/search_scraper.js"));
-            GlobalConstants.executeScript(view, script);
+                    GlobalFunctions.getScriptFromAssets(mContext, "javascript/search_scraper.js"));
+            GlobalFunctions.executeScript(view, script);
         }
     }
 

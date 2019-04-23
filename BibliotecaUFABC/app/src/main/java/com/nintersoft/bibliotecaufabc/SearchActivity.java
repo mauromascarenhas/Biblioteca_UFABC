@@ -8,8 +8,9 @@ import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.nintersoft.bibliotecaufabc.bookproperties.BookProperties;
-import com.nintersoft.bibliotecaufabc.constants.GlobalConstants;
+import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
 import com.nintersoft.bibliotecaufabc.jsinterface.SearchJSInterface;
+import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
 import com.nintersoft.bibliotecaufabc.viewadapter.SearchBookAdapter;
 import com.nintersoft.bibliotecaufabc.webviewclients.SearchWebClient;
 
@@ -21,7 +22,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.InputType;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -158,7 +158,7 @@ public class SearchActivity extends AppCompatActivity {
         fab_more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GlobalConstants.executeScript(dataSource, "javascript: loadMoreBooks();");
+                GlobalFunctions.executeScript(dataSource, "javascript: loadMoreBooks();");
                 v.setVisibility(View.GONE);
 
                 Snackbar.make(findViewById(R.id.list_search_results),
@@ -189,7 +189,7 @@ public class SearchActivity extends AppCompatActivity {
     @SuppressLint("AddJavascriptInterface")
     private void setWebViewSettings(){
         dataSource = new WebView(this);
-        GlobalConstants.configureStandardWebView(dataSource);
+        GlobalFunctions.configureStandardWebView(dataSource);
         dataSource.setWebViewClient(new SearchWebClient(this));
         dataSource.addJavascriptInterface(new SearchJSInterface(this), "js_api");
         dataSource.loadUrl(GlobalConstants.URL_LIBRARY_HOME);

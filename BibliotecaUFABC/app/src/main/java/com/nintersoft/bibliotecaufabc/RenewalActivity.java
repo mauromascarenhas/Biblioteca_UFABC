@@ -4,7 +4,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
@@ -17,12 +16,12 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.nintersoft.bibliotecaufabc.book_renewal_model.BookRenewalContract;
 import com.nintersoft.bibliotecaufabc.book_renewal_model.BookRenewalDAO;
-import com.nintersoft.bibliotecaufabc.book_renewal_model.BookRenewalDatabase;
+import com.nintersoft.bibliotecaufabc.book_renewal_model.BookRenewalDatabaseSingletonFactory;
 import com.nintersoft.bibliotecaufabc.book_renewal_model.BookRenewalProperties;
-import com.nintersoft.bibliotecaufabc.constants.GlobalConstants;
+import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
 import com.nintersoft.bibliotecaufabc.jsinterface.RenewalJSInterface;
+import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
 import com.nintersoft.bibliotecaufabc.viewadapter.RenewalBookAdapter;
 import com.nintersoft.bibliotecaufabc.webviewclients.RenewalWebClient;
 
@@ -56,15 +55,10 @@ public class RenewalActivity extends AppCompatActivity {
         setupInterface(false);
         setupBookList();
         setListeners();
-
-        GlobalConstants.scheduleBookNotification(getApplicationContext(), 5000, 31, null);
-        GlobalConstants.scheduleBookNotification(getApplicationContext(), 10000, 10, null);
-        GlobalConstants.cancelScheduledNotification(getApplicationContext(), 31);
     }
 
     private void bindComponents(){
-        dao = Room.databaseBuilder(this,
-                BookRenewalDatabase.class, BookRenewalContract.DB_NAME).allowMainThreadQueries().build().bookRenewalDAO();
+        dao = BookRenewalDatabaseSingletonFactory.getInstance().bookRenewalDAO();
 
         result_list = findViewById(R.id.list_renewal_results);
         layout_error = findViewById(R.id.renewal_error_layout);
@@ -137,7 +131,7 @@ public class RenewalActivity extends AppCompatActivity {
     @SuppressLint("AddJavascriptInterface")
     private void setWebViewSettings(){
         dataSource = new WebView(this);
-        GlobalConstants.configureStandardWebView(dataSource);
+        GlobalFunctions.configureStandardWebView(dataSource);
         dataSource.setWebViewClient(new RenewalWebClient(this));
         dataSource.addJavascriptInterface(new RenewalJSInterface(this), "js_api");
         dataSource.loadUrl(GlobalConstants.URL_LIBRARY_RENEWAL);
@@ -226,11 +220,11 @@ public class RenewalActivity extends AppCompatActivity {
     }
 
     private void bindAlarms(){
-        GlobalConstants.cancelExistingScheduledAlarms(this, dao);
+        GlobalFunctions.cancelExistingScheduledAlarms(this, dao);
 
         dao.removeAll();
         for (BookRenewalProperties b: availableBooks) dao.insert(b);
 
-        GlobalConstants.scheduleRenewalAlarms(this, dao);
+        GlobalFunctions.scheduleRenewalAlarms(this, dao);
     }
 }

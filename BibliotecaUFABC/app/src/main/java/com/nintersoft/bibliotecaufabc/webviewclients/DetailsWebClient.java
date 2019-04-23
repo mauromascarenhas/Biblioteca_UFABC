@@ -9,7 +9,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.nintersoft.bibliotecaufabc.BookViewerActivity;
-import com.nintersoft.bibliotecaufabc.constants.GlobalConstants;
+import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
+import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
 
 import androidx.annotation.RequiresApi;
 
@@ -50,8 +51,8 @@ public class DetailsWebClient extends WebViewClient {
 
         if (url.contains(GlobalConstants.URL_LIBRARY_DETAILS)){
             String script = String.format("javascript: %1$s \ngetBookDetails();",
-                    GlobalConstants.getScriptFromAssets(mContext, "javascript/details_scraper.js"));
-            GlobalConstants.executeScript(view, script);
+                    GlobalFunctions.getScriptFromAssets(mContext, "javascript/details_scraper.js"));
+            GlobalFunctions.executeScript(view, script);
         }
     }
 

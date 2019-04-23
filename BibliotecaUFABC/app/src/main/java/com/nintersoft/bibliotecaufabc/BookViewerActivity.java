@@ -29,9 +29,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.nintersoft.bibliotecaufabc.constants.GlobalConstants;
+import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
 import com.nintersoft.bibliotecaufabc.jsinterface.DetailsJSInterface;
 import com.nintersoft.bibliotecaufabc.jsinterface.ReserveJSInterface;
+import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
 import com.nintersoft.bibliotecaufabc.webviewclients.DetailsWebClient;
 import com.nintersoft.bibliotecaufabc.webviewclients.ReserveWebClient;
 
@@ -91,7 +92,7 @@ public class BookViewerActivity extends AppCompatActivity {
         dataSource = new WebView(this);
         reserveWebClient = new ReserveWebClient(this);
 
-        GlobalConstants.configureStandardWebView(dataSource);
+        GlobalFunctions.configureStandardWebView(dataSource);
         dataSource.setWebViewClient(new DetailsWebClient(this));
         dataSource.addJavascriptInterface(new DetailsJSInterface(this), "js_api");
         dataSource.addJavascriptInterface(new ReserveJSInterface(this), "js_api_r");
@@ -311,7 +312,7 @@ public class BookViewerActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         reserveWebClient.resetCounters();
                         dataSource.setWebViewClient(reserveWebClient);
-                        GlobalConstants.executeScript(dataSource, "javascript: reserveBook();");
+                        GlobalFunctions.executeScript(dataSource, "javascript: reserveBook();");
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(BookViewerActivity.this);
                         builder.setView(R.layout.message_progress_dialog);
@@ -477,9 +478,9 @@ public class BookViewerActivity extends AppCompatActivity {
 
                             tempObject = options.toString();
                             String script = String.format("javascript: %1$s\nsubmitReservationForm();",
-                                    GlobalConstants.getScriptFromAssets(BookViewerActivity.this,
+                                    GlobalFunctions.getScriptFromAssets(BookViewerActivity.this,
                                             "javascript/submit_reserve_scraper.js"));
-                            GlobalConstants.executeScript(dataSource, script);
+                            GlobalFunctions.executeScript(dataSource, script);
                             optionsDialog.dismiss();
 
                             loading_alert.setOnShowListener(new DialogInterface.OnShowListener() {

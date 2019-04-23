@@ -21,8 +21,9 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.nintersoft.bibliotecaufabc.constants.GlobalConstants;
+import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
 import com.nintersoft.bibliotecaufabc.jsinterface.LoginJSInterface;
+import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
 import com.nintersoft.bibliotecaufabc.webviewclients.LoginWebClient;
 
 public class LoginActivity extends AppCompatActivity {
@@ -88,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
     @SuppressLint("AddJavascriptInterface")
     private void setWebViewSettings(){
         dataSource = new WebView(this);
-        GlobalConstants.configureStandardWebView(dataSource);
+        GlobalFunctions.configureStandardWebView(dataSource);
         dataSource.setWebViewClient(new LoginWebClient(this));
         dataSource.addJavascriptInterface(new LoginJSInterface(this), "js_api");
         dataSource.loadUrl(GlobalConstants.URL_LIBRARY_LOGIN);
@@ -168,9 +169,9 @@ public class LoginActivity extends AppCompatActivity {
         if (!proceed) return;
 
         String script = String.format("javascript: %1$s performLogin(\"%2$s\",\"%3$s\");",
-                GlobalConstants.getScriptFromAssets(this, "javascript/login_scraper.js"),
+                GlobalFunctions.getScriptFromAssets(this, "javascript/login_scraper.js"),
                 login, pass);
-        GlobalConstants.executeScript(dataSource, script);
+        GlobalFunctions.executeScript(dataSource, script);
         setupInterface(false);
 
         if (GlobalConstants.storeUserFormData){

@@ -93,7 +93,6 @@ public class SearchFiltersActivity extends AppCompatActivity {
 
             library_layout.addView(cb);
         }
-
     }
 
     private void setListeners(){
