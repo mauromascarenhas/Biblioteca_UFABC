@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.nintersoft.bibliotecaufabc.R;
 import com.nintersoft.bibliotecaufabc.RenewalActivity;
 import com.nintersoft.bibliotecaufabc.book_renewal_model.BookRenewalProperties;
+import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
 
 import java.util.ArrayList;
 
@@ -68,12 +69,16 @@ public class RenewalBookAdapter extends RecyclerView.Adapter<RenewalBookAdapter.
         holder.library.setText(cProperties.getLibrary());
         holder.patrimony.setText(cProperties.getPatrimony());
 
-        holder.renewButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((RenewalActivity)mContext).loadRenewalLink(cProperties.getRenewalLink());
-            }
-        });
+        boolean hasRenewal = !cProperties.getRenewalLink().equals(GlobalConstants.URL_LIBRARY_RENEWAL + "#");
+        holder.renewButton.setEnabled(hasRenewal);
+        if (hasRenewal){
+            holder.renewButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((RenewalActivity)mContext).loadRenewalLink(cProperties.getRenewalLink());
+                }
+            });
+        }
     }
 
     @Override

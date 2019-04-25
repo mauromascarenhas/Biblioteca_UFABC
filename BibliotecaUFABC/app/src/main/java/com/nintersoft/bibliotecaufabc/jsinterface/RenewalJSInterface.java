@@ -44,4 +44,14 @@ public class RenewalJSInterface {
             }
         });
     }
+
+    @JavascriptInterface
+    public void setUserDisconnected(){
+        ((RenewalActivity)mContext).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ((RenewalActivity)mContext).setUserDisconnected();
+            }
+        });
+    }
 }

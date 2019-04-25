@@ -1,5 +1,6 @@
 package com.nintersoft.bibliotecaufabc;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -7,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -16,6 +18,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.nintersoft.bibliotecaufabc.book_renewal_model.BookRenewalDAO;
 import com.nintersoft.bibliotecaufabc.book_renewal_model.BookRenewalDatabaseSingletonFactory;
 import com.nintersoft.bibliotecaufabc.book_renewal_model.BookRenewalProperties;
@@ -144,6 +147,27 @@ public class RenewalActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void setUserDisconnected(){
+        Intent login = new Intent(this, LoginActivity.class);
+        startActivityForResult(login, GlobalConstants.ACTIVITY_LOGIN_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == GlobalConstants.ACTIVITY_LOGIN_REQUEST_CODE) {
+            if (resultCode == RESULT_OK && data != null) {
+                dataSource.loadUrl(GlobalConstants.URL_LIBRARY_RENEWAL);
+                String username = data.getStringExtra("user_name");
+                Snackbar.make(layout_holder, getString(R.string.message_renewal_connected,
+                        username == null ? "???" : username),
+                        Snackbar.LENGTH_LONG).show();
+            }
+            else setErrorForm(getString(R.string.message_renewal_connected_failed));
+        }
     }
 
     public void setReservationBooks(String books){

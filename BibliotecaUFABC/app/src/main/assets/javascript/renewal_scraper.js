@@ -1,5 +1,10 @@
 // Get books available for renewal
 function getRenewals(){
+    if (!checkLoginStatus()){
+        js_api.setUserDisconnected();
+        return;
+    }
+
     var errorDiv = document.querySelector('.divErroCentralizada');
     if (errorDiv != null){
         js_api.setUsernameErr(errorDiv.getElementsByTagName('b')[0].textContent);
@@ -25,4 +30,9 @@ function getRenewals(){
     }
 
     js_api.setRenewalBooks(JSON.stringify(books));
+}
+
+function checkLoginStatus(){
+    var logoutButton = document.querySelector("#li-logout");
+    return logoutButton != null;
 }

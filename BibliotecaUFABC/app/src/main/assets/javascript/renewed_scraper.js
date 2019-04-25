@@ -9,9 +9,12 @@ function getRenewalMessage(){
         if (nodes[i].nodeType == Node.TEXT_NODE && nodes[i].textContent.trim())
             contents.push(nodes[i].textContent.trim());
 
+    let featuredNode = content.querySelector('.textoNegrito');
+    if (featuredNode == null) featuredNode = content.querySelector('.textoVermelho');
+
     let details = {
         details : contents,
-        featured : content.querySelector('.textoNegrito').textContent
+        featured : featuredNode == null? "" : featuredNode.textContent
     };
     js_api.setConfirmationMessage(JSON.stringify(details));
 }

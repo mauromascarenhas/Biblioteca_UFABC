@@ -19,8 +19,8 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
-import com.nintersoft.bibliotecaufabc.MainActivity;
 import com.nintersoft.bibliotecaufabc.R;
+import com.nintersoft.bibliotecaufabc.RenewalActivity;
 import com.nintersoft.bibliotecaufabc.book_renewal_model.BookRenewalDAO;
 import com.nintersoft.bibliotecaufabc.book_renewal_model.BookRenewalProperties;
 import com.nintersoft.bibliotecaufabc.notification.NotificationDisplay;
@@ -77,6 +77,7 @@ public class GlobalFunctions {
      * Help from : https://stackoverflow.com/questions/36902667/how-to-schedule-notification-in-android
      */
 
+    @SuppressWarnings("WeakerAccess")
     public static void scheduleBookNotification(Context context, long delay,
                                                 int notificationId, @Nullable String message){
         Intent notificationIntent = new Intent(context, NotificationDisplay.class);
@@ -106,8 +107,8 @@ public class GlobalFunctions {
                 .setStyle(new NotificationCompat.BigTextStyle()
                         .bigText(message));
 
-        Intent homeActivity = new Intent(context, MainActivity.class);
-        PendingIntent activity = PendingIntent.getActivity(context, notificationId, homeActivity, PendingIntent.FLAG_ONE_SHOT);
+        Intent renewalActivity = new Intent(context, RenewalActivity.class);
+        PendingIntent activity = PendingIntent.getActivity(context, notificationId, renewalActivity, PendingIntent.FLAG_ONE_SHOT);
         builder.setContentIntent(activity);
 
         return builder.build();
