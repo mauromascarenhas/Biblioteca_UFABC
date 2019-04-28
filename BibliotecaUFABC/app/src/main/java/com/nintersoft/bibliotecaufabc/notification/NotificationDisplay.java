@@ -16,6 +16,6 @@ public class NotificationDisplay extends BroadcastReceiver {
         NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (notificationManager != null)
             notificationManager.notify(notificationID,
-                    GlobalFunctions.createNotification(context, notificationID, intent.getStringExtra(GlobalConstants.NOTIFICATION_MESSAGE)));
+                    GlobalFunctions.createRenewalNotification(context, intent.getStringExtra(GlobalConstants.NOTIFICATION_MESSAGE)));
     }
 }

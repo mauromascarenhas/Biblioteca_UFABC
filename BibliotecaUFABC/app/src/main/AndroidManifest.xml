@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.nintersoft.bibliotecaufabc">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -13,14 +14,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        tools:ignore="AllowBackup,UnusedAttribute">
 
         <activity
             android:name=".ReservationActivity"
             android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity
             android:name=".BookViewerActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden" />
+            android:configChanges="orientation|screenSize|keyboardHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data android:scheme="http" android:host="biblioteca.ufabc.edu.br"
+                    android:path="/mobile/detalhe.php"/>
+                <data android:scheme="https" android:host="biblioteca.ufabc.edu.br"
+                    android:path="/mobile/detalhe.php"/>
+            </intent-filter>
+        </activity>
         <activity android:name=".SearchFiltersActivity" />
         <activity
             android:name=".SettingsActivity"
@@ -47,7 +60,9 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".notification.NotificationDisplay">
+        <receiver android:name=".notification.NotificationDisplay"
+            android:enabled="true"
+            android:exported="false">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

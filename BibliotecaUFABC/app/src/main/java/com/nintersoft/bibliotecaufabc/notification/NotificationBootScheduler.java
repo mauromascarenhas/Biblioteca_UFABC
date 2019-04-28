@@ -16,7 +16,7 @@ public class NotificationBootScheduler extends BroadcastReceiver {
                 "android.intent.action.QUICKBOOT_POWERON".equalsIgnoreCase(intent.getAction())){
             BookRenewalDAO dao = BookRenewalDatabaseSingletonFactory.getInstance().bookRenewalDAO();
 
-            GlobalFunctions.createNotificationChannel(context.getApplicationContext());
+            GlobalFunctions.createRenewalNotificationChannel(context.getApplicationContext());
             GlobalFunctions.scheduleRenewalAlarms(context, dao);
         }
     }

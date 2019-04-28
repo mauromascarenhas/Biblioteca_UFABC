@@ -83,15 +83,15 @@ public class GlobalFunctions {
         Intent notificationIntent = new Intent(context, NotificationDisplay.class);
         notificationIntent.putExtra(GlobalConstants.NOTIFICATION_ID, notificationId);
         notificationIntent.putExtra(GlobalConstants.NOTIFICATION_MESSAGE, message);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, notificationId, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, notificationId, notificationIntent, 0);
 
         long futureInMillis = SystemClock.elapsedRealtime() + delay;
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         if (alarmManager != null) alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
     }
 
-    public static Notification createNotification(Context context, int notificationId, @Nullable String message){
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, GlobalConstants.CHANNEL_ID);
+    public static Notification createRenewalNotification(Context context, @Nullable String message){
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, GlobalConstants.CHANNEL_RENEWAL_ID);
         builder.setSmallIcon(R.drawable.ic_default_book)
                 .setContentTitle(context.getString(R.string.notification_book_renewal_title))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -108,7 +108,8 @@ public class GlobalFunctions {
                         .bigText(message));
 
         Intent renewalActivity = new Intent(context, RenewalActivity.class);
-        PendingIntent activity = PendingIntent.getActivity(context, notificationId, renewalActivity, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent activity = PendingIntent.getActivity(context, GlobalConstants.ACTIVITY_RENEWAL_REQUEST_CODE,
+                                                            renewalActivity, 0);
         builder.setContentIntent(activity);
 
         return builder.build();
@@ -123,12 +124,16 @@ public class GlobalFunctions {
         if (alarmManager != null) alarmManager.cancel(pendingIntent);
     }
 
-    public static void createNotificationChannel(Context context){
+    /**
+     * Creates notification channel for book renewal
+     * @param context : Used for getting string messages
+     */
+    public static void createRenewalNotificationChannel(Context context){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = context.getString(R.string.notification_channel_title);
-            String description = context.getString(R.string.notification_channel_description);
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(GlobalConstants.CHANNEL_ID, name, importance);
+            CharSequence name = context.getString(R.string.notification_renewal_channel_title);
+            String description = context.getString(R.string.notification_renewal_channel_description);
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel(GlobalConstants.CHANNEL_RENEWAL_ID, name, importance);
             channel.setDescription(description);
 
             NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
@@ -137,11 +142,17 @@ public class GlobalFunctions {
         }
     }
 
+    /**
+     * Cancels every existing pending renewal warning
+     * @param context : Used for intents comparison
+     * @param dao     : Used for getting previous book details
+     */
     public static void cancelExistingScheduledAlarms(Context context, BookRenewalDAO dao){
         List<BookRenewalProperties> oldData = dao.getAll();
         for (BookRenewalProperties b : oldData)
             GlobalFunctions.cancelScheduledNotification(context, (int)b.getId());
     }
+
 
     public static void scheduleRenewalAlarms(Context context, BookRenewalDAO dao){
         List<BookRenewalProperties> availableBooks = dao.getAll();

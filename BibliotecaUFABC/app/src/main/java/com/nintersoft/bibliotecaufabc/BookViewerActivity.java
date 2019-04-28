@@ -81,10 +81,20 @@ public class BookViewerActivity extends AppCompatActivity {
 
     private void initializeBookData(){
         Intent data = getIntent();
+
+        boolean hasData = true;
         String bookData = data.getStringExtra("code");
-        if (bookData == null) bookURL = "";
-        else bookURL = GlobalConstants.URL_LIBRARY_DETAILS + "?codigo=" + bookData
+        if (bookData == null) {
+            if (data.getData() != null){
+                bookData = data.getData().getQueryParameter("codigo");
+                hasData = bookData != null;
+            }
+            else hasData = false;
+        }
+
+        if (hasData) bookURL = GlobalConstants.URL_LIBRARY_DETAILS + "?codigo=" + bookData
                 + GlobalConstants.MANDATORY_APPEND_URL_LIBRARY_DETAILS;
+        else bookURL = "";
     }
 
     @SuppressLint("AddJavascriptInterface")
@@ -96,7 +106,20 @@ public class BookViewerActivity extends AppCompatActivity {
         dataSource.setWebViewClient(new DetailsWebClient(this));
         dataSource.addJavascriptInterface(new DetailsJSInterface(this), "js_api");
         dataSource.addJavascriptInterface(new ReserveJSInterface(this), "js_api_r");
-        dataSource.loadUrl(bookURL);
+        if (!bookURL.isEmpty()) dataSource.loadUrl(bookURL);
+        else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(getString(R.string.dialog_error_title));
+            builder.setMessage(getString(R.string.label_book_details_incorrect_data));
+            builder.setNeutralButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    BookViewerActivity.this.finish();
+                }
+            });
+            builder.setCancelable(false);
+            builder.create().show();
+        }
     }
 
     public void setupInterface(boolean setResults){
@@ -301,6 +324,7 @@ public class BookViewerActivity extends AppCompatActivity {
                 }
             }
 
+            //TODO: Check dynamically and fire login activity
             if (GlobalConstants.isUserConnected && book_properties.getBoolean("reservable")) {
                 Button button_reserve = new Button(this);
                 button_reserve.setText(R.string.button_book_details_reserve);

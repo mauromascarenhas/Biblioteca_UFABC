@@ -169,6 +169,10 @@
     <string name="label_book_details_available_header">Available copies</string>
     <string name="label_book_details_available_details">[ %1$s ] - %2$s</string>
     <string name="label_book_details_available_counting_sep">of</string>
+    <string name="label_book_details_incorrect_data">
+        "Unfortunately the requested URL is incompatible.\n"
+        "It must contain, at least, the code of the book."
+    </string>
     <string name="label_book_details_connection_error">
         "It seems that an error has occurred while we tried to communicate with"
         "university\'s servers.\n\n"
@@ -187,8 +191,8 @@
     <string name="notification_book_renewal_specific_content">The book/work %1$s is waiting either to be
         renewed or devolved!</string>
 
-    <string name="notification_channel_title">Book renewal warning</string>
-    <string name="notification_channel_description">Alerts regarding book devolution deadlines</string>
+    <string name="notification_renewal_channel_title">Book renewal warning</string>
+    <string name="notification_renewal_channel_description">Alerts regarding book devolution deadlines</string>
 
     <!-- Strings related to Settings -->
 

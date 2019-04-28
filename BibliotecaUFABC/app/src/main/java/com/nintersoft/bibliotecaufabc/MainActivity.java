@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         bindComponents();
-        GlobalFunctions.createNotificationChannel(getApplicationContext());
+        GlobalFunctions.createRenewalNotificationChannel(getApplicationContext());
         loadPreferences();
         setWebViewSettings();
         setupBookList();

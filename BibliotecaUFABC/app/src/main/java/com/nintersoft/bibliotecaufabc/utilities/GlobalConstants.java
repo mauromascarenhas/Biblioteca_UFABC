@@ -11,8 +11,8 @@ public class GlobalConstants {
     public static int ringAlarmOffset = 0;
 
     // Intent constants for Getters
-    public static String NOTIFICATION_ID = "notification_id";
-    public static String NOTIFICATION_MESSAGE = "notification_message";
+    public static final String NOTIFICATION_ID = "notification_id";
+    public static final String NOTIFICATION_MESSAGE = "notification_message";
 
     /**
      * Gets notification content as parcelable extra from intent
@@ -21,10 +21,10 @@ public class GlobalConstants {
      * @see #NOTIFICATION_MESSAGE
      */
     @Deprecated
-    public static String NOTIFICATION_CONTENT = "notification_content";
+    public static final String NOTIFICATION_CONTENT = "notification_content";
 
     // Notification channel constants
-    static String CHANNEL_ID = "DEFAULT_NOTIFICATION_CHANNEL";
+    static final String CHANNEL_RENEWAL_ID = "RENEWAL_NOTIFICATION_CHANNEL";
 
     // URL constants and Connection-wise variables
     public static boolean isUserConnected = false;
