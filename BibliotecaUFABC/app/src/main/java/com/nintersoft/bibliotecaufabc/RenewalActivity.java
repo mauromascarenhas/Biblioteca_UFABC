@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -141,6 +142,14 @@ public class RenewalActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        if (notificationManager != null) notificationManager.cancelAll();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home){
             finish();
@@ -162,7 +171,7 @@ public class RenewalActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK && data != null) {
                 dataSource.loadUrl(GlobalConstants.URL_LIBRARY_RENEWAL);
                 String username = data.getStringExtra("user_name");
-                Snackbar.make(layout_holder, getString(R.string.message_renewal_connected,
+                Snackbar.make(layout_holder, getString(R.string.snack_message_connected,
                         username == null ? "???" : username),
                         Snackbar.LENGTH_LONG).show();
             }
@@ -196,7 +205,9 @@ public class RenewalActivity extends AppCompatActivity {
             adapter.notifyDataSetChanged();
             bindAlarms();
         }catch (JSONException e){
-            e.printStackTrace();
+            Snackbar.make(layout_holder,
+                    R.string.snack_message_parse_fail, Snackbar.LENGTH_LONG)
+                    .show();
         }
     }
 
@@ -233,7 +244,9 @@ public class RenewalActivity extends AppCompatActivity {
                 parsed.append(general.getString(i)).append("\n");
             parsed.append(general.getString(general.length() - 1)).append("\n");
         } catch (JSONException e){
-            e.printStackTrace();
+            Snackbar.make(layout_holder,
+                    R.string.snack_message_parse_fail, Snackbar.LENGTH_LONG)
+                    .show();
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -250,5 +263,6 @@ public class RenewalActivity extends AppCompatActivity {
         for (BookRenewalProperties b: availableBooks) dao.insert(b);
 
         GlobalFunctions.scheduleRenewalAlarms(this, dao);
+        GlobalFunctions.scheduleSyncNotification(this, 432000);
     }
 }

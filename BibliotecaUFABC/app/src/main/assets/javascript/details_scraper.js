@@ -80,9 +80,14 @@ function getBookDetails(){
     }
     bookDetails.copies = copies_rows_items_arr;
 
-    js_api.setBookDetails(JSON.stringify(bookDetails, null, 4));
+    js_api.setBookDetails(JSON.stringify(bookDetails), checkLoginStatus());
 }
 
 function reserveBook(){
     document.querySelector('#botaoReservar').getElementsByTagName('a')[0].click();
+}
+
+function checkLoginStatus(){
+    var logoutButton = document.querySelector("#li-logout");
+    return logoutButton != null;
 }

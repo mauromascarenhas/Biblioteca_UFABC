@@ -1,4 +1,4 @@
-package com.nintersoft.bibliotecaufabc.bookproperties;
+package com.nintersoft.bibliotecaufabc.bookreservationproperties;
 
 public class BookReservationProperties {
     private String queue;

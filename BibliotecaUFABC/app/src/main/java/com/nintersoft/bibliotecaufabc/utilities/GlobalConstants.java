@@ -24,10 +24,8 @@ public class GlobalConstants {
     public static final String NOTIFICATION_CONTENT = "notification_content";
 
     // Notification channel constants
+    static final String CHANNEL_SYNC_ID = "SYNC_NOTIFICATION_CHANNEL";
     static final String CHANNEL_RENEWAL_ID = "RENEWAL_NOTIFICATION_CHANNEL";
-
-    // URL constants and Connection-wise variables
-    public static boolean isUserConnected = false;
 
     public static final String URL_ACCESS_PAGE = "https://acesso.ufabc.edu.br/";
     public static final String URL_LIBRARY_HOME = "http://biblioteca.ufabc.edu.br/mobile/busca.php";
@@ -51,4 +49,6 @@ public class GlobalConstants {
     public static final int ACTIVITY_RENEWAL_REQUEST_CODE = 13;
     public static final int ACTIVITY_SETTINGS_REQUEST_CODE = 14;
     public static final int ACTIVITY_SEARCH_FILTER_REQUEST_CODE = 15;
+
+    public static final int SYNC_NOTIFICATION_ID = 9000;
 }

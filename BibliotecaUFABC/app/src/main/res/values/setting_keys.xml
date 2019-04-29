@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Sync -->
+    <string name="key_synchronization_schedule">key_synchronization_schedule</string>
+
     <!-- General -->
     <string name="key_general_leave_warning">key_general_leave_warning</string>
     <string name="key_general_share_app_enabled">key_general_share_app</string>

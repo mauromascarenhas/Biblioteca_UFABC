@@ -7,7 +7,7 @@ import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-import com.nintersoft.bibliotecaufabc.bookproperties.BookProperties;
+import com.nintersoft.bibliotecaufabc.book_search_model.BookSearchProperties;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
 import com.nintersoft.bibliotecaufabc.jsinterface.SearchJSInterface;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
@@ -53,7 +53,7 @@ public class SearchActivity extends AppCompatActivity {
     private FloatingActionButton fab_more;
     private ArrayList<Boolean> searchFilter;
     private ArrayList<Boolean> searchLibrary;
-    private ArrayList<BookProperties> availableBooks;
+    private ArrayList<BookSearchProperties> availableBooks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -308,7 +308,7 @@ public class SearchActivity extends AppCompatActivity {
 
             for (int i = 0; i < jsResultsArr.length(); ++i){
                 JSONObject jsBook = jsResultsArr.getJSONObject(i);
-                BookProperties newBook = new BookProperties();
+                BookSearchProperties newBook = new BookSearchProperties();
                 newBook.setTitle(jsBook.getString("title"));
                 newBook.setAuthor(jsBook.getString("author"));
                 newBook.setSection(jsBook.getString("section"));
@@ -318,7 +318,9 @@ public class SearchActivity extends AppCompatActivity {
             }
             adapter.notifyDataSetChanged();
         } catch (JSONException e) {
-            e.printStackTrace();
+            Snackbar.make(layout_holder,
+                    R.string.snack_message_parse_fail, Snackbar.LENGTH_LONG)
+                    .show();
         }
 
         if (availableBooks.size() > 10)

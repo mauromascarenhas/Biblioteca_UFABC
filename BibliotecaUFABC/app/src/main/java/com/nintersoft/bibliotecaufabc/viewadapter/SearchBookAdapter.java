@@ -14,7 +14,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.nintersoft.bibliotecaufabc.BookViewerActivity;
 import com.nintersoft.bibliotecaufabc.R;
-import com.nintersoft.bibliotecaufabc.bookproperties.BookProperties;
+import com.nintersoft.bibliotecaufabc.book_search_model.BookSearchProperties;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
 
 import java.util.ArrayList;
@@ -47,9 +47,9 @@ public class SearchBookAdapter extends RecyclerView.Adapter<SearchBookAdapter.Se
     }
 
     private Context mContext;
-    private ArrayList<BookProperties> properties;
+    private ArrayList<BookSearchProperties> properties;
 
-    public SearchBookAdapter(@NonNull Context context,@NonNull ArrayList<BookProperties> properties){
+    public SearchBookAdapter(@NonNull Context context,@NonNull ArrayList<BookSearchProperties> properties){
         this.properties = properties;
         mContext = context;
     }
@@ -63,7 +63,7 @@ public class SearchBookAdapter extends RecyclerView.Adapter<SearchBookAdapter.Se
 
     @Override
     public void onBindViewHolder(@NonNull SearchBooksViewHolder holder, int position) {
-        final BookProperties cProperties = properties.get(position);
+        final BookSearchProperties cProperties = properties.get(position);
 
         holder.type.setText(cProperties.getType());
         holder.title.setText(cProperties.getTitle());
@@ -113,7 +113,7 @@ public class SearchBookAdapter extends RecyclerView.Adapter<SearchBookAdapter.Se
         mContext.startActivity(viewer);
     }
 
-    private void shareBookDetails(BookProperties book){
+    private void shareBookDetails(BookSearchProperties book){
         String bookShare = mContext.getString(R.string.share_book_structure,
                 book.getTitle(), book.getAuthor(),
                 GlobalConstants.URL_LIBRARY_DETAILS + "?codigo=" + book.getCode()

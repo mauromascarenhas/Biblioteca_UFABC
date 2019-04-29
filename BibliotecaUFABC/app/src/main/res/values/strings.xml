@@ -27,6 +27,8 @@
 
     <string name="title_activity_login">Sign in (UFABC)</string>
 
+    <string name="snack_message_connected">Connected as %1$s&#8230;</string>
+    <string name="snack_message_parse_fail">An error has occurred while we were trying to parse the data :(</string>
     <string name="snack_message_loaded_newest">The newest acquisitions have already been loaded!</string>
     <string name="snack_message_loading_newest">Loading newest acquisitions&#8230;</string>
     <string name="snack_message_loaded_more_items">Additional books have already been loaded!</string>
@@ -68,6 +70,10 @@
     <string name="dialog_warning_message_loading_reservation">Preparing reservation options&#8230;</string>
     <string name="dialog_reservation_options_error_message">Every field must have a valid selection!</string>
     <string name="dialog_warning_message_external_link">You are about to open the following external link: %1$s</string>
+    <string name="dialog_warning_message_user_disconnected">
+        "You are currently disconnected from the university's servers. "
+        "Would you like to connect in order to perform the reservation?"
+    </string>
     <string name="dialog_warning_message_no_results">
         "Unfortunately anything matched to your search query. "
         "Would you like to try a new search with different terms?"
@@ -135,7 +141,6 @@
     <string name="label_renewal_loading">Loading books available for renewal&#8230;</string>
     <string name="label_no_renewal_username">There is no open circulation for %1$s at the moment.</string>
 
-    <string name="message_renewal_connected">Connected as %1$s&#8230;</string>
     <string name="message_renewal_connected_failed">You have canceled the login attempt.</string>
     <string name="label_renewal_connection_error">
         "It seems that an error has occurred while we tried to communicate with"
@@ -185,13 +190,20 @@
 
     <string name="book_details_image_description">Picture of the book cover</string>
 
+    <string name="notification_sync_title">UFABC Library - Synchronization Reminder</string>
     <string name="notification_book_renewal_title">UFABC Library - Renewal Warning</string>
+
+    <string name="notification_sync_message">Its been a long time since your last synchronization.
+        It is important to maintain the renewal data updated so as to keep receiving the devolution
+        warnings/notifications.</string>
     <string name="notification_book_renewal_content">It seems that you have at least one book/work waiting
         to be either renewed or devolved!</string>
     <string name="notification_book_renewal_specific_content">The book/work %1$s is waiting either to be
         renewed or devolved!</string>
 
+    <string name="notification_sync_channel_title">Synchronization request</string>
     <string name="notification_renewal_channel_title">Book renewal warning</string>
+    <string name="notification_sync_channel_description">Alerts regarding synchronization issues</string>
     <string name="notification_renewal_channel_description">Alerts regarding book devolution deadlines</string>
 
     <!-- Strings related to Settings -->

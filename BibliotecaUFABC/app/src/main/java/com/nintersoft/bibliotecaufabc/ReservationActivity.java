@@ -16,7 +16,8 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.nintersoft.bibliotecaufabc.bookproperties.BookReservationProperties;
+import com.google.android.material.snackbar.Snackbar;
+import com.nintersoft.bibliotecaufabc.bookreservationproperties.BookReservationProperties;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
 import com.nintersoft.bibliotecaufabc.jsinterface.ReservationJSInterface;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
@@ -166,7 +167,9 @@ public class ReservationActivity extends AppCompatActivity {
             }
             adapter.notifyDataSetChanged();
         }catch (JSONException e){
-            e.printStackTrace();
+            Snackbar.make(layout_holder,
+                    R.string.snack_message_parse_fail, Snackbar.LENGTH_LONG)
+                    .show();
         }
     }
 

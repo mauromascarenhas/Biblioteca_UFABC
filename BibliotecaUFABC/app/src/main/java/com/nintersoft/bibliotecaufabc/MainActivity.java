@@ -14,7 +14,9 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
-import com.nintersoft.bibliotecaufabc.bookproperties.BookProperties;
+import com.nintersoft.bibliotecaufabc.book_search_model.BookSearchDAO;
+import com.nintersoft.bibliotecaufabc.book_search_model.BookSearchDatabaseSingletonFactory;
+import com.nintersoft.bibliotecaufabc.book_search_model.BookSearchProperties;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
 import com.nintersoft.bibliotecaufabc.jsinterface.MainJSInterface;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
@@ -52,11 +54,12 @@ public class MainActivity extends AppCompatActivity
     private WebView dataSource;
     private AlertDialog loading_alert;
     private RecyclerView list;
-    private SearchBookAdapter adapter;
+    private MainWebClient dataClient;
     private FloatingActionButton fab;
 
-    private MainWebClient dataClient;
-    private ArrayList<BookProperties> availableBooks;
+    private BookSearchDAO dao;
+    private SearchBookAdapter adapter;
+    private ArrayList<BookSearchProperties> availableBooks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +67,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         bindComponents();
+        GlobalFunctions.createSyncNotificationChannel(getApplicationContext());
         GlobalFunctions.createRenewalNotificationChannel(getApplicationContext());
         loadPreferences();
         setWebViewSettings();
@@ -72,6 +76,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void bindComponents(){
+        dao = BookSearchDatabaseSingletonFactory.getInstance().bookSearchDAO();
+
         availableBooks = new ArrayList<>();
 
         fab = findViewById(R.id.fab);
@@ -308,21 +314,25 @@ public class MainActivity extends AppCompatActivity
         if (results.isEmpty()) return;
 
         try {
+            dao.removeAll();
             availableBooks.clear();
             JSONArray jsResultsArr = new JSONArray(results);
             for (int i = 0; i < jsResultsArr.length(); ++i){
                 JSONObject jsBook = jsResultsArr.getJSONObject(i);
-                BookProperties newBook = new BookProperties();
+                BookSearchProperties newBook = new BookSearchProperties();
                 newBook.setTitle(jsBook.getString("title"));
                 newBook.setAuthor(jsBook.getString("author"));
                 newBook.setSection(jsBook.getString("section"));
                 newBook.setType(jsBook.getString("type"));
                 newBook.setCode(jsBook.getString("code"));
                 availableBooks.add(newBook);
+                dao.insert(newBook);
             }
             adapter.notifyDataSetChanged();
         } catch (JSONException e) {
-            e.printStackTrace();
+            Snackbar.make(findViewById(R.id.list_items_home),
+                    R.string.snack_message_parse_fail, Snackbar.LENGTH_LONG)
+                    .show();
         } finally {
             if (loading_alert.isShowing()) loading_alert.dismiss();
             else Snackbar.make(findViewById(R.id.list_items_home), R.string.snack_message_loaded_newest,
@@ -340,7 +350,6 @@ public class MainActivity extends AppCompatActivity
         navViewMenu.findItem(R.id.nav_logout).setVisible(connected);
         navViewMenu.findItem(R.id.nav_renew).setVisible(connected);
         navViewMenu.findItem(R.id.nav_reservation).setVisible(connected);
-        GlobalConstants.isUserConnected = connected;
     }
 
     public void receiveError(String message){
@@ -359,5 +368,9 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
         snack_error.show();
+
+        availableBooks.clear();
+        availableBooks.addAll(dao.getAll());
+        adapter.notifyDataSetChanged();
     }
 }

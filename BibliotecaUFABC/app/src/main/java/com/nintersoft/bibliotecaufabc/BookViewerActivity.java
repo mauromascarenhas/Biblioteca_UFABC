@@ -29,6 +29,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.material.snackbar.Snackbar;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
 import com.nintersoft.bibliotecaufabc.jsinterface.DetailsJSInterface;
 import com.nintersoft.bibliotecaufabc.jsinterface.ReserveJSInterface;
@@ -44,9 +45,12 @@ import java.util.ArrayList;
 
 public class BookViewerActivity extends AppCompatActivity {
 
+    private boolean reservationRequest;
+
     private String bookURL;
     private String tempObject;
 
+    private Button res_button;
     private WebView dataSource;
     private MenuItem share_action;
     private AlertDialog loading_alert;
@@ -95,6 +99,8 @@ public class BookViewerActivity extends AppCompatActivity {
         if (hasData) bookURL = GlobalConstants.URL_LIBRARY_DETAILS + "?codigo=" + bookData
                 + GlobalConstants.MANDATORY_APPEND_URL_LIBRARY_DETAILS;
         else bookURL = "";
+
+        reservationRequest = false;
     }
 
     @SuppressLint("AddJavascriptInterface")
@@ -189,9 +195,26 @@ public class BookViewerActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void setBookData(String jsObject){
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == GlobalConstants.ACTIVITY_LOGIN_REQUEST_CODE) {
+            if (resultCode == RESULT_OK && data != null) {
+                reservationRequest = true;
+                dataSource.loadUrl(bookURL);
+                String username = data.getStringExtra("user_name");
+                Snackbar.make(layout_holder, getString(R.string.snack_message_connected,
+                        username == null ? "???" : username),
+                        Snackbar.LENGTH_LONG).show();
+            }
+            else setErrorForm(getString(R.string.message_renewal_connected_failed));
+        }
+    }
+
+    public void setBookData(String jsObject, boolean isUserConnected){
         try {
-            JSONObject book_properties = new JSONObject(jsObject);
+            final JSONObject book_properties = new JSONObject(jsObject);
             if (!book_properties.getBoolean("exists"))
                 return;
 
@@ -324,44 +347,80 @@ public class BookViewerActivity extends AppCompatActivity {
                 }
             }
 
-            //TODO: Check dynamically and fire login activity
-            if (GlobalConstants.isUserConnected && book_properties.getBoolean("reservable")) {
-                Button button_reserve = new Button(this);
-                button_reserve.setText(R.string.button_book_details_reserve);
-                button_reserve.setLayoutParams(hParams);
+            if (book_properties.getBoolean("reservable")){
+                res_button = new Button(this);
+                res_button.setText(R.string.button_book_details_reserve);
+                res_button.setLayoutParams(hParams);
 
-                button_reserve.setOnClickListener(new View.OnClickListener() {
-                    @SuppressLint("AddJavascriptInterface")
-                    @Override
-                    public void onClick(View v) {
-                        reserveWebClient.resetCounters();
-                        dataSource.setWebViewClient(reserveWebClient);
-                        GlobalFunctions.executeScript(dataSource, "javascript: reserveBook();");
+                if (isUserConnected){
+                    res_button.setOnClickListener(new View.OnClickListener() {
+                        @SuppressLint("AddJavascriptInterface")
+                        @Override
+                        public void onClick(View v) {
+                            requestReservation();
+                        }
+                    });
+                }
+                else {
+                    res_button.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(BookViewerActivity.this);
+                            builder.setTitle(R.string.dialog_warning_title);
+                            builder.setMessage(R.string.dialog_warning_message_user_disconnected);
+                            builder.setNeutralButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent login = new Intent(BookViewerActivity.this, LoginActivity.class);
+                                    startActivityForResult(login, GlobalConstants.ACTIVITY_LOGIN_REQUEST_CODE);
+                                    setupInterface(false);
+                                }
+                            });
+                            builder.create().show();
+                        }
+                    });
+                }
+                layout_data.addView(res_button);
 
-                        AlertDialog.Builder builder = new AlertDialog.Builder(BookViewerActivity.this);
-                        builder.setView(R.layout.message_progress_dialog);
-                        builder.setCancelable(false);
-
-                        loading_alert = builder.create();
-                        loading_alert.setOnShowListener(new DialogInterface.OnShowListener() {
-                            @Override
-                            public void onShow(DialogInterface dialog) {
-                                TextView message = loading_alert.findViewById(R.id.label_message_loading);
-                                if (message != null) message.setText(R.string.dialog_warning_message_loading_reservation);
-                            }
-                        });
-                        loading_alert.show();
-
-                        v.setVisibility(View.GONE);
-                    }
-                });
-                layout_data.addView(button_reserve);
+                if (reservationRequest) requestReservation();
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            Snackbar.make(layout_holder,
+                    R.string.snack_message_parse_fail, Snackbar.LENGTH_LONG)
+                    .show();
         } finally {
             share_action.setVisible(true);
         }
+    }
+
+    public void requestReservation(){
+        reserveWebClient.resetCounters();
+        dataSource.setWebViewClient(reserveWebClient);
+        GlobalFunctions.executeScript(dataSource, "javascript: reserveBook();");
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(BookViewerActivity.this);
+        builder.setView(R.layout.message_progress_dialog);
+        builder.setCancelable(false);
+
+        loading_alert = builder.create();
+        loading_alert.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                TextView message = loading_alert.findViewById(R.id.label_message_loading);
+                if (message != null) message.setText(R.string.dialog_warning_message_loading_reservation);
+            }
+        });
+        loading_alert.show();
+
+        res_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reservationRequest = true;
+                setupInterface(false);
+
+                dataSource.loadUrl(bookURL);
+            }
+        });
     }
 
     public void setReservationError(String error){
@@ -449,7 +508,9 @@ public class BookViewerActivity extends AppCompatActivity {
                         }
                     }
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    Snackbar.make(layout_holder,
+                            R.string.snack_message_parse_fail, Snackbar.LENGTH_LONG)
+                            .show();
                 }
 
                 Button button = ((AlertDialog)dialog).getButton(AlertDialog.BUTTON_POSITIVE);
@@ -517,7 +578,9 @@ public class BookViewerActivity extends AppCompatActivity {
                             loading_alert.show();
 
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            Snackbar.make(layout_holder,
+                                    R.string.snack_message_parse_fail, Snackbar.LENGTH_LONG)
+                                    .show();
                         }
                     }
                 });
