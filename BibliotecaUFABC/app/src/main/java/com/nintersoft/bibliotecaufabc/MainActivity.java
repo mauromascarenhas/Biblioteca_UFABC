@@ -325,6 +325,7 @@ public class MainActivity extends AppCompatActivity
                 newBook.setSection(jsBook.getString("section"));
                 newBook.setType(jsBook.getString("type"));
                 newBook.setCode(jsBook.getString("code"));
+                newBook.setId(i);
                 availableBooks.add(newBook);
                 dao.insert(newBook);
             }
