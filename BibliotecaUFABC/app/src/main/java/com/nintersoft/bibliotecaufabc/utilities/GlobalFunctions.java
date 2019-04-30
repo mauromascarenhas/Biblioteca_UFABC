@@ -114,7 +114,7 @@ public class GlobalFunctions {
         if (delay < 0){
             long currentTime = SystemClock.elapsedRealtime();
             long lastSchedule = preferences.getLong(context.getString(R.string.key_synchronization_schedule), currentTime - 1);
-            if (lastSchedule < currentTime) delay = 1000;
+            delay = (lastSchedule < currentTime) ? 1000 : lastSchedule - currentTime;
         }
 
         Intent notificationIntent = new Intent(context, SyncNotificationDisplay.class);
@@ -286,7 +286,7 @@ public class GlobalFunctions {
         List<BookRenewalProperties> availableBooks = dao.getAll();
 
         if (GlobalConstants.ringAlarm) {
-            for (int i = availableBooks.size() - 1; i > -1; ++i) {
+            for (int i = availableBooks.size() - 1; i > -1; --i) {
                 BookRenewalProperties b = availableBooks.get(i);
                 long id = b.getId();
 
@@ -304,8 +304,7 @@ public class GlobalFunctions {
                             calendar.add(Calendar.DAY_OF_MONTH, GlobalConstants.ringAlarmOffset);
 
                             long millis = calendar.getTime().getTime() - (new Date()).getTime();
-                            if (millis < 0) dao.remove(b);
-                            else GlobalFunctions.scheduleBookNotification(context.getApplicationContext(), millis,
+                            if (millis > 0) GlobalFunctions.scheduleBookNotification(context.getApplicationContext(), millis,
                                     (int) id + (500 * k), context.getString(R.string.notification_book_renewal_specific_content, b.getTitle()));
                         }
                     } catch (ParseException e) {
