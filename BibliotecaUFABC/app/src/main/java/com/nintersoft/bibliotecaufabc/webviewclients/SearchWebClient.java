@@ -3,6 +3,7 @@ package com.nintersoft.bibliotecaufabc.webviewclients;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Build;
+import android.util.Log;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
@@ -61,11 +62,9 @@ public class SearchWebClient extends WebViewClient {
             search_home_finished++;
         }
         else if (url.contains(GlobalConstants.URL_LIBRARY_SEARCH)){
-            if (search_search_finished < 1){
-                search_search_finished++;
-                return;
-            }
+            if (search_search_finished > 0) return;
 
+            search_search_finished++;
             ((SearchActivity)mContext).setupInterface(true);
             String script = String.format("javascript: %1$s\ngetSearchResults();",
                     GlobalFunctions.getScriptFromAssets(mContext, "javascript/search_scraper.js"));

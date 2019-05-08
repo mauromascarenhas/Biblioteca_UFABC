@@ -11,7 +11,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
@@ -19,9 +19,11 @@
 
         <activity
             android:name=".ReservationActivity"
+            android:label="@string/title_activity_reservation"
             android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity
             android:name=".BookViewerActivity"
+            android:label="@string/title_activity_book_details"
             android:configChanges="orientation|screenSize|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
@@ -34,7 +36,10 @@
                     android:path="/mobile/detalhe.php"/>
             </intent-filter>
         </activity>
-        <activity android:name=".SearchFiltersActivity" />
+        <activity
+            android:name=".SearchFiltersActivity"
+            android:label="@string/title_activity_search_filters"
+            android:configChanges="orientation|screenSize|keyboardHidden"/>
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" />
@@ -43,9 +48,12 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/title_activity_search"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".RenewalActivity" />
+        <activity
+            android:name=".RenewalActivity"
+            android:label="@string/title_activity_renewal"/>
         <activity
             android:name=".LoginActivity"
+            android:label="@string/title_activity_login"
             android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity
             android:name=".MainActivity"

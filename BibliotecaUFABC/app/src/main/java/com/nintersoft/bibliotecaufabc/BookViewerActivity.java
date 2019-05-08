@@ -59,6 +59,7 @@ public class BookViewerActivity extends AppCompatActivity {
     private LinearLayout layout_holder;
     private LinearLayout layout_loading;
 
+    private DetailsWebClient detailsWebClient;
     private ReserveWebClient reserveWebClient;
 
     @Override
@@ -107,9 +108,10 @@ public class BookViewerActivity extends AppCompatActivity {
     private void setWebViewSettings(){
         dataSource = new WebView(this);
         reserveWebClient = new ReserveWebClient(this);
+        detailsWebClient = new DetailsWebClient(this);
 
         GlobalFunctions.configureStandardWebView(dataSource);
-        dataSource.setWebViewClient(new DetailsWebClient(this));
+        dataSource.setWebViewClient(detailsWebClient);
         dataSource.addJavascriptInterface(new DetailsJSInterface(this), "js_api");
         dataSource.addJavascriptInterface(new ReserveJSInterface(this), "js_api_r");
         if (!bookURL.isEmpty()) dataSource.loadUrl(bookURL);
@@ -202,6 +204,8 @@ public class BookViewerActivity extends AppCompatActivity {
         if (requestCode == GlobalConstants.ACTIVITY_LOGIN_REQUEST_CODE) {
             if (resultCode == RESULT_OK && data != null) {
                 reservationRequest = true;
+                detailsWebClient.resetCounters();
+
                 dataSource.loadUrl(bookURL);
                 String username = data.getStringExtra("user_name");
                 Snackbar.make(layout_holder, getString(R.string.snack_message_connected,
@@ -213,6 +217,11 @@ public class BookViewerActivity extends AppCompatActivity {
     }
 
     public void setBookData(String jsObject, boolean isUserConnected){
+        if (reservationRequest){
+            requestReservation();
+            return;
+        }
+
         try {
             final JSONObject book_properties = new JSONObject(jsObject);
             if (!book_properties.getBoolean("exists"))
@@ -368,7 +377,7 @@ public class BookViewerActivity extends AppCompatActivity {
                             AlertDialog.Builder builder = new AlertDialog.Builder(BookViewerActivity.this);
                             builder.setTitle(R.string.dialog_warning_title);
                             builder.setMessage(R.string.dialog_warning_message_user_disconnected);
-                            builder.setNeutralButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
+                            builder.setPositiveButton(R.string.dialog_button_yes, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     Intent login = new Intent(BookViewerActivity.this, LoginActivity.class);
@@ -376,13 +385,12 @@ public class BookViewerActivity extends AppCompatActivity {
                                     setupInterface(false);
                                 }
                             });
+                            builder.setNegativeButton(R.string.dialog_button_no, null);
                             builder.create().show();
                         }
                     });
                 }
                 layout_data.addView(res_button);
-
-                if (reservationRequest) requestReservation();
             }
         } catch (JSONException e) {
             Snackbar.make(layout_holder,
@@ -418,6 +426,8 @@ public class BookViewerActivity extends AppCompatActivity {
                 reservationRequest = true;
                 setupInterface(false);
 
+                detailsWebClient.resetCounters();
+                dataSource.setWebViewClient(detailsWebClient);
                 dataSource.loadUrl(bookURL);
             }
         });

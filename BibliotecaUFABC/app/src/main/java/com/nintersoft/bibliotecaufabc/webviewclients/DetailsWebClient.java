@@ -15,13 +15,18 @@ import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
 import androidx.annotation.RequiresApi;
 
 public class DetailsWebClient extends WebViewClient {
-    private int book_page_finished = 0;
+    private int book_page_finished;
 
     private Context mContext;
 
     public DetailsWebClient(Context context){
         super();
         this.mContext = context;
+        this.book_page_finished = 0;
+    }
+
+    public void resetCounters(){
+        this.book_page_finished = 0;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
