@@ -20,6 +20,7 @@ import com.nintersoft.bibliotecaufabc.book_search_model.BookSearchProperties;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
 import com.nintersoft.bibliotecaufabc.jsinterface.MainJSInterface;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
+import com.nintersoft.bibliotecaufabc.utilities.GlobalVariables;
 import com.nintersoft.bibliotecaufabc.viewadapter.SearchBookAdapter;
 import com.nintersoft.bibliotecaufabc.webviewclients.MainWebClient;
 
@@ -75,6 +76,21 @@ public class MainActivity extends AppCompatActivity
         setListeners();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (GlobalVariables.bookViewerUserNameSet != null){
+            GlobalVariables.bookViewerUserNameSet = null;
+            navViewMenu.findItem(R.id.nav_logout).setTitle(getString(R.string.nav_menu_logout,
+                                                                        GlobalVariables.bookViewerUserNameSet));
+            setUserConnected(true);
+
+            dataClient.resetCounters();
+            dataSource.loadUrl(GlobalConstants.URL_LIBRARY_NEWEST);
+        }
+    }
+
     private void bindComponents(){
         dao = BookSearchDatabaseSingletonFactory.getInstance().bookSearchDAO();
 
@@ -111,7 +127,8 @@ public class MainActivity extends AppCompatActivity
         GlobalConstants.showExtWarning = pref.getBoolean(getString(R.string.key_general_leave_warning), true);
         GlobalConstants.storeUserFormData = pref.getBoolean(getString(R.string.key_privacy_store_password), true);
 
-        GlobalConstants.ringAlarmOffset = Integer.parseInt(pref.getString(getString(R.string.key_notification_warning_delay), "0"));
+        String warningDelay = pref.getString(getString(R.string.key_notification_warning_delay), "0");
+        GlobalConstants.ringAlarmOffset = Integer.parseInt(warningDelay == null ? "0" : warningDelay);
 
         applyPreferences(pref);
     }
@@ -268,7 +285,7 @@ public class MainActivity extends AppCompatActivity
 
         if (requestCode == GlobalConstants.ACTIVITY_LOGIN_REQUEST_CODE && resultCode == RESULT_OK
                 && data != null){
-            String userName = data.getStringExtra("user_name");
+            String userName = data.getStringExtra(GlobalConstants.CONNECTED_STATUS_USER_NAME);
             navViewMenu.findItem(R.id.nav_logout).setTitle(getString(R.string.nav_menu_logout, userName == null ? "???" : userName));
             setUserConnected(true);
 

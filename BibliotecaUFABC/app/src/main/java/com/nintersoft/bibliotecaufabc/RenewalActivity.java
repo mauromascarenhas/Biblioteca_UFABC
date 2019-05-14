@@ -26,6 +26,7 @@ import com.nintersoft.bibliotecaufabc.book_renewal_model.BookRenewalProperties;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
 import com.nintersoft.bibliotecaufabc.jsinterface.RenewalJSInterface;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
+import com.nintersoft.bibliotecaufabc.utilities.GlobalVariables;
 import com.nintersoft.bibliotecaufabc.viewadapter.RenewalBookAdapter;
 import com.nintersoft.bibliotecaufabc.webviewclients.RenewalWebClient;
 
@@ -170,7 +171,8 @@ public class RenewalActivity extends AppCompatActivity {
         if (requestCode == GlobalConstants.ACTIVITY_LOGIN_REQUEST_CODE) {
             if (resultCode == RESULT_OK && data != null) {
                 dataSource.loadUrl(GlobalConstants.URL_LIBRARY_RENEWAL);
-                String username = data.getStringExtra("user_name");
+                String username = data.getStringExtra(GlobalConstants.CONNECTED_STATUS_USER_NAME);
+                GlobalVariables.bookViewerUserNameSet = username == null ? "???" : username;
                 Snackbar.make(layout_holder, getString(R.string.snack_message_connected,
                         username == null ? "???" : username),
                         Snackbar.LENGTH_LONG).show();

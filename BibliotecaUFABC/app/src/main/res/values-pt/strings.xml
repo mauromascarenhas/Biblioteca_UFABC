@@ -206,4 +206,11 @@
         "Detalhes do erro: %1$s.\n\n"
         "Você pode tentar adquirir a lista de livros reservados assim que o problema for resolvido."
     </string>
+
+    <string-array name="pref_notification_shift_options">
+        <item>Sem adiantamento</item>
+        <item>Um dia</item>
+        <item>Dois dias</item>
+        <item>Três dias</item>
+    </string-array>
 </resources>

@@ -34,6 +34,7 @@ import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
 import com.nintersoft.bibliotecaufabc.jsinterface.DetailsJSInterface;
 import com.nintersoft.bibliotecaufabc.jsinterface.ReserveJSInterface;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
+import com.nintersoft.bibliotecaufabc.utilities.GlobalVariables;
 import com.nintersoft.bibliotecaufabc.webviewclients.DetailsWebClient;
 import com.nintersoft.bibliotecaufabc.webviewclients.ReserveWebClient;
 
@@ -207,7 +208,8 @@ public class BookViewerActivity extends AppCompatActivity {
                 detailsWebClient.resetCounters();
 
                 dataSource.loadUrl(bookURL);
-                String username = data.getStringExtra("user_name");
+                String username = data.getStringExtra(GlobalConstants.CONNECTED_STATUS_USER_NAME);
+                GlobalVariables.bookViewerUserNameSet = username == null ? "???" : username;
                 Snackbar.make(layout_holder, getString(R.string.snack_message_connected,
                         username == null ? "???" : username),
                         Snackbar.LENGTH_LONG).show();

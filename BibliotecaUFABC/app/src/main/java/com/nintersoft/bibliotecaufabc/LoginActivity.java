@@ -138,7 +138,11 @@ public class LoginActivity extends AppCompatActivity {
         String login = pref.getString(getString(R.string.key_privacy_login_username), "");
         String pass = pref.getString(getString(R.string.key_privacy_login_password), "");
 
-        if (login.isEmpty() || pass.isEmpty()){
+        if ((login == null || pass == null)){
+            setupInterface(true);
+            return;
+        }
+        else if (login.isEmpty() || pass.isEmpty()){
             setupInterface(true);
             return;
         }
@@ -184,7 +188,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void hasLoggedIn(String userName){
         Intent data = new Intent();
-        data.putExtra("user_name", userName);
+        data.putExtra(GlobalConstants.CONNECTED_STATUS_USER_NAME, userName);
         setResult(RESULT_OK, data);
         finish();
     }

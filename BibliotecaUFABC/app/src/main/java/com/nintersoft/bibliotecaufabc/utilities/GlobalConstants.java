@@ -1,5 +1,6 @@
 package com.nintersoft.bibliotecaufabc.utilities;
 
+@SuppressWarnings("WeakerAccess")
 public class GlobalConstants {
     // SharedPreferences options
     public static boolean keepCache = true;
@@ -10,9 +11,11 @@ public class GlobalConstants {
 
     public static int ringAlarmOffset = 0;
 
-    // Intent constants for Getters
+    // Intent constants for Setters and Getters
     public static final String NOTIFICATION_ID = "notification_id";
     public static final String NOTIFICATION_MESSAGE = "notification_message";
+
+    public static final String CONNECTED_STATUS_USER_NAME = "connected_status_user_name";
 
     /**
      * Gets notification content as parcelable extra from intent
