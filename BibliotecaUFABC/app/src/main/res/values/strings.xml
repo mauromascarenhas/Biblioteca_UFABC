@@ -229,6 +229,12 @@
     <string name="pref_title_login_username">Username</string>
     <string name="pref_title_login_password">Password</string>
 
+    <!-- Privacy policy settings -->
+    <string name="pref_header_privacy_policy">Privacy policy</string>
+    <string name="pref_summary_privacy_policy">Open the app\'s privacy policy in a web browser.</string>
+
+    <string name="pref_summary_privacy_policy_intent_data">https://github.com/mauromascarenhas/Biblioteca_UFABC/raw/master/privacy_policy/en/policy.pdf</string>
+
     <!-- Bug report settings -->
     <string name="pref_header_bug_report">Bug report</string>
     <string name="pref_summary_bug_report">Send us an email reporting possible issues so as to we can help you troubleshoot them.</string>

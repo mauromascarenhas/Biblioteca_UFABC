@@ -16,6 +16,7 @@
     <dimen name="spinner_text_size">12sp</dimen>
 
     <dimen name="image_book_cover_details">150dp</dimen>
+    <dimen name="image_drawer_logo_size">95dp</dimen>
 
     <dimen name="label_book_title_def_size">18sp</dimen>
     <dimen name="label_book_author_def_size">16sp</dimen>

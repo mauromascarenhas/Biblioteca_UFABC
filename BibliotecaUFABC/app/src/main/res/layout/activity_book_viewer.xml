@@ -82,19 +82,21 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
+            android:padding="@dimen/layout_default_padding"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/book_viewer_error_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/form_items_default_margin"
+                android:textAlignment="center"
                 android:text="@string/label_book_details_connection_error"/>
 
             <Button
                 android:id="@+id/book_viewer_button_reload"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/form_items_default_margin"
                 android:text="@string/button_book_details_try_again"
                 />
         </LinearLayout>

@@ -19,14 +19,16 @@ import java.util.ArrayList;
 
 public class SearchFiltersActivity extends AppCompatActivity {
 
-    int searchField;
+    private int searchField;
 
-    Button toggle_filter;
-    Spinner spinner_field;
-    LinearLayout filter_layout;
-    LinearLayout library_layout;
-    ArrayList<Boolean> searchFilter;
-    ArrayList<Boolean> searchLibrary;
+    private Button toggle_filter;
+    private Spinner spinner_field;
+    private CheckBox first_checkLib;
+    private CheckBox first_checkFilter;
+    private LinearLayout filter_layout;
+    private LinearLayout library_layout;
+    private ArrayList<Boolean> searchFilter;
+    private ArrayList<Boolean> searchLibrary;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,10 +74,16 @@ public class SearchFiltersActivity extends AppCompatActivity {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     searchFilter.set(k, isChecked);
+
+                    boolean hasChecked = false;
+                    for (int k = 1; k < searchFilter.size(); ++k)
+                        if (searchFilter.get(k)) hasChecked = true;
+                    first_checkFilter.setChecked(!hasChecked);
                 }
             });
 
             filter_layout.addView(cb);
+            if (i == 0) first_checkFilter = cb;
         }
 
         for (int i = 0; i < searchLibrary.size(); ++i){
@@ -88,10 +96,16 @@ public class SearchFiltersActivity extends AppCompatActivity {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     searchLibrary.set(k, isChecked);
+
+                    boolean hasChecked = false;
+                    for (int k = 1; k < searchLibrary.size(); ++k)
+                        if (searchLibrary.get(k)) hasChecked = true;
+                    first_checkLib.setChecked(!hasChecked);
                 }
             });
 
             library_layout.addView(cb);
+            if (i == 0) first_checkLib = cb;
         }
     }
 

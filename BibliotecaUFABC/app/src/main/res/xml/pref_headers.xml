@@ -21,6 +21,16 @@
         android:summary="@string/pref_summary_privacy"/>
 
     <header
+        android:icon="@drawable/ic_pref_open_policy"
+        android:title="@string/pref_header_privacy_policy"
+        android:summary="@string/pref_summary_privacy_policy">
+
+        <intent android:action="android.intent.action.VIEW"
+            android:data="@string/pref_summary_privacy_policy_intent_data"/>
+
+    </header>
+
+    <header
         android:icon="@drawable/ic_pref_bug_report"
         android:title="@string/pref_header_bug_report"
         android:summary="@string/pref_summary_bug_report" >
