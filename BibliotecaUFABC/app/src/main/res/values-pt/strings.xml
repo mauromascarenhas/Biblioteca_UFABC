@@ -137,7 +137,7 @@
     <string name="label_search_filter_filter">Filtro (patrimônio)</string>
     <string name="label_search_filter_library">Biblioteca</string>
     <string name="label_search_loading">Carregando os resultados de busca&#8230;</string>
-    <string name="message_renewal_connected_failed">Você cancelou a tentativa de login.</string>
+    <string name="message_renewal_connected_failed">Você cancelou a tentativa de login</string>
     <string name="nav_header_subtitle">Ferramentas e recursos</string>
     <string name="nav_header_title">Biblioteca UFABC</string>
     <string name="nav_menu_leave">Sair</string>

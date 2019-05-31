@@ -46,6 +46,7 @@ import java.util.ArrayList;
 
 public class BookViewerActivity extends AppCompatActivity {
 
+    private boolean loginCanceled;
     private boolean reservationRequest;
 
     private String bookURL;
@@ -102,6 +103,7 @@ public class BookViewerActivity extends AppCompatActivity {
                 + GlobalConstants.MANDATORY_APPEND_URL_LIBRARY_DETAILS;
         else bookURL = "";
 
+        loginCanceled = false;
         reservationRequest = false;
     }
 
@@ -161,7 +163,13 @@ public class BookViewerActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 setupInterface(false);
-                dataSource.reload();
+                if (loginCanceled){
+                    Intent login = new Intent(BookViewerActivity.this, LoginActivity.class);
+                    startActivityForResult(login, GlobalConstants.ACTIVITY_LOGIN_REQUEST_CODE);
+
+                    loginCanceled = false;
+                }
+                else dataSource.reload();
             }
         });
     }
@@ -214,7 +222,10 @@ public class BookViewerActivity extends AppCompatActivity {
                         username == null ? "???" : username),
                         Snackbar.LENGTH_LONG).show();
             }
-            else setErrorForm(getString(R.string.message_renewal_connected_failed));
+            else{
+                setErrorForm(getString(R.string.message_renewal_connected_failed));
+                loginCanceled = true;
+            }
         }
     }
 

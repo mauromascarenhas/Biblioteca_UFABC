@@ -141,7 +141,7 @@
     <string name="label_renewal_loading">Loading books available for renewal&#8230;</string>
     <string name="label_no_renewal_username">There is no open circulation for %1$s at the moment.</string>
 
-    <string name="message_renewal_connected_failed">You have canceled the login attempt.</string>
+    <string name="message_renewal_connected_failed">You have canceled the login attempt</string>
     <string name="label_renewal_connection_error">
         "It seems that an error has occurred while we tried to communicate with"
         "university\'s servers.\n\n"
