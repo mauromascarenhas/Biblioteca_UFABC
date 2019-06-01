@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -206,6 +207,7 @@ public class RenewalActivity extends AppCompatActivity {
             }
             adapter.notifyDataSetChanged();
             bindAlarms();
+            clearNotifications();
         }catch (JSONException e){
             Snackbar.make(layout_holder,
                     R.string.snack_message_parse_fail, Snackbar.LENGTH_LONG)
@@ -266,5 +268,10 @@ public class RenewalActivity extends AppCompatActivity {
 
         GlobalFunctions.scheduleRenewalAlarms(this, dao);
         GlobalFunctions.scheduleSyncNotification(this, 432000000);
+    }
+
+    private void clearNotifications(){
+        NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        if (notificationManager != null) notificationManager.cancelAll();
     }
 }
