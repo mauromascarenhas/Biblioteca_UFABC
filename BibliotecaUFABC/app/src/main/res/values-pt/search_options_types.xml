@@ -16,6 +16,7 @@
         <item>Especialização</item>
         <item>Evento/Congresso</item>
         <item>Fascículo</item>
+        <item>Folheto</item>
         <item>Foto/Imagem</item>
         <item>Jornal</item>
         <item>Legislação</item>
@@ -34,6 +35,7 @@
         <item>Relatório</item>
         <item>Resolução</item>
         <item>Revista</item>
+        <item>Separata</item>
         <item>Tese</item>
         <item>Vídeo</item>
     </string-array>
