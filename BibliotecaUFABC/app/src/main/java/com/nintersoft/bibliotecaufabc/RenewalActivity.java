@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.annotation.SuppressLint;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -25,7 +24,6 @@ import com.nintersoft.bibliotecaufabc.book_renewal_model.BookRenewalDAO;
 import com.nintersoft.bibliotecaufabc.book_renewal_model.BookRenewalDatabaseSingletonFactory;
 import com.nintersoft.bibliotecaufabc.book_renewal_model.BookRenewalProperties;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
-import com.nintersoft.bibliotecaufabc.jsinterface.RenewalJSInterface;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalVariables;
 import com.nintersoft.bibliotecaufabc.viewadapter.RenewalBookAdapter;
@@ -134,12 +132,10 @@ public class RenewalActivity extends AppCompatActivity {
         });
     }
 
-    @SuppressLint("AddJavascriptInterface")
     private void setWebViewSettings(){
         dataSource = new WebView(this);
         GlobalFunctions.configureStandardWebView(dataSource);
         dataSource.setWebViewClient(new RenewalWebClient(this));
-        dataSource.addJavascriptInterface(new RenewalJSInterface(this), "js_api");
         dataSource.loadUrl(GlobalConstants.URL_LIBRARY_RENEWAL);
     }
 

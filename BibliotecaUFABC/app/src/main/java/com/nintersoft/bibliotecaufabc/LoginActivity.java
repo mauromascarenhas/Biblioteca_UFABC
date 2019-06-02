@@ -3,7 +3,6 @@ package com.nintersoft.bibliotecaufabc;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -22,7 +21,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
-import com.nintersoft.bibliotecaufabc.jsinterface.LoginJSInterface;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
 import com.nintersoft.bibliotecaufabc.webviewclients.LoginWebClient;
 
@@ -86,12 +84,10 @@ public class LoginActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressLint("AddJavascriptInterface")
     private void setWebViewSettings(){
         dataSource = new WebView(this);
         GlobalFunctions.configureStandardWebView(dataSource);
         dataSource.setWebViewClient(new LoginWebClient(this));
-        dataSource.addJavascriptInterface(new LoginJSInterface(this), "js_api");
         dataSource.loadUrl(GlobalConstants.URL_LIBRARY_LOGIN);
     }
 
@@ -172,10 +168,10 @@ public class LoginActivity extends AppCompatActivity {
         }
         if (!proceed) return;
 
-        String script = String.format("javascript: %1$s performLogin(\"%2$s\",\"%3$s\");",
+        String script = String.format("%1$s \nperformLogin(\"%2$s\",\"%3$s\");",
                 GlobalFunctions.getScriptFromAssets(this, "javascript/login_scraper.js"),
                 login, pass);
-        GlobalFunctions.executeScript(dataSource, script);
+        dataSource.evaluateJavascript(script, null);
         setupInterface(false);
 
         if (GlobalConstants.storeUserFormData){
@@ -188,7 +184,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void hasLoggedIn(String userName){
         Intent data = new Intent();
-        data.putExtra(GlobalConstants.CONNECTED_STATUS_USER_NAME, userName);
+        data.putExtra(GlobalConstants.CONNECTED_STATUS_USER_NAME, userName.replace("\"", ""));
         setResult(RESULT_OK, data);
         finish();
     }

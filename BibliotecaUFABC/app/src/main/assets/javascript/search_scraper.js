@@ -9,6 +9,14 @@ var searchEditor;
 
 var moreButton;
 
+var expectedChange = null;
+
+function getServerChange(){
+    let value = expectedChange;
+    expectedChange = null;
+    return value;
+}
+
 // Triggered as soon as DOM elements are available
 function documentReady(){
     // Bind input references
@@ -41,8 +49,8 @@ function setSearchFilter(filterStr){
 }
 
 // Performs a search with the given query
-function performSearch(query){
-    setSearchFilter(js_api.getSearchFilters());
+function performSearch(query, filters){
+    setSearchFilter(filters);
     searchEditor.value = query;
     searchButton.click();
 }
@@ -72,7 +80,11 @@ function addSearchResults(nodeList, observer){
     }
 
     if (moreButton.onclick == null) observer.disconnect();
-    js_api.setSearchResults(JSON.stringify(results), moreButton.onclick != null);
+
+    expectedChange = {
+        changes : results,
+        hasMore : moreButton.onclick != null
+    };
 }
 
 // Get search results
@@ -81,8 +93,10 @@ function getSearchResults(){
 
     var container = document.getElementById('lista');
     if (container == null){
-        js_api.setSearchResults(JSON.stringify(new Array(0), null, 4), false);
-        return;
+        return {
+            books : new Array(0),
+            hasMore : false
+        }
     }
 
     var list = container.getElementsByTagName('li');
@@ -104,8 +118,10 @@ function getSearchResults(){
     }
 
     if (moreButton == null){
-        js_api.setSearchResults(JSON.stringify(results), false);
-        return;
+        return {
+            books : results,
+            hasMore : false
+        }
     }
 
     if (moreButton.onclick != null){
@@ -114,5 +130,8 @@ function getSearchResults(){
         observer.observe(container, config);
     }
 
-    js_api.setSearchResults(JSON.stringify(results), moreButton.onclick != null);
+    return {
+        books : results,
+        hasMore : moreButton.onclick != null
+    };
 }

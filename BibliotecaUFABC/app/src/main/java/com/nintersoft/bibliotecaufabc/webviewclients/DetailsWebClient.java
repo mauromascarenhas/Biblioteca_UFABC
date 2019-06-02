@@ -3,6 +3,7 @@ package com.nintersoft.bibliotecaufabc.webviewclients;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Build;
+import android.webkit.ValueCallback;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
@@ -13,6 +14,9 @@ import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
 
 import androidx.annotation.RequiresApi;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class DetailsWebClient extends WebViewClient {
     private int book_page_finished;
@@ -55,22 +59,51 @@ public class DetailsWebClient extends WebViewClient {
         }
 
         if (url.contains(GlobalConstants.URL_LIBRARY_DETAILS)){
-            String script = String.format("javascript: %1$s \ngetBookDetails();",
+            String script = String.format("%1$s \ngetBookDetails();",
                     GlobalFunctions.getScriptFromAssets(mContext, "javascript/details_scraper.js"));
-            GlobalFunctions.executeScript(view, script);
+            view.evaluateJavascript(script, new ValueCallback<String>() {
+                @Override
+                public void onReceiveValue(final String value) {
+                    ((BookViewerActivity)mContext).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try{
+                                JSONObject result = new JSONObject(value);
+                                ((BookViewerActivity)mContext).setBookData(result.getString("details"),
+                                        result.getBoolean("login"));
+                                ((BookViewerActivity)mContext).setupInterface(true);
+                            } catch (JSONException e){
+                                ((BookViewerActivity)mContext).setErrorForm("UNKNOWN");
+                            }
+                        }
+                    });
+                }
+            });
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
-    public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-        ((BookViewerActivity)mContext).setErrorForm(error.getDescription().toString());
+    public void onReceivedError(WebView view, WebResourceRequest request, final WebResourceError error) {
         super.onReceivedError(view, request, error);
+
+        ((BookViewerActivity)mContext).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ((BookViewerActivity)mContext).setErrorForm(error.getDescription().toString());
+            }
+        });
     }
 
     @Override
-    public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-        ((BookViewerActivity)mContext).setErrorForm(description);
+    public void onReceivedError(WebView view, int errorCode, final String description, String failingUrl) {
         super.onReceivedError(view, errorCode, description, failingUrl);
+
+        ((BookViewerActivity)mContext).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ((BookViewerActivity)mContext).setErrorForm(description);
+            }
+        });
     }
 }

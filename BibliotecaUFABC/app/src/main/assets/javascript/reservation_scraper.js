@@ -2,8 +2,10 @@
 function getReservations(){
     var errorDiv = document.querySelector('.divErroCentralizada');
     if (errorDiv != null){
-        js_api.setUsernameErr(errorDiv.getElementsByTagName('b')[0].textContent);
-        return;
+        return{
+            hasErrorDiv : true,
+            username : errorDiv.getElementsByTagName('b')[0].textContent
+        };
     }
 
     var listContent = document.querySelector('ul[data-theme=c]');
@@ -25,11 +27,15 @@ function getReservations(){
         books[i-1] = cProperties;
     }
 
-    js_api.setReservationBooks(JSON.stringify(books));
+    return {
+        hasErrorDiv : false,
+        reservationBooks : books
+    };
 }
 
 // Get message displayed after cancelling a reservation
 function getCancellationMessage(){
-    js_api.setCancellationMessage(document.querySelector('div.center').getElementsByTagName('span')[0].textContent);
+    let value = document.querySelector('div.center').getElementsByTagName('span')[0].textContent;
     document.querySelector('div.center').getElementsByTagName('a')[0].click();
+    return value;
 }

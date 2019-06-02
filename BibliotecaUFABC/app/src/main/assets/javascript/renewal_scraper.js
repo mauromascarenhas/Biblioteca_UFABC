@@ -1,14 +1,18 @@
 // Get books available for renewal
 function getRenewals(){
     if (!checkLoginStatus()){
-        js_api.setUserDisconnected();
-        return;
+        return {
+            connected : false
+        };
     }
 
     var errorDiv = document.querySelector('.divErroCentralizada');
     if (errorDiv != null){
-        js_api.setUsernameErr(errorDiv.getElementsByTagName('b')[0].textContent);
-        return;
+        return {
+            connected : true,
+            hasErrorDiv : true,
+            usernameError : errorDiv.getElementsByTagName('b')[0].textContent
+        };
     }
 
     var listContent = document.querySelector('ul[data-theme=c]');
@@ -29,7 +33,11 @@ function getRenewals(){
         books[i-1] = cProperties;
     }
 
-    js_api.setRenewalBooks(JSON.stringify(books));
+    return {
+        connected : true,
+        hasErrorDiv : false,
+        renewalBooks : books
+    };
 }
 
 function checkLoginStatus(){

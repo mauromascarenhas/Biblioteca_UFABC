@@ -58,11 +58,18 @@ function getReservationFormData(){
         support : support_options
     };
 
-    js_api_r.setOptions(JSON.stringify(options));
+    return options;
 }
 
 function detectAction(){
     let form = document.querySelector('#frm_dados_comp');
-    if (form != null) getReservationFormData();
-    else js_api_r.getServerMessage(document.querySelector('#div-conteudoCentral').textContent.trim());
+    if (form != null) return {
+        hasData : true,
+        data : getReservationFormData()
+    };
+
+    else return {
+        hasData : false,
+        message : document.querySelector('#div-conteudoCentral').textContent.trim()
+    };
 }

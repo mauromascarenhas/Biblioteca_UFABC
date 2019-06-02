@@ -1,6 +1,5 @@
 package com.nintersoft.bibliotecaufabc;
 
-import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,7 +17,6 @@ import com.nintersoft.bibliotecaufabc.book_search_model.BookSearchDAO;
 import com.nintersoft.bibliotecaufabc.book_search_model.BookSearchDatabaseSingletonFactory;
 import com.nintersoft.bibliotecaufabc.book_search_model.BookSearchProperties;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
-import com.nintersoft.bibliotecaufabc.jsinterface.MainJSInterface;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalVariables;
 import com.nintersoft.bibliotecaufabc.viewadapter.SearchBookAdapter;
@@ -151,14 +149,12 @@ public class MainActivity extends AppCompatActivity
         adapter.notifyDataSetChanged();
     }
 
-    @SuppressLint("AddJavascriptInterface")
     private void setWebViewSettings(){
         dataSource = new WebView(this);
         dataClient = new MainWebClient(this);
         GlobalFunctions.configureStandardWebView(dataSource);
 
         dataSource.setWebViewClient(dataClient);
-        dataSource.addJavascriptInterface(new MainJSInterface(this), "js_api");
         dataSource.loadUrl(GlobalConstants.URL_LIBRARY_NEWEST);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

@@ -3,6 +3,7 @@ package com.nintersoft.bibliotecaufabc.webviewclients;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Build;
+import android.webkit.ValueCallback;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
@@ -13,6 +14,9 @@ import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
 
 import androidx.annotation.RequiresApi;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class ReserveWebClient extends WebViewClient {
     private int reserve_url_loaded;
@@ -54,23 +58,53 @@ public class ReserveWebClient extends WebViewClient {
                 return;
             }
 
-            String script = String.format("javascript: %1$s\ndetectAction()",
+            String script = String.format("%1$s \ndetectAction()",
                     GlobalFunctions.getScriptFromAssets(mContext,
                             "javascript/reserve_scraper.js"));
-            GlobalFunctions.executeScript(view, script);
+            view.evaluateJavascript(script, new ValueCallback<String>() {
+                @Override
+                public void onReceiveValue(final String value) {
+                    ((BookViewerActivity)mContext).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                JSONObject result = new JSONObject(value);
+                                if (result.getBoolean("hasData")){
+                                    ((BookViewerActivity)mContext).setReservationAvailability(result.getJSONObject("data").toString());
+                                }
+                                else ((BookViewerActivity)mContext).setReservationResults(value);
+                            } catch (JSONException e){
+                                ((BookViewerActivity)mContext).setReservationResults("ERROR");
+                            }
+                        }
+                    });
+                }
+            });
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
-    public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+    public void onReceivedError(WebView view, WebResourceRequest request, final WebResourceError error) {
         super.onReceivedError(view, request, error);
-        ((BookViewerActivity)mContext).setReservationError(error.getDescription().toString());
+
+        ((BookViewerActivity)mContext).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ((BookViewerActivity)mContext).setReservationError(error.getDescription().toString());
+            }
+        });
     }
 
     @Override
-    public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+    public void onReceivedError(WebView view, int errorCode, final String description, String failingUrl) {
         super.onReceivedError(view, errorCode, description, failingUrl);
-        ((BookViewerActivity)mContext).setReservationError(description);
+
+        ((BookViewerActivity)mContext).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ((BookViewerActivity)mContext).setReservationError(description);
+            }
+        });
     }
 }

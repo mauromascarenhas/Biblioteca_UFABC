@@ -3,6 +3,7 @@ package com.nintersoft.bibliotecaufabc.webviewclients;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Build;
+import android.webkit.ValueCallback;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
@@ -13,6 +14,9 @@ import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
 
 import androidx.annotation.RequiresApi;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class LoginWebClient extends WebViewClient {
     private int login_page_finished;
@@ -56,9 +60,25 @@ public class LoginWebClient extends WebViewClient {
                 login_page_finished++;
             }
 
-            String script = String.format("javascript: %1$s \ncheckForErrors();",
+            String script = String.format("%1$s \ncheckForErrors();",
                     GlobalFunctions.getScriptFromAssets(mContext, "javascript/login_scraper.js"));
-            GlobalFunctions.executeScript(view, script);
+            view.evaluateJavascript(script, new ValueCallback<String>() {
+                @Override
+                public void onReceiveValue(final String value) {
+                    ((LoginActivity)mContext).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                JSONObject result = new JSONObject(value);
+                                if (result.getBoolean("hasFormError"))
+                                    ((LoginActivity)mContext).showLoginError(result.getString("errorDetails"));
+                            } catch (JSONException e){
+                                ((LoginActivity)mContext).showLoginError("UNKNOWN");
+                            }
+                        }
+                    });
+                }
+            });
         }
         else if (url.contains(GlobalConstants.URL_LIBRARY_HOME)){
             if (login_home_finished < 1){
@@ -66,22 +86,44 @@ public class LoginWebClient extends WebViewClient {
                 return;
             }
 
-            String script = String.format("javascript: %1$s \ngetUsername();",
+            String script = String.format("%1$s \ngetUsername();",
                     GlobalFunctions.getScriptFromAssets(mContext, "javascript/login_scraper.js"));
-            GlobalFunctions.executeScript(view, script);
+            view.evaluateJavascript(script, new ValueCallback<String>() {
+                @Override
+                public void onReceiveValue(final String value) {
+                    ((LoginActivity)mContext).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!value.isEmpty()) ((LoginActivity)mContext).hasLoggedIn(value);
+                        }
+                    });
+                }
+            });
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
-    public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-        ((LoginActivity)mContext).setErrorForm(error.getDescription().toString());
+    public void onReceivedError(WebView view, WebResourceRequest request, final WebResourceError error) {
         super.onReceivedError(view, request, error);
+
+        ((LoginActivity)mContext).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ((LoginActivity)mContext).setErrorForm(error.getDescription().toString());
+            }
+        });
     }
 
     @Override
-    public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-        ((LoginActivity)mContext).setErrorForm(description);
+    public void onReceivedError(WebView view, int errorCode, final String description, String failingUrl) {
         super.onReceivedError(view, errorCode, description, failingUrl);
+
+        ((LoginActivity)mContext).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ((LoginActivity)mContext).setErrorForm(description);
+            }
+        });
     }
 }

@@ -3,7 +3,7 @@ package com.nintersoft.bibliotecaufabc.webviewclients;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Build;
-import android.util.Log;
+import android.webkit.ValueCallback;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
@@ -14,6 +14,9 @@ import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
 
 import androidx.annotation.RequiresApi;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class SearchWebClient extends WebViewClient {
     private int search_home_finished;
@@ -55,10 +58,10 @@ public class SearchWebClient extends WebViewClient {
             }
 
             String searchQuery = ((SearchActivity) mContext).getSearchData();
-            String script = String.format("javascript: %1$s\ndocumentReady();\nperformSearch(\"%2$s\");",
+            String script = String.format("%1$s\ndocumentReady();\nperformSearch(\"%2$s\", \'%3$s\');",
                     GlobalFunctions.getScriptFromAssets(mContext, "javascript/search_scraper.js"),
-                    searchQuery);
-            GlobalFunctions.executeScript(view, script);
+                    searchQuery, ((SearchActivity) mContext).JSONSearchFilters());
+            view.evaluateJavascript(script, null);
             search_home_finished++;
         }
         else if (url.contains(GlobalConstants.URL_LIBRARY_SEARCH)){
@@ -66,22 +69,53 @@ public class SearchWebClient extends WebViewClient {
 
             search_search_finished++;
             ((SearchActivity)mContext).setupInterface(true);
-            String script = String.format("javascript: %1$s\ngetSearchResults();",
+            String script = String.format("%1$s\ngetSearchResults();",
                     GlobalFunctions.getScriptFromAssets(mContext, "javascript/search_scraper.js"));
-            GlobalFunctions.executeScript(view, script);
+            view.evaluateJavascript(script, new ValueCallback<String>() {
+                @Override
+                public void onReceiveValue(final String value) {
+                    ((SearchActivity)mContext).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                JSONObject result = new JSONObject(value);
+
+                                ((SearchActivity)mContext).setupInterface(true);
+                                ((SearchActivity)mContext).setSearchResults(
+                                        result.getJSONArray("books").toString(),
+                                        result.getBoolean("hasMore"));
+                            } catch (JSONException e){
+                                ((SearchActivity)mContext).setErrorForm("UNKNOWN");
+                            }
+                        }
+                    });
+                }
+            });
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
-    public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-        ((SearchActivity)mContext).setErrorForm(error.getDescription().toString());
+    public void onReceivedError(WebView view, WebResourceRequest request, final WebResourceError error) {
         super.onReceivedError(view, request, error);
+
+        ((SearchActivity)mContext).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ((SearchActivity)mContext).setErrorForm(error.getDescription().toString());
+            }
+        });
     }
 
     @Override
-    public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-        ((SearchActivity)mContext).setErrorForm(description);
+    public void onReceivedError(WebView view, int errorCode, final String description, String failingUrl) {
         super.onReceivedError(view, errorCode, description, failingUrl);
+
+        ((SearchActivity)mContext).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ((SearchActivity)mContext).setErrorForm(description);
+            }
+        });
     }
 }

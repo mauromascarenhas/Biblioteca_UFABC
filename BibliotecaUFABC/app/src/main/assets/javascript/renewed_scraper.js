@@ -12,9 +12,8 @@ function getRenewalMessage(){
     let featuredNode = content.querySelector('.textoNegrito');
     if (featuredNode == null) featuredNode = content.querySelector('.textoVermelho');
 
-    let details = {
+    return {
         details : contents,
         featured : featuredNode == null? "" : featuredNode.textContent
     };
-    js_api.setConfirmationMessage(JSON.stringify(details));
 }

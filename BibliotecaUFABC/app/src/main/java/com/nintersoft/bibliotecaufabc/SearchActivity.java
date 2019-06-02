@@ -9,7 +9,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.nintersoft.bibliotecaufabc.book_search_model.BookSearchProperties;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
-import com.nintersoft.bibliotecaufabc.jsinterface.SearchJSInterface;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
 import com.nintersoft.bibliotecaufabc.viewadapter.SearchBookAdapter;
 import com.nintersoft.bibliotecaufabc.webviewclients.SearchWebClient;
@@ -21,11 +20,13 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.text.InputType;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.ValueCallback;
 import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -157,8 +158,24 @@ public class SearchActivity extends AppCompatActivity {
         });
         fab_more.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                GlobalFunctions.executeScript(dataSource, "javascript: loadMoreBooks();");
+            public void onClick(final View v) {
+                dataSource.evaluateJavascript("loadMoreBooks()", new ValueCallback<String>() {
+                    @Override
+                    public void onReceiveValue(String value) {
+                        if (value.equals("null")) requestNewChangeDetection();
+                        else {
+                            try {
+                                JSONObject result = new JSONObject(value);
+                                setSearchResults( result.getJSONArray("changes").toString(),
+                                        result.getBoolean("hasMore"));
+                            } catch (JSONException e){
+                                Snackbar.make(layout_holder,
+                                        R.string.snack_message_parse_fail, Snackbar.LENGTH_LONG)
+                                        .show();
+                            }
+                        }
+                    }
+                });
                 v.setVisibility(View.GONE);
 
                 Snackbar.make(findViewById(R.id.list_search_results),
@@ -191,7 +208,6 @@ public class SearchActivity extends AppCompatActivity {
         dataSource = new WebView(this);
         GlobalFunctions.configureStandardWebView(dataSource);
         dataSource.setWebViewClient(new SearchWebClient(this));
-        dataSource.addJavascriptInterface(new SearchJSInterface(this), "js_api");
         dataSource.loadUrl(GlobalConstants.URL_LIBRARY_HOME);
     }
 
@@ -329,5 +345,31 @@ public class SearchActivity extends AppCompatActivity {
                     Snackbar.LENGTH_LONG).show();
 
         fab_more.setVisibility(hasMore ? View.VISIBLE : View.GONE);
+    }
+
+    public void requestNewChangeDetection(){
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                dataSource.evaluateJavascript("getServerChange();", new ValueCallback<String>() {
+                    @Override
+                    public void onReceiveValue(String value) {
+                        if (value.equals("null")) requestNewChangeDetection();
+                        else {
+                            try {
+                                JSONObject result = new JSONObject(value);
+                                setSearchResults( result.getJSONArray("changes").toString(),
+                                        result.getBoolean("hasMore"));
+                            } catch (JSONException e){
+                                Snackbar.make(layout_holder,
+                                        R.string.snack_message_parse_fail, Snackbar.LENGTH_LONG)
+                                        .show();
+                            }
+                        }
+                    }
+                });
+            }
+        }, 250);
     }
 }

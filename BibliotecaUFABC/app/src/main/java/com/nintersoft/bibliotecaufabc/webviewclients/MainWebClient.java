@@ -3,6 +3,7 @@ package com.nintersoft.bibliotecaufabc.webviewclients;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Build;
+import android.webkit.ValueCallback;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
@@ -12,6 +13,9 @@ import com.nintersoft.bibliotecaufabc.MainActivity;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
 
 import androidx.annotation.RequiresApi;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainWebClient extends WebViewClient {
     private int home_page_loaded;
@@ -51,9 +55,40 @@ public class MainWebClient extends WebViewClient {
             return;
         }
 
-        String script = String.format("javascript: %1$s\ncheckLoginStatus();\ngetNewestBooks();",
+        String script = String.format("javascript: %1$s\ncheckLoginStatus();",
                 GlobalFunctions.getScriptFromAssets(mContext, "javascript/main_scraper.js"));
-        GlobalFunctions.executeScript(view, script);
+        view.evaluateJavascript(script, new ValueCallback<String>() {
+            @Override
+            public void onReceiveValue(final String value) {
+                ((MainActivity)mContext).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            JSONObject result = new JSONObject(value);
+                            ((MainActivity)mContext).setUserConnected(result.getBoolean("status"),
+                                    result.getString("name"));
+                        }
+                        catch (JSONException e){
+                            ((MainActivity)mContext).setUserConnected(false, "");
+                        }
+                    }
+                });
+            }
+        });
+
+        script = String.format("%1$s\ngetNewestBooks();",
+                GlobalFunctions.getScriptFromAssets(mContext, "javascript/main_scraper.js"));
+        view.evaluateJavascript(script, new ValueCallback<String>() {
+            @Override
+            public void onReceiveValue(final String value) {
+                ((MainActivity)mContext).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ((MainActivity)mContext).setSearchResults(value);
+                    }
+                });
+            }
+        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)

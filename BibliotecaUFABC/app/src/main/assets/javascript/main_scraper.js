@@ -17,11 +17,14 @@ function getNewestBooks(){
       results[i - 1] = bookElement;
     }
 
-    js_api.setBooks(JSON.stringify(results));
+    return results;
 }
 
 function checkLoginStatus(){
     var logoutButton = document.querySelector("#li-logout");
     var connected = logoutButton != null;
-    js_api.setConnected(connected, connected ? logoutButton.getElementsByTagName('span')[1].textContent.trim() : "");
+    return {
+        status : connected,
+        name : connected ? logoutButton.getElementsByTagName('span')[1].textContent.trim() : ""
+    };
 }

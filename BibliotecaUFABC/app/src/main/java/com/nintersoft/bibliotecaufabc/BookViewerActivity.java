@@ -10,14 +10,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.ValueCallback;
 import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -31,8 +32,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.snackbar.Snackbar;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
-import com.nintersoft.bibliotecaufabc.jsinterface.DetailsJSInterface;
-import com.nintersoft.bibliotecaufabc.jsinterface.ReserveJSInterface;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalVariables;
 import com.nintersoft.bibliotecaufabc.webviewclients.DetailsWebClient;
@@ -50,7 +49,6 @@ public class BookViewerActivity extends AppCompatActivity {
     private boolean reservationRequest;
 
     private String bookURL;
-    private String tempObject;
 
     private Button res_button;
     private WebView dataSource;
@@ -107,7 +105,6 @@ public class BookViewerActivity extends AppCompatActivity {
         reservationRequest = false;
     }
 
-    @SuppressLint("AddJavascriptInterface")
     private void setWebViewSettings(){
         dataSource = new WebView(this);
         reserveWebClient = new ReserveWebClient(this);
@@ -115,8 +112,6 @@ public class BookViewerActivity extends AppCompatActivity {
 
         GlobalFunctions.configureStandardWebView(dataSource);
         dataSource.setWebViewClient(detailsWebClient);
-        dataSource.addJavascriptInterface(new DetailsJSInterface(this), "js_api");
-        dataSource.addJavascriptInterface(new ReserveJSInterface(this), "js_api_r");
         if (!bookURL.isEmpty()) dataSource.loadUrl(bookURL);
         else {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -293,8 +288,7 @@ public class BookViewerActivity extends AppCompatActivity {
                     header.setGravity(Gravity.CENTER_HORIZONTAL);
                     header.setTypeface(header.getTypeface(), Typeface.BOLD);
                     header.setTextSize(TypedValue.COMPLEX_UNIT_PX, headerSize);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
-                        header.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                    header.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                     header.setLayoutParams(hParams);
                     layout_data.addView(header);
 
@@ -350,8 +344,7 @@ public class BookViewerActivity extends AppCompatActivity {
                 header.setGravity(Gravity.CENTER_HORIZONTAL);
                 header.setTypeface(header.getTypeface(), Typeface.BOLD);
                 header.setTextSize(TypedValue.COMPLEX_UNIT_PX, headerSize);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
-                    header.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                header.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 header.setLayoutParams(hParams);
                 layout_data.addView(header);
 
@@ -417,7 +410,7 @@ public class BookViewerActivity extends AppCompatActivity {
     public void requestReservation(){
         reserveWebClient.resetCounters();
         dataSource.setWebViewClient(reserveWebClient);
-        GlobalFunctions.executeScript(dataSource, "javascript: reserveBook();");
+        dataSource.evaluateJavascript("\nreserveBook();", null);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(BookViewerActivity.this);
         builder.setView(R.layout.message_progress_dialog);
@@ -519,8 +512,7 @@ public class BookViewerActivity extends AppCompatActivity {
                                     View v = super.getDropDownView(position, convertView, parent);
                                     TextView label = v.findViewById(android.R.id.text1);
                                     label.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(R.dimen.label_form_item_def_size));
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
-                                        label.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                                    label.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                                     label.getLayoutParams();
                                     label.setGravity(Gravity.CENTER);
                                     v.setMinimumHeight(getResources().getDimensionPixelSize(R.dimen.spinner_item_size));
@@ -539,7 +531,7 @@ public class BookViewerActivity extends AppCompatActivity {
                 Button button = ((AlertDialog)dialog).getButton(AlertDialog.BUTTON_POSITIVE);
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
+                    public void onClick(final View v) {
                         try {
                             boolean hasErrors = false;
                             JSONObject options = new JSONObject();
@@ -584,11 +576,17 @@ public class BookViewerActivity extends AppCompatActivity {
                                 return;
                             }
 
-                            tempObject = options.toString();
-                            String script = String.format("javascript: %1$s\nsubmitReservationForm();",
+                            String script = String.format("%1$s \nsubmitReservationForm(\'%2$s\');",
                                     GlobalFunctions.getScriptFromAssets(BookViewerActivity.this,
-                                            "javascript/submit_reserve_scraper.js"));
-                            GlobalFunctions.executeScript(dataSource, script);
+                                            "javascript/submit_reserve_scraper.js"),
+                                    options.toString());
+                            dataSource.evaluateJavascript(script, new ValueCallback<String>() {
+                                @Override
+                                public void onReceiveValue(String value) {
+                                    if (value.equals("null")) requestNewChangeDetection();
+                                    else setReservationResults(value.substring(1, value.length() - 1));
+                                }
+                            });
                             optionsDialog.dismiss();
 
                             loading_alert.setOnShowListener(new DialogInterface.OnShowListener() {
@@ -622,8 +620,19 @@ public class BookViewerActivity extends AppCompatActivity {
         builder.create().show();
     }
 
-    public String getTemporaryObject(){
-        return tempObject;
+    public void requestNewChangeDetection(){
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                dataSource.evaluateJavascript("getServerChange();", new ValueCallback<String>() {
+                    @Override
+                    public void onReceiveValue(String value) {
+                        if (value.equals("null")) requestNewChangeDetection();
+                        else setReservationResults(value.substring(1, value.length() - 1));
+                    }
+                });
+            }
+        }, 250);
     }
-
 }

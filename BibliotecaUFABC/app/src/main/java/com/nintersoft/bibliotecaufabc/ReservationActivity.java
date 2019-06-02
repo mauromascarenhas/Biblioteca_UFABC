@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -19,7 +18,6 @@ import android.widget.TextView;
 import com.google.android.material.snackbar.Snackbar;
 import com.nintersoft.bibliotecaufabc.bookreservationproperties.BookReservationProperties;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
-import com.nintersoft.bibliotecaufabc.jsinterface.ReservationJSInterface;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
 import com.nintersoft.bibliotecaufabc.viewadapter.ReservationBookAdapter;
 import com.nintersoft.bibliotecaufabc.webviewclients.ReservationWebClient;
@@ -124,12 +122,10 @@ public class ReservationActivity extends AppCompatActivity {
         });
     }
 
-    @SuppressLint("AddJavascriptInterface")
     private void setWebViewSettings(){
         dataSource = new WebView(this);
         GlobalFunctions.configureStandardWebView(dataSource);
         dataSource.setWebViewClient(new ReservationWebClient(this));
-        dataSource.addJavascriptInterface(new ReservationJSInterface(this), "js_api");
         dataSource.loadUrl(GlobalConstants.URL_LIBRARY_RESERVATION);
     }
 

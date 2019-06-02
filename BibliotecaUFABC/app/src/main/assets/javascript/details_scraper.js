@@ -80,7 +80,10 @@ function getBookDetails(){
     }
     bookDetails.copies = copies_rows_items_arr;
 
-    js_api.setBookDetails(JSON.stringify(bookDetails), checkLoginStatus());
+    return {
+        details : bookDetails,
+        login: checkLoginStatus()
+    };
 }
 
 function reserveBook(){

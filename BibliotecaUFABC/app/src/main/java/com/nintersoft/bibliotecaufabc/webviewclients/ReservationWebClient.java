@@ -3,6 +3,7 @@ package com.nintersoft.bibliotecaufabc.webviewclients;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Build;
+import android.webkit.ValueCallback;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
@@ -13,6 +14,9 @@ import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
 
 import androidx.annotation.RequiresApi;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class ReservationWebClient extends WebViewClient {
     private int reservation_page_finished;
@@ -53,9 +57,20 @@ public class ReservationWebClient extends WebViewClient {
                 return;
             }
 
-            String script = String.format("javascript: %1$s \ngetCancellationMessage();",
+            String script = String.format("%1$s \ngetCancellationMessage();",
                     GlobalFunctions.getScriptFromAssets(mContext, "javascript/reservation_scraper.js"));
-            GlobalFunctions.executeScript(view, script);
+            view.evaluateJavascript(script, new ValueCallback<String>() {
+                @Override
+                public void onReceiveValue(final String value) {
+                    ((ReservationActivity)mContext).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ((ReservationActivity)mContext).setupInterface(false);
+                            ((ReservationActivity)mContext).showCancellationMessage(value);
+                        }
+                    });
+                }
+            });
             reservation_page_finished = 0;
         }
         else if (url.contains(GlobalConstants.URL_LIBRARY_RESERVATION)){
@@ -64,23 +79,60 @@ public class ReservationWebClient extends WebViewClient {
                 return;
             }
 
-            String script = String.format("javascript: %1$s \ngetReservations();",
+            String script = String.format("%1$s \ngetReservations();",
                     GlobalFunctions.getScriptFromAssets(mContext, "javascript/reservation_scraper.js"));
-            GlobalFunctions.executeScript(view, script);
+            view.evaluateJavascript(script, new ValueCallback<String>() {
+                @Override
+                public void onReceiveValue(final String value) {
+                    ((ReservationActivity)mContext).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try{
+                                JSONObject result = new JSONObject(value);
+                                if (result.getBoolean("hasErrorDiv"))
+                                    ((ReservationActivity)mContext).setUserNameNoReservation(result.getString("username"));
+                                else {
+                                    ((ReservationActivity)mContext).setReservationBooks(result.getJSONObject("reservationBooks").toString());
+                                    ((ReservationActivity)mContext).setupInterface(true);
+                                }
+                            } catch (JSONException e){
+                                ((ReservationActivity)mContext).runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ((ReservationActivity)mContext).setUserNameNoReservation("???");
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+            });
             confirmation_page_finished = 0;
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
-    public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-        ((ReservationActivity)mContext).setErrorForm(error.getDescription().toString());
+    public void onReceivedError(WebView view, WebResourceRequest request, final WebResourceError error) {
         super.onReceivedError(view, request, error);
+
+        ((ReservationActivity)mContext).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ((ReservationActivity)mContext).setErrorForm(error.getDescription().toString());
+            }
+        });
     }
 
     @Override
-    public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-        ((ReservationActivity)mContext).setErrorForm(description);
+    public void onReceivedError(WebView view, int errorCode, final String description, String failingUrl) {
         super.onReceivedError(view, errorCode, description, failingUrl);
+
+        ((ReservationActivity)mContext).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ((ReservationActivity)mContext).setErrorForm(description);
+            }
+        });
     }
 }

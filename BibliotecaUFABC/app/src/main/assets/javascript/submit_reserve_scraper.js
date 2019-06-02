@@ -1,13 +1,19 @@
 var observer;
+var expectedChange = null;
+
+function getServerChange(){
+    return expectedChange;
+}
 
 function getServerMessage(mutationsList, observer){
     let serverDiv = document.querySelector('#div-mensagemServidor');
-    js_api_r.getServerMessage(serverDiv == null ? '' : serverDiv.textContent);
     observer.disconnect();
+
+    expectedChange = serverDiv == null ? '' : serverDiv.textContent;
 }
 
-function submitReservationForm(){
-    let jsOptions = JSON.parse(js_api_r.getOptions());
+function submitReservationForm(jsOptionsString){
+    let jsOptions = JSON.parse(jsOptionsString);
 
     let library_button = document.querySelector('#biblioteca-button');
     let volume_button = document.querySelector('#volume-button');

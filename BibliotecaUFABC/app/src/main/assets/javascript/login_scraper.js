@@ -7,10 +7,13 @@ function performLogin(username, password){
 function checkForErrors(){
     var error = document.querySelector('.form-error');
     var hasError = error != null;
-    js_api.showError(hasError, hasError ? error.textContent : "");
+    return {
+        hasFormError : hasError,
+        errorDetails : hasError ? error.textContent : ""
+    };
 }
 
 function getUsername(){
     var logoutButton = document.querySelector("#li-logout");
-    js_api.setUserName(logoutButton == null? "" : logoutButton.getElementsByTagName('span')[1].textContent.trim());
+    return logoutButton == null? "" : logoutButton.getElementsByTagName('span')[1].textContent.trim();
 }
