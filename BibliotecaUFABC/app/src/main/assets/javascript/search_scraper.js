@@ -82,7 +82,7 @@ function addSearchResults(nodeList, observer){
     if (moreButton.onclick == null) observer.disconnect();
 
     expectedChange = {
-        changes : results,
+        books : results,
         hasMore : moreButton.onclick != null
     };
 }

@@ -77,16 +77,8 @@ public class SearchWebClient extends WebViewClient {
                     ((SearchActivity)mContext).runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            try {
-                                JSONObject result = new JSONObject(value);
-
-                                ((SearchActivity)mContext).setupInterface(true);
-                                ((SearchActivity)mContext).setSearchResults(
-                                        result.getJSONArray("books").toString(),
-                                        result.getBoolean("hasMore"));
-                            } catch (JSONException e){
-                                ((SearchActivity)mContext).setErrorForm("UNKNOWN");
-                            }
+                            ((SearchActivity)mContext).setupInterface(true);
+                            ((SearchActivity)mContext).setSearchResults(value);
                         }
                     });
                 }

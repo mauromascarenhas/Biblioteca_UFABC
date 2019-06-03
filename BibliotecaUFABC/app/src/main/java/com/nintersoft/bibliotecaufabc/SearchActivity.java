@@ -163,17 +163,7 @@ public class SearchActivity extends AppCompatActivity {
                     @Override
                     public void onReceiveValue(String value) {
                         if (value.equals("null")) requestNewChangeDetection();
-                        else {
-                            try {
-                                JSONObject result = new JSONObject(value);
-                                setSearchResults( result.getJSONArray("changes").toString(),
-                                        result.getBoolean("hasMore"));
-                            } catch (JSONException e){
-                                Snackbar.make(layout_holder,
-                                        R.string.snack_message_parse_fail, Snackbar.LENGTH_LONG)
-                                        .show();
-                            }
-                        }
+                        else setSearchResults(value);
                     }
                 });
                 v.setVisibility(View.GONE);
@@ -302,11 +292,15 @@ public class SearchActivity extends AppCompatActivity {
         finish();
     }
 
-    public void setSearchResults(String results, boolean hasMore){
-        if (results.isEmpty()) return;
+    public void setSearchResults(String json){
+        if (json.isEmpty() || json.equals("null")) return;
+
+        boolean hasMore = false;
 
         try {
-            JSONArray jsResultsArr = new JSONArray(results);
+            JSONObject result = new JSONObject(json);
+            JSONArray jsResultsArr = result.getJSONArray("books");
+            hasMore = result.getBoolean("hasMore");
 
             if (jsResultsArr.length() == 0){
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -356,17 +350,7 @@ public class SearchActivity extends AppCompatActivity {
                     @Override
                     public void onReceiveValue(String value) {
                         if (value.equals("null")) requestNewChangeDetection();
-                        else {
-                            try {
-                                JSONObject result = new JSONObject(value);
-                                setSearchResults( result.getJSONArray("changes").toString(),
-                                        result.getBoolean("hasMore"));
-                            } catch (JSONException e){
-                                Snackbar.make(layout_holder,
-                                        R.string.snack_message_parse_fail, Snackbar.LENGTH_LONG)
-                                        .show();
-                            }
-                        }
+                        else setSearchResults(value);
                     }
                 });
             }

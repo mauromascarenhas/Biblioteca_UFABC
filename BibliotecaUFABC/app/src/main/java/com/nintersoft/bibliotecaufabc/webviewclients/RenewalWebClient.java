@@ -86,7 +86,7 @@ public class RenewalWebClient extends WebViewClient {
                                     if (result.getBoolean("hasErrorDiv"))
                                         ((RenewalActivity)mContext).setUserNameNoRenewal(result.getString("usernameError"));
                                     else {
-                                        ((RenewalActivity)mContext).setReservationBooks(result.getJSONObject("renewalBooks").toString());
+                                        ((RenewalActivity)mContext).setReservationBooks(result.getJSONArray("renewalBooks"));
                                         ((RenewalActivity)mContext).setupInterface(true);
                                     }
                                 }

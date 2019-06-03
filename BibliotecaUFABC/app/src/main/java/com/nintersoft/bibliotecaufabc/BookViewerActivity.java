@@ -224,14 +224,15 @@ public class BookViewerActivity extends AppCompatActivity {
         }
     }
 
-    public void setBookData(String jsObject, boolean isUserConnected){
+    public void setBookData(String jsObject){
         if (reservationRequest){
             requestReservation();
             return;
         }
 
         try {
-            final JSONObject book_properties = new JSONObject(jsObject);
+            JSONObject result = new JSONObject(jsObject);
+            final JSONObject book_properties = result.getJSONObject("details");
             if (!book_properties.getBoolean("exists"))
                 return;
 
@@ -367,7 +368,7 @@ public class BookViewerActivity extends AppCompatActivity {
                 res_button.setText(R.string.button_book_details_reserve);
                 res_button.setLayoutParams(hParams);
 
-                if (isUserConnected){
+                if (result.getBoolean("login")){
                     res_button.setOnClickListener(new View.OnClickListener() {
                         @SuppressLint("AddJavascriptInterface")
                         @Override

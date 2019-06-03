@@ -15,9 +15,6 @@ import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
 
 import androidx.annotation.RequiresApi;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 public class DetailsWebClient extends WebViewClient {
     private int book_page_finished;
 
@@ -67,14 +64,8 @@ public class DetailsWebClient extends WebViewClient {
                     ((BookViewerActivity)mContext).runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            try{
-                                JSONObject result = new JSONObject(value);
-                                ((BookViewerActivity)mContext).setBookData(result.getString("details"),
-                                        result.getBoolean("login"));
-                                ((BookViewerActivity)mContext).setupInterface(true);
-                            } catch (JSONException e){
-                                ((BookViewerActivity)mContext).setErrorForm("UNKNOWN");
-                            }
+                            ((BookViewerActivity)mContext).setBookData(value);
+                            ((BookViewerActivity)mContext).setupInterface(true);
                         }
                     });
                 }

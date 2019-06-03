@@ -178,15 +178,13 @@ public class RenewalActivity extends AppCompatActivity {
         }
     }
 
-    public void setReservationBooks(String books){
+    public void setReservationBooks(JSONArray jsResultsArr){
+        if (jsResultsArr.length() == 0){
+            setUserNameNoRenewal("???");
+            return;
+        }
+
         try {
-            JSONArray jsResultsArr = new JSONArray(books);
-
-            if (jsResultsArr.length() == 0){
-                setUserNameNoRenewal("???");
-                return;
-            }
-
             availableBooks.clear();
             for (int i = 0; i < jsResultsArr.length(); ++i){
                 JSONObject jsBook = jsResultsArr.getJSONObject(i);
