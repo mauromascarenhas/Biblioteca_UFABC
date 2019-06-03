@@ -370,7 +370,6 @@ public class BookViewerActivity extends AppCompatActivity {
 
                 if (result.getBoolean("login")){
                     res_button.setOnClickListener(new View.OnClickListener() {
-                        @SuppressLint("AddJavascriptInterface")
                         @Override
                         public void onClick(View v) {
                             requestReservation();

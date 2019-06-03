@@ -1,6 +1,5 @@
 package com.nintersoft.bibliotecaufabc;
 
-import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -193,7 +192,6 @@ public class SearchActivity extends AppCompatActivity {
         return searchData;
     }
 
-    @SuppressLint("AddJavascriptInterface")
     private void setWebViewSettings(){
         dataSource = new WebView(this);
         GlobalFunctions.configureStandardWebView(dataSource);

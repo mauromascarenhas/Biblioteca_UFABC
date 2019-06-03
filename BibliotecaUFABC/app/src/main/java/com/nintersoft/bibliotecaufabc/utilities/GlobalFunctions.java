@@ -60,18 +60,6 @@ public class GlobalFunctions {
     }
 
     /**
-     * Executes the given script in the given #WebView, maintaining support for
-     * every SDKs version
-     * @param v  : WebView
-     * @param js : JavaScript content
-     */
-    public static void executeScript(WebView v, String js){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-            v.evaluateJavascript(js, null);
-        else v.loadUrl(js);
-    }
-
-    /**
      * Retrieves the asset content as a text, using the #context to get the specified asset
      *
      * @param context  : Context used for data building and retrieval
