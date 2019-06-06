@@ -16,30 +16,37 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup,UnusedAttribute">
-
+        <activity
+            android:name=".SyncActivity"
+            android:theme="@style/AppTheme.Translucent"/>
         <activity
             android:name=".ReservationActivity"
-            android:label="@string/title_activity_reservation"
-            android:configChanges="orientation|screenSize|keyboardHidden" />
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="@string/title_activity_reservation" />
         <activity
             android:name=".BookViewerActivity"
-            android:label="@string/title_activity_book_details"
-            android:configChanges="orientation|screenSize|keyboardHidden">
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="@string/title_activity_book_details">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <data android:scheme="http" android:host="biblioteca.ufabc.edu.br"
-                    android:path="/mobile/detalhe.php"/>
-                <data android:scheme="https" android:host="biblioteca.ufabc.edu.br"
-                    android:path="/mobile/detalhe.php"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="biblioteca.ufabc.edu.br"
+                    android:path="/mobile/detalhe.php"
+                    android:scheme="http" />
+                <data
+                    android:host="biblioteca.ufabc.edu.br"
+                    android:path="/mobile/detalhe.php"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
         <activity
             android:name=".SearchFiltersActivity"
-            android:label="@string/title_activity_search_filters"
-            android:configChanges="orientation|screenSize|keyboardHidden"/>
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="@string/title_activity_search_filters" />
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" />
@@ -50,11 +57,11 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".RenewalActivity"
-            android:label="@string/title_activity_renewal"/>
+            android:label="@string/title_activity_renewal" />
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_login"
-            android:configChanges="orientation|screenSize|keyboardHidden" />
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="@string/title_activity_login" />
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -68,14 +75,16 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".notification.NotificationDisplay"
+        <receiver
+            android:name=".notification.NotificationDisplay"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".notification.SyncNotificationDisplay"
+        <receiver
+            android:name=".notification.SyncNotificationDisplay"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -88,7 +97,16 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".notification.SyncExecutioner"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>

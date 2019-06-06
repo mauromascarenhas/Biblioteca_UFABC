@@ -273,7 +273,7 @@ public class GlobalFunctions {
     public static void scheduleRenewalAlarms(Context context, BookRenewalDAO dao){
         List<BookRenewalProperties> availableBooks = dao.getAll();
 
-        if (GlobalConstants.ringAlarm) {
+        if (GlobalVariables.ringAlarm) {
             for (int i = availableBooks.size() - 1; i > -1; --i) {
                 BookRenewalProperties b = availableBooks.get(i);
                 long id = b.getId();
@@ -289,7 +289,7 @@ public class GlobalFunctions {
                                     new Locale("pt", "BR"))
                                     .parse(m.group(1) + String.format(new Locale("pt", "BR"),
                                                                         " %02d:%02d:00", 8 + (5 * k), i)));
-                            calendar.add(Calendar.DAY_OF_MONTH, GlobalConstants.ringAlarmOffset);
+                            calendar.add(Calendar.DAY_OF_MONTH, GlobalVariables.ringAlarmOffset);
 
                             long millis = calendar.getTime().getTime() - (new Date()).getTime();
                             if (millis > 0) GlobalFunctions.scheduleBookNotification(context.getApplicationContext(), millis,

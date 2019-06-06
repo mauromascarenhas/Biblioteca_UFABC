@@ -5,7 +5,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -307,7 +306,7 @@ public class BookViewerActivity extends AppCompatActivity {
                             description.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    if (GlobalConstants.showExtWarning) {
+                                    if (GlobalVariables.showExtWarning) {
                                         AlertDialog.Builder builder = new AlertDialog.Builder(BookViewerActivity.this);
                                         builder.setTitle(R.string.dialog_warning_title);
                                         builder.setMessage(getString(R.string.dialog_warning_message_external_link, link));

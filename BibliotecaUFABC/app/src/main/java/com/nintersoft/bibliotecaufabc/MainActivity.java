@@ -1,10 +1,14 @@
 package com.nintersoft.bibliotecaufabc;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.view.View;
@@ -13,9 +17,11 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import com.nintersoft.bibliotecaufabc.appcontext.ContextApp;
 import com.nintersoft.bibliotecaufabc.book_search_model.BookSearchDAO;
 import com.nintersoft.bibliotecaufabc.book_search_model.BookSearchDatabaseSingletonFactory;
 import com.nintersoft.bibliotecaufabc.book_search_model.BookSearchProperties;
+import com.nintersoft.bibliotecaufabc.notification.SyncExecutioner;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalVariables;
@@ -72,6 +78,13 @@ public class MainActivity extends AppCompatActivity
         setWebViewSettings();
         setupBookList();
         setListeners();
+
+        Intent k = new Intent(this, SyncExecutioner.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(ContextApp.getContext(), 0, k, 0);
+
+        long futureInMillis = SystemClock.elapsedRealtime() + 20000;
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        if (alarmManager != null) alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
     }
 
     @Override
@@ -119,22 +132,22 @@ public class MainActivity extends AppCompatActivity
 
     private void loadPreferences(){
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-        GlobalConstants.showShare = pref.getBoolean(getString(R.string.key_general_share_app_enabled), true);
-        GlobalConstants.keepCache = pref.getBoolean(getString(R.string.key_privacy_cache_main_content), true);
-        GlobalConstants.ringAlarm = pref.getBoolean(getString(R.string.key_notification_enable_warning), true);
-        GlobalConstants.showExtWarning = pref.getBoolean(getString(R.string.key_general_leave_warning), true);
-        GlobalConstants.storeUserFormData = pref.getBoolean(getString(R.string.key_privacy_store_password), true);
+        GlobalVariables.showShare = pref.getBoolean(getString(R.string.key_general_share_app_enabled), true);
+        GlobalVariables.keepCache = pref.getBoolean(getString(R.string.key_privacy_cache_main_content), true);
+        GlobalVariables.ringAlarm = pref.getBoolean(getString(R.string.key_notification_enable_warning), true);
+        GlobalVariables.showExtWarning = pref.getBoolean(getString(R.string.key_general_leave_warning), true);
+        GlobalVariables.storeUserFormData = pref.getBoolean(getString(R.string.key_privacy_store_password), true);
 
         String warningDelay = pref.getString(getString(R.string.key_notification_warning_delay), "0");
-        GlobalConstants.ringAlarmOffset = Integer.parseInt(warningDelay == null ? "0" : warningDelay);
+        GlobalVariables.ringAlarmOffset = Integer.parseInt(warningDelay == null ? "0" : warningDelay);
 
         applyPreferences(pref);
     }
 
     private void applyPreferences(@Nullable SharedPreferences preferences){
-        navViewMenu.findItem(R.id.nav_share).setVisible(GlobalConstants.showShare);
+        navViewMenu.findItem(R.id.nav_share).setVisible(GlobalVariables.showShare);
 
-        if (!GlobalConstants.storeUserFormData && preferences != null){
+        if (!GlobalVariables.storeUserFormData && preferences != null){
             SharedPreferences.Editor editor = preferences.edit();
             editor.remove(getString(R.string.key_privacy_login_username));
             editor.remove(getString(R.string.key_privacy_login_password));
@@ -262,7 +275,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onDestroy() {
-        if (!GlobalConstants.keepCache){
+        if (!GlobalVariables.keepCache){
             // Clear Glide cache
             Glide.get(getApplicationContext()).clearDiskCache();
 

@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
+import com.nintersoft.bibliotecaufabc.utilities.GlobalVariables;
 import com.nintersoft.bibliotecaufabc.webviewclients.LoginWebClient;
 
 public class LoginActivity extends AppCompatActivity {
@@ -174,7 +175,7 @@ public class LoginActivity extends AppCompatActivity {
         dataSource.evaluateJavascript(script, null);
         setupInterface(false);
 
-        if (GlobalConstants.storeUserFormData){
+        if (GlobalVariables.storeUserFormData){
             SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
             editor.putString(getString(R.string.key_privacy_login_username), login);
             editor.putString(getString(R.string.key_privacy_login_password), pass);

@@ -2,15 +2,6 @@ package com.nintersoft.bibliotecaufabc.utilities;
 
 @SuppressWarnings("WeakerAccess")
 public class GlobalConstants {
-    // SharedPreferences options
-    public static boolean keepCache = true;
-    public static boolean showShare = true;
-    public static boolean ringAlarm = true;
-    public static boolean showExtWarning = true;
-    public static boolean storeUserFormData = true;
-
-    public static int ringAlarmOffset = 0;
-
     // Intent constants for Setters and Getters
     public static final String NOTIFICATION_ID = "notification_id";
     public static final String NOTIFICATION_MESSAGE = "notification_message";

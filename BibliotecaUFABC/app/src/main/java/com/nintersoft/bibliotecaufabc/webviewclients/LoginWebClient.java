@@ -12,6 +12,7 @@ import android.webkit.WebViewClient;
 import com.nintersoft.bibliotecaufabc.LoginActivity;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
+import com.nintersoft.bibliotecaufabc.utilities.GlobalVariables;
 
 import androidx.annotation.RequiresApi;
 
@@ -53,7 +54,7 @@ public class LoginWebClient extends WebViewClient {
 
         if (url.contains(GlobalConstants.URL_ACCESS_PAGE)){
             if (login_page_finished == 0){
-                if (GlobalConstants.storeUserFormData)
+                if (GlobalVariables.storeUserFormData)
                     ((LoginActivity)mContext).setSavedUserLogin();
                 else
                     ((LoginActivity)mContext).setupInterface(true);
