@@ -45,4 +45,7 @@ public class GlobalConstants {
     public static final int ACTIVITY_SEARCH_FILTER_REQUEST_CODE = 15;
 
     public static final int SYNC_NOTIFICATION_ID = 9000;
+
+    //TODO: Use it!
+    public static final int SYNC_REQUEST_INTENT_ID = 10000;
 }
