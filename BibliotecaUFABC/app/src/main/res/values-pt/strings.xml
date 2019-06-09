@@ -197,6 +197,23 @@
         "É importante que os dados de renovação estejam atualizados para que você continue"
         "recebendo os avisos/notificações de devolução.
     </string>
+    <string name="notification_syncing_title">Biblioteca UFABC - Sincronizando</string>
+    <string name="notification_syncing_message">Sincronizando dados de renovação&#8230;</string>
+    <string name="notification_sync_error_title">Biblioteca UFABC - Erro de sincronização</string>
+    <string name="notification_sync_error_message">Erro durante o processo de sincronização.
+        Seu nome de usuário e senha não são mais válidas. Por favor, tente reconectar na aplicação
+        assim poderemos sincronizar as renovações novamente.</string>
+    <string name="notification_sync_denied_title">Biblioteca UFABC - Permissão negada</string>
+    <string name="notification_sync_denied_message">Como você negou a permissão,
+        infelizmente não poderemos sincronizar seus livros &#128557;</string>
+    <string name="notification_sync_removed_title">Biblioteca UFABC - Permissão revogada</string>
+    <string name="notification_sync_removed_message">Parece que você revogou nossa permissão para
+        sincronizar os dados de obras. Sem ela, não poderemos notificá-lo a respeito das datas de
+        renovação e entrega &#128557;</string>
+    <string name="notification_sync_rationale_title">Biblioteca UFABC - Permissão necessária</string>
+    <string name="notification_sync_rationale_message">Esta permissão é necessária para manter
+        as renovações sincronizadas. Se você não a conceder, não estaremos hábeis a notificá-lo a respeito
+        das datas de renovação e entrega.</string>
     <string name="label_search_connection_error">
         "Parece que algo deu errado enquanto tentávamos nos comunicar com"
         "os servidores da universidade.\n\n"

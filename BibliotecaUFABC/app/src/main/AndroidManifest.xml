@@ -3,7 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.nintersoft.bibliotecaufabc">
 
+
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
@@ -16,9 +19,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup,UnusedAttribute">
-        <activity
-            android:name=".SyncActivity"
-            android:theme="@style/AppTheme.Translucent"/>
+
         <activity
             android:name=".ReservationActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -75,6 +76,11 @@
             </intent-filter>
         </activity>
 
+        <service
+            android:name=".synchronization.SyncService"
+            android:enabled="true"
+            android:exported="false" />
+
         <receiver
             android:name=".notification.NotificationDisplay"
             android:enabled="true"
@@ -103,7 +109,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".notification.SyncExecutioner"
+            android:name=".synchronization.SyncExecutioner"
             android:enabled="true"
             android:exported="false">
             <intent-filter>

@@ -28,6 +28,7 @@ import com.nintersoft.bibliotecaufabc.book_renewal_model.BookRenewalDAO;
 import com.nintersoft.bibliotecaufabc.book_renewal_model.BookRenewalProperties;
 import com.nintersoft.bibliotecaufabc.notification.NotificationDisplay;
 import com.nintersoft.bibliotecaufabc.notification.SyncNotificationDisplay;
+import com.nintersoft.bibliotecaufabc.synchronization.SyncExecutioner;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -301,5 +302,21 @@ public class GlobalFunctions {
                 }
             }
         }
+    }
+
+    /**
+     * Schedules a new synchronization procedure within the given delay (which must be in milliseconds)
+     *
+     * @param context        : Context used for data building and retrieval
+     * @param delay          : Time in milliseconds to trigger the synchronization operation
+     */
+    public static void scheduleNextSynchronization(Context context, long delay){
+        Intent notificationIntent = new Intent(context, SyncExecutioner.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, GlobalConstants.SYNC_EXECUTIONER_INTENT_ID,
+                notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        long futureInMillis = SystemClock.elapsedRealtime() + delay;
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        if (alarmManager != null) alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
     }
 }

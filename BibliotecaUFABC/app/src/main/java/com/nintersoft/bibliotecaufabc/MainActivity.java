@@ -1,15 +1,14 @@
 package com.nintersoft.bibliotecaufabc;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.text.InputType;
 import android.view.View;
 
@@ -17,11 +16,10 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
-import com.nintersoft.bibliotecaufabc.appcontext.ContextApp;
 import com.nintersoft.bibliotecaufabc.book_search_model.BookSearchDAO;
 import com.nintersoft.bibliotecaufabc.book_search_model.BookSearchDatabaseSingletonFactory;
 import com.nintersoft.bibliotecaufabc.book_search_model.BookSearchProperties;
-import com.nintersoft.bibliotecaufabc.notification.SyncExecutioner;
+import com.nintersoft.bibliotecaufabc.synchronization.SyncService;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalVariables;
@@ -78,13 +76,6 @@ public class MainActivity extends AppCompatActivity
         setWebViewSettings();
         setupBookList();
         setListeners();
-
-        Intent k = new Intent(this, SyncExecutioner.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(ContextApp.getContext(), 0, k, 0);
-
-        long futureInMillis = SystemClock.elapsedRealtime() + 20000;
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        if (alarmManager != null) alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
     }
 
     @Override
@@ -180,8 +171,19 @@ public class MainActivity extends AppCompatActivity
             }
         });
         loading_alert = builder.create();
-        loading_alert.show();
 
+        loading_alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                requestSyncPermission();
+            }
+        });
+        loading_alert.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                requestSyncPermission();
+            }
+        });
         loading_alert.show();
     }
 
@@ -303,6 +305,20 @@ public class MainActivity extends AppCompatActivity
         }
         else if (requestCode == GlobalConstants.ACTIVITY_SETTINGS_REQUEST_CODE)
             loadPreferences();
+        else if (requestCode == GlobalConstants.SYNC_PERMISSION_REQUEST_ID){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (Settings.canDrawOverlays(this))
+                    //TODO: Fix math (it may be negative the way it is)
+                    GlobalFunctions.scheduleNextSynchronization(this, 82800000 - System.currentTimeMillis() % 86400000);
+                else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle(R.string.notification_sync_denied_title)
+                            .setMessage(R.string.notification_sync_denied_message)
+                            .setPositiveButton(R.string.dialog_button_ok, null)
+                            .create().show();
+                }
+            }
+        }
     }
 
     private void openSearchDialog(){
@@ -399,5 +415,29 @@ public class MainActivity extends AppCompatActivity
         availableBooks.clear();
         availableBooks.addAll(dao.getAll());
         adapter.notifyDataSetChanged();
+    }
+
+    //TODO: Change request message
+    public void requestSyncPermission(){
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(this))
+            //TODO: Fix math (it may be negative the way it is)
+            GlobalFunctions.scheduleNextSynchronization(this,  82800000 - System.currentTimeMillis() % 86400000);
+        else {
+            //TODO: Change message
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.notification_sync_rationale_title)
+                    .setMessage(R.string.notification_sync_rationale_message)
+                    .setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                                    Uri.parse("package:" + getPackageName()));
+                            if (intent.resolveActivity(getPackageManager()) != null)
+                                startActivityForResult(intent, GlobalConstants.SYNC_PERMISSION_REQUEST_ID);
+                        }
+                    }).create().show();
+        }
+        startService(new Intent(this, SyncService.class));
     }
 }

@@ -18,7 +18,7 @@ public class GlobalConstants {
     public static final String NOTIFICATION_CONTENT = "notification_content";
 
     // Notification channel constants
-    static final String CHANNEL_SYNC_ID = "SYNC_NOTIFICATION_CHANNEL";
+    public static final String CHANNEL_SYNC_ID = "SYNC_NOTIFICATION_CHANNEL";
     static final String CHANNEL_RENEWAL_ID = "RENEWAL_NOTIFICATION_CHANNEL";
 
     public static final String URL_ACCESS_PAGE = "https://acesso.ufabc.edu.br/";
@@ -46,6 +46,7 @@ public class GlobalConstants {
 
     public static final int SYNC_NOTIFICATION_ID = 9000;
 
-    //TODO: Use it!
     public static final int SYNC_REQUEST_INTENT_ID = 10000;
+    public static final int SYNC_EXECUTIONER_INTENT_ID = 10001;
+    public static final int SYNC_PERMISSION_REQUEST_ID = 10002;
 }

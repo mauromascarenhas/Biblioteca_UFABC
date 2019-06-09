@@ -193,13 +193,29 @@
     <string name="book_details_image_description">Picture of the book cover</string>
 
     <string name="notification_sync_title">UFABC Library - Synchronization Reminder</string>
+    <string name="notification_syncing_title">UFABC Library - Syncing</string>
+    <string name="notification_sync_error_title">UFABC Library - Synchronization Error</string>
+    <string name="notification_sync_denied_title">UFABC Library - Permission denied</string>
     <string name="notification_book_renewal_title">UFABC Library - Renewal Warning</string>
+    <string name="notification_sync_removed_title">UFABC Library - Permission revoked</string>
+    <string name="notification_sync_rationale_title">UFABC Library - Permission required</string>
 
-    <string name="notification_sync_message">Its been a long time since your last synchronization.
+    <string name="notification_sync_message">It\'s been a long time since your last synchronization.
         It is important to maintain the renewal data updated so as to keep receiving the devolution
         warnings/notifications.</string>
+    <string name="notification_syncing_message">Synchronizing renewal data&#8230;</string>
+    <string name="notification_sync_error_message">Error during the synchronization process.
+        Your username and password are no longer valid. Please, try to reconnect in the application
+        so we can synchronize the renewal details again.</string>
+    <string name="notification_sync_denied_message">Since you have denied the permission,
+        we will not be able to synchronize your books &#128557;</string>
+    <string name="notification_sync_removed_message">It seems that you have revoked our permission to
+        sync the book data. Without it, we will not be able to notify you about the renewal deadlines &#128557;</string>
     <string name="notification_book_renewal_content">It seems that you have at least one book/work waiting
         to be either renewed or devolved!</string>
+    <string name="notification_sync_rationale_message">This permission is necessary so as to keep the
+        renewals synchronized. If you do not grant it, we will not be able to notify you about
+        the renewal deadlines.</string>
     <string name="notification_book_renewal_specific_content">The book/work %1$s is waiting either to be
         renewed or devolved!</string>
 
