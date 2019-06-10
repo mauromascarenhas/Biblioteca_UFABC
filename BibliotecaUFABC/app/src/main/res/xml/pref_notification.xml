@@ -8,7 +8,6 @@
         android:title="@string/pref_title_enable_renewal_warning"
         android:summary="@string/pref_description_enable_renewal_warning"/>
 
-
     <ListPreference
         android:defaultValue="0"
         android:entries="@array/pref_notification_shift_options"
@@ -18,6 +17,17 @@
         android:positiveButtonText="@null"
         android:title="@string/pref_notification_shift"
         />
+
+    <ListPreference
+        android:defaultValue="2"
+        android:entries="@array/pref_notification_sync_interval_options"
+        android:entryValues="@array/pref_notification_sync_interval_values"
+        android:key="@string/key_notification_sync_interval"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="@string/pref_notification_sync_interval"
+        />
+
     <!-- Allows the user to choose a ringtone in the 'notification' category. -->
     <!-- NOTE: This preference will be enabled only when the checkbox above is checked. -->
     <!-- NOTE: RingtonePreference's summary should be set to its value by the activity renewalLink. -->

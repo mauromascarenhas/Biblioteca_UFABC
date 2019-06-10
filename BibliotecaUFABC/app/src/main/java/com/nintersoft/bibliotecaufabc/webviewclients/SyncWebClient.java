@@ -1,15 +1,9 @@
 package com.nintersoft.bibliotecaufabc.webviewclients;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.media.RingtoneManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.webkit.ValueCallback;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
@@ -17,11 +11,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import androidx.annotation.RequiresApi;
-import androidx.core.app.NotificationCompat;
-import androidx.core.content.ContextCompat;
 
 import com.nintersoft.bibliotecaufabc.R;
-import com.nintersoft.bibliotecaufabc.RenewalActivity;
 import com.nintersoft.bibliotecaufabc.book_renewal_model.BookRenewalDAO;
 import com.nintersoft.bibliotecaufabc.book_renewal_model.BookRenewalDatabaseSingletonFactory;
 import com.nintersoft.bibliotecaufabc.book_renewal_model.BookRenewalProperties;
@@ -55,12 +46,9 @@ public class SyncWebClient extends WebViewClient {
         renewal_page_finished = 0;
 
         loadSettings();
-
-        Log.v("AQUI", "AQUI");
     }
 
     private void loadSettings(){
-        //TODO: Improve sync settings -> Implement?
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(mContext);
         GlobalVariables.storeUserFormData = pref.getBoolean(mContext.getString(R.string.key_privacy_store_password), true);
 
@@ -69,20 +57,13 @@ public class SyncWebClient extends WebViewClient {
 
         if (user_login == null || user_password == null){
             GlobalFunctions.scheduleNextSynchronization(mContext, 86400000);
-            ((SyncService)mContext).stopSelf();
+            ((SyncService)mContext).finish();
         }
         if (!GlobalVariables.storeUserFormData || user_login.isEmpty()
                 || user_password.isEmpty()){
             GlobalFunctions.scheduleNextSynchronization(mContext, 86400000);
-            ((SyncService)mContext).stopSelf();
+            ((SyncService)mContext).finish();
         }
-    }
-
-    @Override
-    public void onPageStarted(WebView view, String url, Bitmap favicon) {
-        super.onPageStarted(view, url, favicon);
-
-        Log.v("Lendo...", url);
     }
 
     @Override
@@ -99,9 +80,6 @@ public class SyncWebClient extends WebViewClient {
     public void onPageFinished(final WebView view, String url) {
         super.onPageFinished(view, url);
 
-        Log.v("Terminou!", url);
-
-        //TODO: Check this method
         if (url.contains(GlobalConstants.URL_ACCESS_PAGE)){
             if (login_page_finished == 0){
                 String script = String.format("%1$s \nperformLogin(\"%2$s\",\"%3$s\");",
@@ -119,13 +97,16 @@ public class SyncWebClient extends WebViewClient {
                     try {
                         JSONObject result = new JSONObject(value);
                         if (result.getBoolean("hasFormError")) {
-                            requestUpdateNotification();
-                            //TODO: Schedule for the next hour or do another thing
-                            ((SyncService)mContext).stopSelf();
+                            GlobalFunctions.createSyncNotification(mContext,
+                                    R.string.notification_sync_error_title,
+                                    R.string.notification_sync_error_message,
+                                    GlobalConstants.SYNC_NOTIFICATION_UPDATE_ID);
+                            GlobalFunctions.scheduleNextSynchronization(mContext, 86400000);
+                            ((SyncService)mContext).finish();
                         }
                     } catch (JSONException e){
                         GlobalFunctions.scheduleNextSynchronization(mContext, 3600000);
-                        ((SyncService)mContext).stopSelf();
+                        ((SyncService)mContext).finish();
                     }
                 }
             });
@@ -162,7 +143,7 @@ public class SyncWebClient extends WebViewClient {
                         else view.loadUrl(GlobalConstants.URL_LIBRARY_LOGIN);
                     } catch (JSONException e){
                         GlobalFunctions.scheduleNextSynchronization(mContext, 3600000);
-                        ((SyncService)mContext).stopSelf();
+                        ((SyncService)mContext).finish();
                     }
                 }
             });
@@ -173,21 +154,15 @@ public class SyncWebClient extends WebViewClient {
     @Override
     public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
         super.onReceivedError(view, request, error);
-
-        Log.v("Falhou", error.getDescription().toString());
-
         GlobalFunctions.scheduleNextSynchronization(mContext, 900000);
-        ((SyncService)mContext).stopSelf();
+        ((SyncService)mContext).finish();
     }
 
     @Override
     public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
         super.onReceivedError(view, errorCode, description, failingUrl);
-
-        Log.v("Falhou", failingUrl);
-
         GlobalFunctions.scheduleNextSynchronization(mContext, 900000);
-        ((SyncService)mContext).stopSelf();
+        ((SyncService)mContext).finish();
     }
 
     private void setReservationBooks(JSONArray jsResultsArr){
@@ -209,10 +184,11 @@ public class SyncWebClient extends WebViewClient {
                 availableBooks.add(newBook);
             }
             bindAlarms(availableBooks);
-            GlobalFunctions.scheduleNextSynchronization(mContext, 172800000);
+            GlobalFunctions.scheduleNextSynchronization(mContext, GlobalFunctions.nextStandardSync());
         }catch (JSONException e){
             GlobalFunctions.scheduleNextSynchronization(mContext, 3600000);
-            ((SyncService)mContext).stopSelf();
+        }finally {
+            ((SyncService)mContext).finish();
         }
     }
 
@@ -224,31 +200,7 @@ public class SyncWebClient extends WebViewClient {
         for (BookRenewalProperties b: availableBooks) dao.insert(b);
 
         GlobalFunctions.scheduleRenewalAlarms(mContext, dao);
+        //TODO: Remove it?
         GlobalFunctions.scheduleSyncNotification(mContext, 432000000);
-    }
-
-    //TODO: Move to GlobalFunctions with aditional parameter
-    private void requestUpdateNotification(){
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext, GlobalConstants.CHANNEL_SYNC_ID);
-        builder.setSmallIcon(R.drawable.ic_default_book)
-                .setContentTitle(mContext.getString(R.string.notification_sync_error_title))
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setVibrate(new long[] {750, 750})
-                .setColor(ContextCompat.getColor(mContext, android.R.color.holo_red_dark))
-                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                .setContentText(mContext.getString(R.string.notification_sync_error_message))
-                .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText(mContext.getString(R.string.notification_sync_error_message)))
-                .setAutoCancel(true);
-
-        Intent renewalActivity = new Intent(mContext, RenewalActivity.class);
-        PendingIntent activity = PendingIntent.getActivity(mContext, GlobalConstants.ACTIVITY_RENEWAL_REQUEST_CODE,
-                renewalActivity, 0);
-        builder.setContentIntent(activity);
-
-        int notificationID = GlobalConstants.SYNC_REQUEST_INTENT_ID;
-        NotificationManager notificationManager = (NotificationManager)mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-        if (notificationManager != null)
-            notificationManager.notify(notificationID, builder.build());
     }
 }

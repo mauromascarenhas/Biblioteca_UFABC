@@ -1,13 +1,9 @@
 package com.nintersoft.bibliotecaufabc.synchronization;
 
 import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
-import android.media.RingtoneManager;
 import android.os.Build;
 import android.os.IBinder;
 import android.provider.Settings;
@@ -19,7 +15,6 @@ import android.webkit.WebView;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
-import com.nintersoft.bibliotecaufabc.MainActivity;
 import com.nintersoft.bibliotecaufabc.R;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
@@ -47,8 +42,12 @@ public class SyncService extends Service {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!Settings.canDrawOverlays(this)) {
-                requestUpdateNotification();
+                GlobalFunctions.createSyncNotification(this,
+                        R.string.notification_sync_removed_title,
+                        R.string.notification_sync_removed_message,
+                        GlobalConstants.SYNC_NOTIFICATION_REVOKED_ID);
                 stopSelf();
+                return;
             }
         }
 
@@ -93,30 +92,6 @@ public class SyncService extends Service {
         if (dataSource != null) windowManager.removeView(dataSource);
     }
 
-    private void requestUpdateNotification(){
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, GlobalConstants.CHANNEL_SYNC_ID);
-        builder.setSmallIcon(R.drawable.ic_default_book)
-                .setContentTitle(this.getString(R.string.notification_sync_removed_title))
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setVibrate(new long[] {750, 750})
-                .setColor(ContextCompat.getColor(this, android.R.color.holo_purple))
-                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                .setContentText(this.getString(R.string.notification_sync_removed_message))
-                .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText(this.getString(R.string.notification_sync_removed_message)))
-                .setAutoCancel(true);
-
-        Intent renewalActivity = new Intent(this, MainActivity.class);
-        PendingIntent activity = PendingIntent.getActivity(this, GlobalConstants.ACTIVITY_RENEWAL_REQUEST_CODE,
-                renewalActivity, 0);
-        builder.setContentIntent(activity);
-
-        int notificationID = GlobalConstants.SYNC_REQUEST_INTENT_ID;
-        NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-        if (notificationManager != null)
-            notificationManager.notify(notificationID, builder.build());
-    }
-
     private Notification createSyncingNotification(){
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, GlobalConstants.CHANNEL_SYNC_ID);
         return builder.setSmallIcon(R.drawable.ic_default_book)
@@ -126,8 +101,14 @@ public class SyncService extends Service {
                 .setContentText(this.getString(R.string.notification_syncing_message))
                 .setStyle(new NotificationCompat.BigTextStyle()
                         .bigText(this.getString(R.string.notification_syncing_message)))
+                .setProgress(0, 0, true)
                 .setAutoCancel(false)
                 .setOngoing(true)
                 .build();
+    }
+
+    public void finish(){
+        stopForeground(true);
+        stopSelf();
     }
 }

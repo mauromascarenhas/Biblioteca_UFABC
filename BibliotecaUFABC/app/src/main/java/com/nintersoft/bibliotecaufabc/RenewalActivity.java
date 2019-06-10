@@ -261,6 +261,7 @@ public class RenewalActivity extends AppCompatActivity {
         for (BookRenewalProperties b: availableBooks) dao.insert(b);
 
         GlobalFunctions.scheduleRenewalAlarms(this, dao);
+        //TODO: Remove it?
         GlobalFunctions.scheduleSyncNotification(this, 432000000);
     }
 

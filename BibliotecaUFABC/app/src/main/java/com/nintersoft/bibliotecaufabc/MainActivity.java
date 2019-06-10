@@ -29,6 +29,7 @@ import com.nintersoft.bibliotecaufabc.webviewclients.MainWebClient;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -128,6 +129,9 @@ public class MainActivity extends AppCompatActivity
         GlobalVariables.ringAlarm = pref.getBoolean(getString(R.string.key_notification_enable_warning), true);
         GlobalVariables.showExtWarning = pref.getBoolean(getString(R.string.key_general_leave_warning), true);
         GlobalVariables.storeUserFormData = pref.getBoolean(getString(R.string.key_privacy_store_password), true);
+
+        String syncInterval = pref.getString(getString(R.string.key_notification_sync_interval), "2");
+        GlobalVariables.syncInterval = Integer.parseInt(syncInterval == null ? "2" : syncInterval);
 
         String warningDelay = pref.getString(getString(R.string.key_notification_warning_delay), "0");
         GlobalVariables.ringAlarmOffset = Integer.parseInt(warningDelay == null ? "0" : warningDelay);
@@ -308,8 +312,7 @@ public class MainActivity extends AppCompatActivity
         else if (requestCode == GlobalConstants.SYNC_PERMISSION_REQUEST_ID){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (Settings.canDrawOverlays(this))
-                    //TODO: Fix math (it may be negative the way it is)
-                    GlobalFunctions.scheduleNextSynchronization(this, 82800000 - System.currentTimeMillis() % 86400000);
+                    GlobalFunctions.scheduleNextSynchronization(this, GlobalFunctions.nextStandardSync());
                 else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle(R.string.notification_sync_denied_title)
@@ -417,13 +420,11 @@ public class MainActivity extends AppCompatActivity
         adapter.notifyDataSetChanged();
     }
 
-    //TODO: Change request message
+    //TODO: Call after login ONLY
     public void requestSyncPermission(){
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(this))
-            //TODO: Fix math (it may be negative the way it is)
-            GlobalFunctions.scheduleNextSynchronization(this,  82800000 - System.currentTimeMillis() % 86400000);
+            GlobalFunctions.scheduleNextSynchronization(this, GlobalFunctions.nextStandardSync());
         else {
-            //TODO: Change message
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.notification_sync_rationale_title)
                     .setMessage(R.string.notification_sync_rationale_message)
@@ -438,6 +439,7 @@ public class MainActivity extends AppCompatActivity
                         }
                     }).create().show();
         }
-        startService(new Intent(this, SyncService.class));
+        //TODO: Remove this line when ready!
+        ContextCompat.startForegroundService(this, new Intent(this, SyncService.class));
     }
 }

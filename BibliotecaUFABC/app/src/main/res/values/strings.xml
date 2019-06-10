@@ -213,9 +213,10 @@
         sync the book data. Without it, we will not be able to notify you about the renewal deadlines &#128557;</string>
     <string name="notification_book_renewal_content">It seems that you have at least one book/work waiting
         to be either renewed or devolved!</string>
-    <string name="notification_sync_rationale_message">This permission is necessary so as to keep the
-        renewals synchronized. If you do not grant it, we will not be able to notify you about
-        the renewal deadlines.</string>
+    <string name="notification_sync_rationale_message">
+        In order to keep the renewal data synchronized, we must have your permission
+        to overlay other apps. If you do not grant it, we will not be able to notify you about
+        the renewal deadlines properly.</string>
     <string name="notification_book_renewal_specific_content">The book/work %1$s is waiting either to be
         renewed or devolved!</string>
 
@@ -296,6 +297,20 @@
         <item>-1</item>
         <item>-2</item>
         <item>-3</item>
+    </string-array>
+
+    <string name="pref_notification_sync_interval">Synchronization interval</string>
+    <string-array name="pref_notification_sync_interval_options">
+        <item>One day</item>
+        <item>Two days</item>
+        <item>Three days</item>
+        <item>Four days</item>
+    </string-array>
+    <string-array name="pref_notification_sync_interval_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
     </string-array>
 
 </resources>

@@ -16,6 +16,7 @@ public class NotificationBootScheduler extends BroadcastReceiver {
                 "android.intent.action.QUICKBOOT_POWERON".equalsIgnoreCase(intent.getAction())){
             BookRenewalDAO dao = BookRenewalDatabaseSingletonFactory.getInstance().bookRenewalDAO();
 
+            //TODO: Fix this old fashioned notifications
             GlobalFunctions.createSyncNotificationChannel(context.getApplicationContext());
             GlobalFunctions.createRenewalNotificationChannel(context.getApplicationContext());
             GlobalFunctions.scheduleSyncNotification(context, -1);

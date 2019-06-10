@@ -145,21 +145,23 @@ public class GlobalFunctions {
     }
 
     /**
-     * Creates a synchronization request notification.
-     * @param context : Context used for data building and retrieval
-     * @return        : Returns the notification already built
+     * Creates a generic notification with a pending intent to RenewalActivity.
+     * @param context     : Context used for data building and retrieval
+     * @param title_rId   : Id of the title string resource
+     * @param message_rId : Id of the message string resource
+     * @return            : Returns the notification already built
      */
-    public static Notification createSyncNotification(Context context){
+    private static Notification createSyncNotification(Context context, int title_rId, int message_rId){
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, GlobalConstants.CHANNEL_SYNC_ID);
         builder.setSmallIcon(R.drawable.ic_default_book)
-                .setContentTitle(context.getString(R.string.notification_sync_title))
+                .setContentTitle(context.getString(title_rId))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setVibrate(new long[] {750, 750})
                 .setColor(ContextCompat.getColor(context, android.R.color.holo_red_dark))
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                .setContentText(context.getString(R.string.notification_sync_message))
+                .setContentText(context.getString(message_rId))
                 .setStyle(new NotificationCompat.BigTextStyle()
-                                .bigText(context.getString(R.string.notification_sync_message)))
+                        .bigText(context.getString(message_rId)))
                 .setAutoCancel(true);
 
         Intent renewalActivity = new Intent(context, RenewalActivity.class);
@@ -168,6 +170,19 @@ public class GlobalFunctions {
         builder.setContentIntent(activity);
 
         return builder.build();
+    }
+
+    /**
+     * Creates a notification with a pending intent to RenewalActivity and post it.
+     * @param context     : Context used for data building and retrieval
+     * @param title_rId   : Id of the title string resource
+     * @param message_rId : Id of the message string resource
+     * @param id      : Notification id
+     */
+    public static void createSyncNotification(Context context, int title_rId, int message_rId, int id){
+        NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (notificationManager != null)
+            notificationManager.notify(id, GlobalFunctions.createSyncNotification(context, title_rId, message_rId));
     }
 
     /**
@@ -306,6 +321,7 @@ public class GlobalFunctions {
 
     /**
      * Schedules a new synchronization procedure within the given delay (which must be in milliseconds)
+     * Take notice that this method also removes previously scheduled requests
      *
      * @param context        : Context used for data building and retrieval
      * @param delay          : Time in milliseconds to trigger the synchronization operation
@@ -313,10 +329,21 @@ public class GlobalFunctions {
     public static void scheduleNextSynchronization(Context context, long delay){
         Intent notificationIntent = new Intent(context, SyncExecutioner.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, GlobalConstants.SYNC_EXECUTIONER_INTENT_ID,
-                notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                notificationIntent, 0);
 
         long futureInMillis = SystemClock.elapsedRealtime() + delay;
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        if (alarmManager != null) alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
+        if (alarmManager != null){
+            alarmManager.cancel(pendingIntent);
+            alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
+        }
+    }
+
+    /**
+     * Convenience function to get the next standard sync delay
+     * @return : The next standard synchronization time (delay in millis)
+     */
+    public static long nextStandardSync(){
+        return (82800000 - System.currentTimeMillis() % 86400000) + (86400000 * GlobalVariables.syncInterval);
     }
 }

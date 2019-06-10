@@ -17,4 +17,5 @@
     <!-- Notification -->
     <string name="key_notification_enable_warning" translatable="false">key_notification_enable_warning</string>
     <string name="key_notification_warning_delay" translatable="false">key_notification_warning_delay</string>
+    <string name="key_notification_sync_interval" translatable="false">key_notification_sync_interval</string>
 </resources>

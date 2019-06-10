@@ -174,6 +174,7 @@
     <string name="pref_summary_bug_intent_data">mailto:suporte@nintersoft.com</string>
     <string name="pref_summary_privacy_policy_intent_data">https://github.com/mauromascarenhas/Biblioteca_UFABC/raw/master/privacy_policy/pt/privacidade.pdf</string>
     <string name="pref_notification_shift">Adiantamento de agendamento de notificações</string>
+    <string name="pref_notification_sync_interval">Intervalo de sincronização</string>
     <string name="pref_header_privacy">Privacidade</string>
     <string name="pref_header_notifications">Notificações</string>
     <string name="pref_header_general">Geral</string>
@@ -191,6 +192,7 @@
     <string name="pref_description_leave_waning">"Define quando a aplicação deve mostrar um aviso se uma operação de abertura de URL é pedida."</string>
     <string name="pref_description_keep_cache">Se estiver desmarcada, a aplicação limpará seu cache assim que for encerrada. Isto reiniciará conexões atuais e dados temporários também.</string>
     <string name="pref_description_enable_renewal_warning">Ativa avisos para livros cuja data de devolução se aproxima. (Deve ser atualizado ao menos uma vez por semana).</string>
+
     <string name="notification_sync_title">Biblioteca UFABC - Aviso de sincronização</string>
     <string name="notification_sync_message">
         "Já tem um bom tempo desde a sua última sincronização.\n"
@@ -211,7 +213,8 @@
         sincronizar os dados de obras. Sem ela, não poderemos notificá-lo a respeito das datas de
         renovação e entrega &#128557;</string>
     <string name="notification_sync_rationale_title">Biblioteca UFABC - Permissão necessária</string>
-    <string name="notification_sync_rationale_message">Esta permissão é necessária para manter
+    <string name="notification_sync_rationale_message">
+        Precisamos de sua permissão de sobreposição de aplicação a fim de manter
         as renovações sincronizadas. Se você não a conceder, não estaremos hábeis a notificá-lo a respeito
         das datas de renovação e entrega.</string>
     <string name="label_search_connection_error">
@@ -232,5 +235,12 @@
         <item>Um dia</item>
         <item>Dois dias</item>
         <item>Três dias</item>
+    </string-array>
+
+    <string-array name="pref_notification_sync_interval_options">
+        <item>Um dia</item>
+        <item>Dois dias</item>
+        <item>Três dias</item>
+        <item>Quatro dias</item>
     </string-array>
 </resources>
