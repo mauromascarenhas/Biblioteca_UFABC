@@ -10,7 +10,9 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -261,8 +263,12 @@ public class RenewalActivity extends AppCompatActivity {
         for (BookRenewalProperties b: availableBooks) dao.insert(b);
 
         GlobalFunctions.scheduleRenewalAlarms(this, dao);
-        //TODO: Remove it?
         GlobalFunctions.scheduleSyncNotification(this, 432000000);
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putLong(getString(R.string.key_synchronization_schedule), System.currentTimeMillis());
+        editor.apply();
     }
 
     private void clearNotifications(){

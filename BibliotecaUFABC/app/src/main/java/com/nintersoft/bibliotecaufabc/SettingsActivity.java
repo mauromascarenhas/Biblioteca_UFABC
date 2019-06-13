@@ -187,6 +187,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // updated to reflect the new value, per the Android Design
             // guidelines.
             bindPreferenceSummaryToValue(findPreference(getString(R.string.key_notification_warning_delay)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.key_notification_sync_interval)));
         }
 
         @Override

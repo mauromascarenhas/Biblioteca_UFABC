@@ -8,11 +8,9 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.os.Build;
 import android.os.SystemClock;
-import android.preference.PreferenceManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Toast;
@@ -99,12 +97,7 @@ public class GlobalFunctions {
      *                   Useful for rescheduling on boot
      */
     public static void scheduleSyncNotification(Context context, long delay){
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        if (delay < 0){
-            long currentTime = SystemClock.elapsedRealtime();
-            long lastSchedule = preferences.getLong(context.getString(R.string.key_synchronization_schedule), currentTime - 1);
-            delay = (lastSchedule < currentTime) ? 1000 : lastSchedule - currentTime;
-        }
+        if (delay < 0) delay = 1000;
 
         Intent notificationIntent = new Intent(context, SyncNotificationDisplay.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, GlobalConstants.SYNC_NOTIFICATION_ID, notificationIntent, 0);
@@ -114,10 +107,6 @@ public class GlobalFunctions {
         if (alarmManager != null){
             alarmManager.cancel(pendingIntent);
             alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
-
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putLong(context.getString(R.string.key_synchronization_schedule), futureInMillis);
-            editor.apply();
         }
     }
 
@@ -345,5 +334,14 @@ public class GlobalFunctions {
      */
     public static long nextStandardSync(){
         return (82800000 - System.currentTimeMillis() % 86400000) + (86400000 * GlobalVariables.syncInterval);
+    }
+
+    /**
+     * Convenience function to get the next standard sync delay
+     * @param maxDays : Used to reference the next sync (in days) instead of the global standard
+     * @return        : The next standard synchronization time (delay in millis)
+     */
+    public static long nextStandardSync(int maxDays){
+        return (82800000 - System.currentTimeMillis() % 86400000) + (86400000 * maxDays);
     }
 }

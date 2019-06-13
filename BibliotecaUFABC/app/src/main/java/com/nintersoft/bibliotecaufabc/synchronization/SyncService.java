@@ -7,7 +7,6 @@ import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.IBinder;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.WindowManager;
 import android.webkit.WebView;
@@ -24,6 +23,7 @@ public class SyncService extends Service {
 
     private WebView dataSource;
     private WindowManager windowManager;
+    private boolean isScheduled;
 
     public SyncService() {
     }
@@ -46,7 +46,6 @@ public class SyncService extends Service {
                         R.string.notification_sync_removed_title,
                         R.string.notification_sync_removed_message,
                         GlobalConstants.SYNC_NOTIFICATION_REVOKED_ID);
-                stopSelf();
                 return;
             }
         }
@@ -78,17 +77,21 @@ public class SyncService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        startForeground(GlobalConstants.SYNC_NOTIFICATION_ID, createSyncingNotification());
-        dataSource.loadUrl(GlobalConstants.URL_LIBRARY_RENEWAL);
-        return super.onStartCommand(intent, flags, startId);
+        if (dataSource != null) {
+            isScheduled = intent.getBooleanExtra("service", true);
+            startForeground(GlobalConstants.SYNC_NOTIFICATION_ID, createSyncingNotification());
+            dataSource.loadUrl(GlobalConstants.URL_LIBRARY_RENEWAL);
+            return super.onStartCommand(intent, flags, startId);
+        }
+        else{
+            stopSelf();
+            return START_NOT_STICKY;
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        Log.v("Service", "DESTROY");
-
         if (dataSource != null) windowManager.removeView(dataSource);
     }
 
@@ -105,6 +108,11 @@ public class SyncService extends Service {
                 .setAutoCancel(false)
                 .setOngoing(true)
                 .build();
+    }
+
+    public void finish(long delay){
+        if (isScheduled) GlobalFunctions.scheduleNextSynchronization(this, delay);
+        finish();
     }
 
     public void finish(){

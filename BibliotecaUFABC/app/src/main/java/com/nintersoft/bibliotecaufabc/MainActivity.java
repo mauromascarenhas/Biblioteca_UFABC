@@ -311,8 +311,11 @@ public class MainActivity extends AppCompatActivity
             loadPreferences();
         else if (requestCode == GlobalConstants.SYNC_PERMISSION_REQUEST_ID){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (Settings.canDrawOverlays(this))
+                if (Settings.canDrawOverlays(this)) {
                     GlobalFunctions.scheduleNextSynchronization(this, GlobalFunctions.nextStandardSync());
+                    ContextCompat.startForegroundService(this,
+                            new Intent(this, SyncService.class).putExtra("service", false));
+                }
                 else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle(R.string.notification_sync_denied_title)
@@ -420,10 +423,12 @@ public class MainActivity extends AppCompatActivity
         adapter.notifyDataSetChanged();
     }
 
-    //TODO: Call after login ONLY
     public void requestSyncPermission(){
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(this))
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(this)) {
             GlobalFunctions.scheduleNextSynchronization(this, GlobalFunctions.nextStandardSync());
+            ContextCompat.startForegroundService(this,
+                    new Intent(this, SyncService.class).putExtra("service", false));
+        }
         else {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.notification_sync_rationale_title)
@@ -439,7 +444,5 @@ public class MainActivity extends AppCompatActivity
                         }
                     }).create().show();
         }
-        //TODO: Remove this line when ready!
-        ContextCompat.startForegroundService(this, new Intent(this, SyncService.class));
     }
 }

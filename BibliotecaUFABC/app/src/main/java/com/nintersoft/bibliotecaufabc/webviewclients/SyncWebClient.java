@@ -55,15 +55,11 @@ public class SyncWebClient extends WebViewClient {
         user_login = pref.getString(mContext.getString(R.string.key_privacy_login_username), "");
         user_password = pref.getString(mContext.getString(R.string.key_privacy_login_password), "");
 
-        if (user_login == null || user_password == null){
-            GlobalFunctions.scheduleNextSynchronization(mContext, 86400000);
-            ((SyncService)mContext).finish();
-        }
+        if (user_login == null || user_password == null)
+            ((SyncService)mContext).finish(86400000);
         if (!GlobalVariables.storeUserFormData || user_login.isEmpty()
-                || user_password.isEmpty()){
-            GlobalFunctions.scheduleNextSynchronization(mContext, 86400000);
-            ((SyncService)mContext).finish();
-        }
+                || user_password.isEmpty())
+            ((SyncService)mContext).finish(86400000);
     }
 
     @Override
@@ -101,12 +97,10 @@ public class SyncWebClient extends WebViewClient {
                                     R.string.notification_sync_error_title,
                                     R.string.notification_sync_error_message,
                                     GlobalConstants.SYNC_NOTIFICATION_UPDATE_ID);
-                            GlobalFunctions.scheduleNextSynchronization(mContext, 86400000);
-                            ((SyncService)mContext).finish();
+                            ((SyncService)mContext).finish(86400000);
                         }
                     } catch (JSONException e){
-                        GlobalFunctions.scheduleNextSynchronization(mContext, 3600000);
-                        ((SyncService)mContext).finish();
+                        ((SyncService)mContext).finish(3600000);
                     }
                 }
             });
@@ -142,8 +136,7 @@ public class SyncWebClient extends WebViewClient {
                                     result.getJSONArray("renewalBooks"));
                         else view.loadUrl(GlobalConstants.URL_LIBRARY_LOGIN);
                     } catch (JSONException e){
-                        GlobalFunctions.scheduleNextSynchronization(mContext, 3600000);
-                        ((SyncService)mContext).finish();
+                        ((SyncService)mContext).finish(3600000);
                     }
                 }
             });
@@ -154,15 +147,13 @@ public class SyncWebClient extends WebViewClient {
     @Override
     public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
         super.onReceivedError(view, request, error);
-        GlobalFunctions.scheduleNextSynchronization(mContext, 900000);
-        ((SyncService)mContext).finish();
+        ((SyncService)mContext).finish(900000);
     }
 
     @Override
     public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
         super.onReceivedError(view, errorCode, description, failingUrl);
-        GlobalFunctions.scheduleNextSynchronization(mContext, 900000);
-        ((SyncService)mContext).finish();
+        ((SyncService)mContext).finish(900000);
     }
 
     private void setReservationBooks(JSONArray jsResultsArr){
@@ -185,10 +176,9 @@ public class SyncWebClient extends WebViewClient {
             }
             bindAlarms(availableBooks);
             GlobalFunctions.scheduleNextSynchronization(mContext, GlobalFunctions.nextStandardSync());
-        }catch (JSONException e){
-            GlobalFunctions.scheduleNextSynchronization(mContext, 3600000);
-        }finally {
             ((SyncService)mContext).finish();
+        }catch (JSONException e){
+            ((SyncService)mContext).finish(3600000);
         }
     }
 
@@ -200,7 +190,11 @@ public class SyncWebClient extends WebViewClient {
         for (BookRenewalProperties b: availableBooks) dao.insert(b);
 
         GlobalFunctions.scheduleRenewalAlarms(mContext, dao);
-        //TODO: Remove it?
         GlobalFunctions.scheduleSyncNotification(mContext, 432000000);
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putLong(mContext.getString(R.string.key_synchronization_schedule), System.currentTimeMillis());
+        editor.apply();
     }
 }
