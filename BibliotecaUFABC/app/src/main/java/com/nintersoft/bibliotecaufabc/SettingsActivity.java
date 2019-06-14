@@ -1,6 +1,7 @@
 package com.nintersoft.bibliotecaufabc;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -12,6 +13,8 @@ import androidx.appcompat.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
+
+import com.nintersoft.bibliotecaufabc.appcontext.ContextApp;
 
 import java.util.List;
 
@@ -151,13 +154,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_general);
             setHasOptionsMenu(true);
-
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
-            //bindPreferenceSummaryToValue(findPreference("example_text"));
-            //bindPreferenceSummaryToValue(findPreference("example_list"));
         }
 
         @Override
@@ -188,6 +184,22 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // guidelines.
             bindPreferenceSummaryToValue(findPreference(getString(R.string.key_notification_warning_delay)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.key_notification_sync_interval)));
+
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ContextApp.getContext());
+            boolean hasPasswordStored = preferences.getBoolean(getString(R.string.key_privacy_store_password), true);
+            findPreference(getString(R.string.key_notification_enable_warning)).setEnabled(hasPasswordStored);
+            findPreference(getString(R.string.key_notification_warning_delay)).setEnabled(hasPasswordStored);
+            findPreference(getString(R.string.key_notification_sync_interval)).setEnabled(hasPasswordStored);
+
+            findPreference(getString(R.string.key_notification_enable_warning))
+                    .setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                        @Override
+                        public boolean onPreferenceChange(Preference preference, Object newValue) {
+                            findPreference(getString(R.string.key_notification_warning_delay)).setEnabled((Boolean)newValue);
+                            findPreference(getString(R.string.key_notification_sync_interval)).setEnabled((Boolean)newValue);
+                            return true;
+                        }
+                    });
         }
 
         @Override
@@ -217,6 +229,23 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // updated to reflect the new value, per the Android Design
             // guidelines.
             bindPreferenceSummaryToValue(findPreference(getString(R.string.key_privacy_login_username)));
+
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ContextApp.getContext());
+            boolean hasPasswordStored = preferences.getBoolean(getString(R.string.key_privacy_store_password), true);
+            findPreference(getString(R.string.key_privacy_auto_login)).setEnabled(hasPasswordStored);
+            findPreference(getString(R.string.key_privacy_login_username)).setEnabled(hasPasswordStored);
+            findPreference(getString(R.string.key_privacy_login_password)).setEnabled(hasPasswordStored);
+
+            findPreference(getString(R.string.key_privacy_store_password))
+                    .setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                        @Override
+                        public boolean onPreferenceChange(Preference preference, Object newValue) {
+                            findPreference(getString(R.string.key_privacy_auto_login)).setEnabled((Boolean)newValue);
+                            findPreference(getString(R.string.key_privacy_login_username)).setEnabled((Boolean)newValue);
+                            findPreference(getString(R.string.key_privacy_login_password)).setEnabled((Boolean)newValue);
+                            return true;
+                        }
+                    });
         }
 
         @Override

@@ -65,6 +65,8 @@ public class MainActivity extends AppCompatActivity
     private SearchBookAdapter adapter;
     private ArrayList<BookSearchProperties> availableBooks;
 
+    private boolean isFirstRequest;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,12 +131,15 @@ public class MainActivity extends AppCompatActivity
         GlobalVariables.ringAlarm = pref.getBoolean(getString(R.string.key_notification_enable_warning), true);
         GlobalVariables.showExtWarning = pref.getBoolean(getString(R.string.key_general_leave_warning), true);
         GlobalVariables.storeUserFormData = pref.getBoolean(getString(R.string.key_privacy_store_password), true);
+        GlobalVariables.loginAutomatically = pref.getBoolean(getString(R.string.key_privacy_auto_login), true);
 
         String syncInterval = pref.getString(getString(R.string.key_notification_sync_interval), "2");
         GlobalVariables.syncInterval = Integer.parseInt(syncInterval == null ? "2" : syncInterval);
 
         String warningDelay = pref.getString(getString(R.string.key_notification_warning_delay), "0");
         GlobalVariables.ringAlarmOffset = Integer.parseInt(warningDelay == null ? "0" : warningDelay);
+
+        isFirstRequest = true;
 
         applyPreferences(pref);
     }
@@ -399,6 +404,14 @@ public class MainActivity extends AppCompatActivity
         navViewMenu.findItem(R.id.nav_logout).setVisible(connected);
         navViewMenu.findItem(R.id.nav_renew).setVisible(connected);
         navViewMenu.findItem(R.id.nav_reservation).setVisible(connected);
+
+        if (isFirstRequest){
+            if (!connected && GlobalVariables.loginAutomatically){
+                Intent acIntent = new Intent(this, LoginActivity.class);
+                startActivityForResult(acIntent, GlobalConstants.ACTIVITY_LOGIN_REQUEST_CODE);
+            }
+            isFirstRequest = false;
+        }
     }
 
     public void receiveError(String message){

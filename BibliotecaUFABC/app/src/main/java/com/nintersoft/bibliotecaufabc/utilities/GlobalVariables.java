@@ -9,6 +9,7 @@ public class GlobalVariables {
     public static boolean ringAlarm = true;
     public static boolean showExtWarning = true;
     public static boolean storeUserFormData = true;
+    public static boolean loginAutomatically = true;
 
     public static int syncInterval = 2;
     public static int ringAlarmOffset = 0;

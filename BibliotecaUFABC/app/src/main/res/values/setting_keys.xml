@@ -11,6 +11,8 @@
     <string name="key_privacy_cache_main_content" translatable="false">key_privacy_cache_main_content</string>
 
     <string name="key_privacy_store_password" translatable="false">key_privacy_store_password</string>
+    <string name="key_privacy_auto_login" translatable="false">key_privacy_auto_login</string>
+
     <string name="key_privacy_login_username" translatable="false">key_privacy_login_username</string>
     <string name="key_privacy_login_password" translatable="false">key_privacy_login_password</string>
 

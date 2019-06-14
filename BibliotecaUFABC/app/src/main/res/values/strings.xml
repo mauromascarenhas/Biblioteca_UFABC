@@ -243,6 +243,10 @@
     <string name="pref_description_store_password">Allows the application to store your login data.
         It makes the login process a bit faster for you. (See Privacy Policy for more details)</string>
 
+    <string name="pref_title_auto_login">Login automatically</string>
+    <string name="pref_description_auto_login">If the application have your credentials already saved,
+        it will be able to login automatically (only when started from your main launcher).</string>
+
     <string name="pref_title_login_username">Username</string>
     <string name="pref_title_login_password">Password</string>
 

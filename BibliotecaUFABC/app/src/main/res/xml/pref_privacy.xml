@@ -20,6 +20,12 @@
             android:summary="@string/pref_description_store_password"
             android:title="@string/pref_title_store_password" />
 
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_privacy_auto_login"
+            android:summary="@string/pref_description_auto_login"
+            android:title="@string/pref_title_auto_login" />
+
         <EditTextPreference
             android:capitalize="none"
             android:inputType="textAutoComplete"
