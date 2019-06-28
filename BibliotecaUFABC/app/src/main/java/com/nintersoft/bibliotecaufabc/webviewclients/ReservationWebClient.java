@@ -92,7 +92,7 @@ public class ReservationWebClient extends WebViewClient {
                                 if (result.getBoolean("hasErrorDiv"))
                                     ((ReservationActivity)mContext).setUserNameNoReservation(result.getString("username"));
                                 else {
-                                    ((ReservationActivity)mContext).setReservationBooks(result.getJSONObject("reservationBooks").toString());
+                                    ((ReservationActivity)mContext).setReservationBooks(result.getJSONArray("reservationBooks").toString());
                                     ((ReservationActivity)mContext).setupInterface(true);
                                 }
                             } catch (JSONException e){
