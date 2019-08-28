@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity
     private ArrayList<BookSearchProperties> availableBooks;
 
     private boolean isFirstRequest;
+    private boolean hasRequestedSync;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,6 +141,7 @@ public class MainActivity extends AppCompatActivity
         GlobalVariables.ringAlarmOffset = Integer.parseInt(warningDelay == null ? "0" : warningDelay);
 
         isFirstRequest = true;
+        hasRequestedSync = false;
 
         applyPreferences(pref);
     }
@@ -303,14 +305,21 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == GlobalConstants.ACTIVITY_LOGIN_REQUEST_CODE && resultCode == RESULT_OK
-                && data != null){
-            String userName = data.getStringExtra(GlobalConstants.CONNECTED_STATUS_USER_NAME);
-            navViewMenu.findItem(R.id.nav_logout).setTitle(getString(R.string.nav_menu_logout, userName == null ? "???" : userName));
-            setUserConnected(true);
+        if (requestCode == GlobalConstants.ACTIVITY_LOGIN_REQUEST_CODE){
+            if (resultCode == RESULT_OK  && data != null){
+                String userName = data.getStringExtra(GlobalConstants.CONNECTED_STATUS_USER_NAME);
+                navViewMenu.findItem(R.id.nav_logout).setTitle(getString(R.string.nav_menu_logout, userName == null ? "???" : userName));
+                setUserConnected(true);
 
-            dataClient.resetCounters();
-            dataSource.loadUrl(GlobalConstants.URL_LIBRARY_NEWEST);
+                dataClient.resetCounters();
+                dataSource.loadUrl(GlobalConstants.URL_LIBRARY_NEWEST);
+            }
+            if (!hasRequestedSync){
+                GlobalFunctions.scheduleNextSynchronization(this, GlobalFunctions.nextStandardSync());
+                ContextCompat.startForegroundService(this,
+                        new Intent(this, SyncService.class).putExtra("service", false));
+                hasRequestedSync = true;
+            }
         }
         else if (requestCode == GlobalConstants.ACTIVITY_SETTINGS_REQUEST_CODE)
             loadPreferences();
@@ -410,6 +419,12 @@ public class MainActivity extends AppCompatActivity
                 Intent acIntent = new Intent(this, LoginActivity.class);
                 startActivityForResult(acIntent, GlobalConstants.ACTIVITY_LOGIN_REQUEST_CODE);
             }
+            else {
+                GlobalFunctions.scheduleNextSynchronization(this, GlobalFunctions.nextStandardSync());
+                ContextCompat.startForegroundService(this,
+                        new Intent(this, SyncService.class).putExtra("service", false));
+                hasRequestedSync = true;
+            }
             isFirstRequest = false;
         }
     }
@@ -437,12 +452,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void requestSyncPermission(){
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(this)) {
-            GlobalFunctions.scheduleNextSynchronization(this, GlobalFunctions.nextStandardSync());
-            ContextCompat.startForegroundService(this,
-                    new Intent(this, SyncService.class).putExtra("service", false));
-        }
-        else {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.notification_sync_rationale_title)
                     .setMessage(R.string.notification_sync_rationale_message)
