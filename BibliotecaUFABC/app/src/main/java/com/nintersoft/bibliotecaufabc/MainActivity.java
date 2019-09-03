@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
@@ -54,6 +55,14 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    enum PermReqState{
+        BEFORE_REQ,
+        REQUESTING,
+        REQUESTING_LOGIN,
+        REQUESTING_SYNC,
+        REQUESTED
+    }
+
     private Menu navViewMenu;
     private WebView dataSource;
     private AlertDialog loading_alert;
@@ -64,6 +73,8 @@ public class MainActivity extends AppCompatActivity
     private BookSearchDAO dao;
     private SearchBookAdapter adapter;
     private ArrayList<BookSearchProperties> availableBooks;
+
+    private PermReqState permReqState;
 
     private boolean isFirstRequest;
     private boolean hasRequestedSync;
@@ -124,6 +135,7 @@ public class MainActivity extends AppCompatActivity
         navViewMenu.findItem(R.id.nav_reservation).setVisible(false);
 
         list = findViewById(R.id.list_items_home);
+        permReqState = PermReqState.BEFORE_REQ;
     }
 
     private void loadPreferences(){
@@ -331,17 +343,33 @@ public class MainActivity extends AppCompatActivity
             loadPreferences();
         else if (requestCode == GlobalConstants.SYNC_PERMISSION_REQUEST_ID){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (Settings.canDrawOverlays(this)) {
-                    GlobalFunctions.scheduleNextSynchronization(this, GlobalFunctions.nextStandardSync());
-                    ContextCompat.startForegroundService(this,
-                            new Intent(this, SyncService.class).putExtra("service", false));
-                }
-                else {
+                if (!Settings.canDrawOverlays(this)) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle(R.string.notification_sync_denied_title)
                             .setMessage(R.string.notification_sync_denied_message)
                             .setPositiveButton(R.string.dialog_button_ok, null)
                             .create().show();
+                }
+
+                if (permReqState == PermReqState.REQUESTING_LOGIN){
+                    permReqState = PermReqState.REQUESTED;
+                    if (GlobalVariables.loginAutomatically){
+                        Intent acIntent = new Intent(this, LoginActivity.class);
+                        startActivityForResult(acIntent, GlobalConstants.ACTIVITY_LOGIN_REQUEST_CODE);
+                    }
+                    else {
+                        GlobalFunctions.scheduleNextSynchronization(this, GlobalFunctions.nextStandardSync());
+                        ContextCompat.startForegroundService(this,
+                                new Intent(this, SyncService.class).putExtra("service", false));
+                        hasRequestedSync = true;
+                    }
+                    isFirstRequest = false;
+                }
+                else {
+                    GlobalFunctions.scheduleNextSynchronization(this, GlobalFunctions.nextStandardSync());
+                    ContextCompat.startForegroundService(this,
+                            new Intent(this, SyncService.class).putExtra("service", false));
+                    hasRequestedSync = true;
                 }
             }
         }
@@ -415,13 +443,18 @@ public class MainActivity extends AppCompatActivity
         setUserConnected(connected);
     }
 
-    private void setUserConnected(boolean connected){
+    synchronized private void setUserConnected(boolean connected){
         navViewMenu.findItem(R.id.nav_login).setVisible(!connected);
         navViewMenu.findItem(R.id.nav_logout).setVisible(connected);
         navViewMenu.findItem(R.id.nav_renew).setVisible(connected);
         navViewMenu.findItem(R.id.nav_reservation).setVisible(connected);
 
         if (isFirstRequest){
+            if (permReqState == PermReqState.REQUESTING || permReqState == PermReqState.BEFORE_REQ){
+                permReqState = connected ? PermReqState.REQUESTING_SYNC : PermReqState.REQUESTING_LOGIN;
+                return;
+            }
+
             if (!connected && GlobalVariables.loginAutomatically){
                 Intent acIntent = new Intent(this, LoginActivity.class);
                 startActivityForResult(acIntent, GlobalConstants.ACTIVITY_LOGIN_REQUEST_CODE);
@@ -460,8 +493,10 @@ public class MainActivity extends AppCompatActivity
         if (GlobalVariables.ringAlarm) navViewMenu.findItem(R.id.nav_loans).setVisible(true);
     }
 
-    public void requestSyncPermission(){
+    synchronized public void requestSyncPermission(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+            permReqState = permReqState == PermReqState.BEFORE_REQ ? PermReqState.REQUESTING : PermReqState.REQUESTING_LOGIN;
+
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.notification_sync_rationale_title)
                     .setMessage(R.string.notification_sync_rationale_message)
@@ -476,5 +511,17 @@ public class MainActivity extends AppCompatActivity
                         }
                     }).create().show();
         }
+        else if (permReqState == PermReqState.REQUESTING_LOGIN) {
+            Intent acIntent = new Intent(this, LoginActivity.class);
+            startActivityForResult(acIntent, GlobalConstants.ACTIVITY_LOGIN_REQUEST_CODE);
+            permReqState = PermReqState.REQUESTED;
+        }
+        else if (permReqState == PermReqState.REQUESTING_SYNC){
+            GlobalFunctions.scheduleNextSynchronization(this, GlobalFunctions.nextStandardSync());
+            ContextCompat.startForegroundService(this,
+                    new Intent(this, SyncService.class).putExtra("service", false));
+            hasRequestedSync = true;
+        }
+        else permReqState = PermReqState.REQUESTED;
     }
 }
