@@ -16,6 +16,10 @@
                 android:icon="@drawable/ic_menu_renew"
                 android:title="@string/nav_menu_renewal" />
             <item
+                android:id="@+id/nav_loans"
+                android:icon="@drawable/ic_menu_lending"
+                android:title="@string/nav_menu_loans" />
+            <item
                 android:id="@+id/nav_reservation"
                 android:icon="@drawable/ic_menu_reservation"
                 android:title="@string/nav_menu_reservation" />

@@ -120,6 +120,7 @@ public class MainActivity extends AppCompatActivity
         navViewMenu.findItem(R.id.nav_login).setVisible(false);
         navViewMenu.findItem(R.id.nav_logout).setVisible(false);
         navViewMenu.findItem(R.id.nav_renew).setVisible(false);
+        navViewMenu.findItem(R.id.nav_loans).setVisible(false);
         navViewMenu.findItem(R.id.nav_reservation).setVisible(false);
 
         list = findViewById(R.id.list_items_home);
@@ -248,6 +249,11 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_renew: {
                 Intent acIntent = new Intent(this, RenewalActivity.class);
                 startActivityForResult(acIntent, GlobalConstants.ACTIVITY_RENEWAL_REQUEST_CODE);
+                break;
+            }
+            case R.id.nav_loans: {
+                Intent acIntent = new Intent(this, BookLoansActivity.class);
+                startActivityForResult(acIntent, GlobalConstants.ACTIVITY_SETTINGS_REQUEST_CODE);
                 break;
             }
             case R.id.nav_manage: {
@@ -397,6 +403,7 @@ public class MainActivity extends AppCompatActivity
                     R.string.snack_message_parse_fail, Snackbar.LENGTH_LONG)
                     .show();
         } finally {
+            navViewMenu.findItem(R.id.nav_loans).setVisible(false);
             if (loading_alert.isShowing()) loading_alert.dismiss();
             else Snackbar.make(findViewById(R.id.list_items_home), R.string.snack_message_loaded_newest,
                     Snackbar.LENGTH_SHORT).show();
@@ -449,6 +456,8 @@ public class MainActivity extends AppCompatActivity
         availableBooks.clear();
         availableBooks.addAll(dao.getAll());
         adapter.notifyDataSetChanged();
+
+        if (GlobalVariables.ringAlarm) navViewMenu.findItem(R.id.nav_loans).setVisible(true);
     }
 
     public void requestSyncPermission(){

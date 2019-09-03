@@ -9,6 +9,7 @@
 
     <string name="nav_menu_tools">Online tools</string>
     <string name="nav_menu_renewal">Renewals</string>
+    <string name="nav_menu_loans">Book loans</string>
     <string name="nav_menu_reservation">Reservations</string>
     <string name="nav_menu_settings">Settings</string>
     <string name="nav_menu_search">Search for books, articles&#8230;</string>
@@ -140,6 +141,9 @@
 
     <string name="label_renewal_loading">Loading books available for renewal&#8230;</string>
     <string name="label_no_renewal_username">There is no open circulation for %1$s at the moment.</string>
+    <string name="label_no_bookloan_username">There is no open circulation for %1$s at the moment.
+        (Please, take notice that this information depends on the last synchronization,
+        which happened in %2$s)</string>
 
     <string name="message_renewal_connected_failed">You have canceled the login attempt</string>
     <string name="label_renewal_connection_error">
@@ -169,6 +173,8 @@
     <string name="button_reservation_reload">Reload</string>
 
     <string name="action_share_books">Share book</string>
+
+    <string name="title_activity_loans">Book Loans (offline)</string>
 
     <string name="title_activity_book_details">Book/Work Details</string>
 

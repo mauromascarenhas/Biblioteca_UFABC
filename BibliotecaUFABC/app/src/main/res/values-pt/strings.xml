@@ -87,12 +87,16 @@
     <string name="label_login_password">Senha:</string>
     <string name="label_login_username">Usuário:</string>
     <string name="label_no_renewal_username">Não há circulação aberta para %1$s no momento.</string>
+    <string name="label_no_bookloan_username">Não há livros reservados para %1$s no momento.
+        (Por favor, perceba que esta informação depende dos dados obtidos na última sincronização,
+        que aconteceu em %2$s)</string>
     <string name="label_no_reservation_username">Não há livros reservados para %1$s no momento.</string>
     <string name="title_activity_settings">Configurações</string>
     <string name="title_activity_search_results">Resultados para: %1$s</string>
     <string name="title_activity_search_filters">Filtros de Busca</string>
     <string name="title_activity_search">Busca</string>
     <string name="title_activity_reservation">Reservas</string>
+    <string name="title_activity_loans">Empréstimos (offline)</string>
     <string name="title_activity_renewal">Renovações</string>
     <string name="title_activity_login">Conectar-se (UFABC)</string>
     <string name="title_activity_book_details">Detalhes do Livro/Obra</string>
@@ -148,6 +152,7 @@
     <string name="nav_menu_logout">(Desconectar) %1$s</string>
     <string name="nav_menu_misc">Outros</string>
     <string name="nav_menu_renewal">Renovações</string>
+    <string name="nav_menu_loans">Empréstimos</string>
     <string name="nav_menu_reservation">Reservas</string>
     <string name="nav_menu_search">Procurar por livros, artigos&#8230;</string>
     <string name="nav_menu_search_min">Busca</string>

@@ -57,7 +57,12 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".RenewalActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/title_activity_renewal" />
+        <activity
+            android:name=".BookLoansActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="@string/title_activity_loans" />
         <activity
             android:name=".LoginActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
