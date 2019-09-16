@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:gravity="center_vertical"
     android:layout_gravity="center_vertical"
-    tools:context=".RenewalActivity">
+    tools:context=".activities.RenewalActivity">
 
     <LinearLayout
         android:id="@+id/renewal_loading_layout"

@@ -1,4 +1,4 @@
-package com.nintersoft.bibliotecaufabc;
+package com.nintersoft.bibliotecaufabc.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,6 +14,8 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+
+import com.nintersoft.bibliotecaufabc.R;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package com.nintersoft.bibliotecaufabc;
+package com.nintersoft.bibliotecaufabc.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.nintersoft.bibliotecaufabc.R;
 import com.nintersoft.bibliotecaufabc.book_search_model.BookSearchProperties;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;

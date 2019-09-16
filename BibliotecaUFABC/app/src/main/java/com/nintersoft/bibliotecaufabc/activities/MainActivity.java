@@ -1,8 +1,10 @@
-package com.nintersoft.bibliotecaufabc;
+package com.nintersoft.bibliotecaufabc.activities;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,9 +18,11 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import com.nintersoft.bibliotecaufabc.R;
 import com.nintersoft.bibliotecaufabc.book_search_model.BookSearchDAO;
 import com.nintersoft.bibliotecaufabc.book_search_model.BookSearchDatabaseSingletonFactory;
 import com.nintersoft.bibliotecaufabc.book_search_model.BookSearchProperties;
+import com.nintersoft.bibliotecaufabc.synchronization.SyncManager;
 import com.nintersoft.bibliotecaufabc.synchronization.SyncService;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
@@ -29,6 +33,7 @@ import com.nintersoft.bibliotecaufabc.webviewclients.MainWebClient;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -37,6 +42,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.Constraints;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -50,6 +59,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -90,6 +100,10 @@ public class MainActivity extends AppCompatActivity
         setWebViewSettings();
         setupBookList();
         setListeners();
+
+        setSyncSchedule();
+
+        isStoragePermissionGranted();
     }
 
     @Override
@@ -219,6 +233,34 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+    private void setSyncSchedule(){
+        SharedPreferences prefs;
+        if ((prefs = PreferenceManager.getDefaultSharedPreferences(this))
+                .getBoolean(getString(R.string.key_app_first_run), true)){
+
+            Constraints constraints = new Constraints.Builder()
+                    .setRequiredNetworkType(NetworkType.CONNECTED)
+                    .setRequiresBatteryNotLow(true)
+                    .build();
+
+            // FIXME: Change to scheduled days again
+            PeriodicWorkRequest syncRequest = new PeriodicWorkRequest.Builder(SyncManager.class,
+                    //GlobalVariables.syncInterval, TimeUnit.DAYS)
+                    PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS, TimeUnit.MILLISECONDS)
+                    .setInitialDelay(10, TimeUnit.MINUTES)
+                    .setConstraints(constraints)
+                    .addTag(GlobalConstants.SYNC_WORK_TAG)
+                    .build();
+
+            WorkManager.getInstance(this).cancelAllWorkByTag(GlobalConstants.SYNC_WORK_TAG);
+            WorkManager.getInstance(this).enqueue(syncRequest);
+
+            prefs.edit()
+                    .putBoolean(getString(R.string.key_app_first_run), false)
+                    .apply();
+        }
+    }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -332,9 +374,8 @@ public class MainActivity extends AppCompatActivity
                 dataSource.loadUrl(GlobalConstants.URL_LIBRARY_NEWEST);
             }
             if (!hasRequestedSync){
-                GlobalFunctions.scheduleNextSynchronization(this, GlobalFunctions.nextStandardSync());
                 ContextCompat.startForegroundService(this,
-                        new Intent(this, SyncService.class).putExtra("service", false));
+                        new Intent(this, SyncService.class)/*.putExtra("service", false)*/);
                 hasRequestedSync = true;
             }
         }
@@ -357,17 +398,15 @@ public class MainActivity extends AppCompatActivity
                         startActivityForResult(acIntent, GlobalConstants.ACTIVITY_LOGIN_REQUEST_CODE);
                     }
                     else {
-                        GlobalFunctions.scheduleNextSynchronization(this, GlobalFunctions.nextStandardSync());
                         ContextCompat.startForegroundService(this,
-                                new Intent(this, SyncService.class).putExtra("service", false));
+                                new Intent(this, SyncService.class)/*.putExtra("service", false)*/);
                         hasRequestedSync = true;
                     }
                     isFirstRequest = false;
                 }
                 else {
-                    GlobalFunctions.scheduleNextSynchronization(this, GlobalFunctions.nextStandardSync());
                     ContextCompat.startForegroundService(this,
-                            new Intent(this, SyncService.class).putExtra("service", false));
+                            new Intent(this, SyncService.class)/*.putExtra("service", false)*/);
                     hasRequestedSync = true;
                 }
             }
@@ -459,9 +498,8 @@ public class MainActivity extends AppCompatActivity
                 startActivityForResult(acIntent, GlobalConstants.ACTIVITY_LOGIN_REQUEST_CODE);
             }
             else {
-                GlobalFunctions.scheduleNextSynchronization(this, GlobalFunctions.nextStandardSync());
                 ContextCompat.startForegroundService(this,
-                        new Intent(this, SyncService.class).putExtra("service", false));
+                        new Intent(this, SyncService.class)/*.putExtra("service", false)*/);
                 hasRequestedSync = true;
             }
             isFirstRequest = false;
@@ -516,11 +554,26 @@ public class MainActivity extends AppCompatActivity
             permReqState = PermReqState.REQUESTED;
         }
         else if (permReqState == PermReqState.REQUESTING_SYNC){
-            GlobalFunctions.scheduleNextSynchronization(this, GlobalFunctions.nextStandardSync());
             ContextCompat.startForegroundService(this,
-                    new Intent(this, SyncService.class).putExtra("service", false));
+                    new Intent(this, SyncService.class)/*.putExtra("service", false)*/);
             hasRequestedSync = true;
         }
         else permReqState = PermReqState.REQUESTED;
+    }
+
+    //_DEBUG: Remove later
+    public  boolean isStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                return true;
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+        }
+        else { //permission is automatically granted on sdk<23 upon installation
+            return true;
+        }
     }
 }

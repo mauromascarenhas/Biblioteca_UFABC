@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.nintersoft.bibliotecaufabc.BookViewerActivity;
+import com.nintersoft.bibliotecaufabc.activities.BookViewerActivity;
 import com.nintersoft.bibliotecaufabc.R;
 import com.nintersoft.bibliotecaufabc.book_search_model.BookSearchProperties;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;

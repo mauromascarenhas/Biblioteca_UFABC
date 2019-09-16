@@ -1,4 +1,4 @@
-package com.nintersoft.bibliotecaufabc;
+package com.nintersoft.bibliotecaufabc.activities;
 
 import android.content.res.Configuration;
 import android.os.Bundle;

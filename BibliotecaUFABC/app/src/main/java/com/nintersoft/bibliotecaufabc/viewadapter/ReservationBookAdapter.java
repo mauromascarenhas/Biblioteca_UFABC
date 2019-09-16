@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nintersoft.bibliotecaufabc.R;
-import com.nintersoft.bibliotecaufabc.ReservationActivity;
+import com.nintersoft.bibliotecaufabc.activities.ReservationActivity;
 import com.nintersoft.bibliotecaufabc.bookreservationproperties.BookReservationProperties;
 
 import java.util.ArrayList;

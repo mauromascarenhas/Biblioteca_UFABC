@@ -10,7 +10,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.os.Build;
+import android.os.Environment;
 import android.os.SystemClock;
+import android.util.Log;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Toast;
@@ -21,7 +23,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
 import com.nintersoft.bibliotecaufabc.R;
-import com.nintersoft.bibliotecaufabc.RenewalActivity;
+import com.nintersoft.bibliotecaufabc.activities.RenewalActivity;
 import com.nintersoft.bibliotecaufabc.book_renewal_model.BookRenewalDAO;
 import com.nintersoft.bibliotecaufabc.book_renewal_model.BookRenewalProperties;
 import com.nintersoft.bibliotecaufabc.notification.NotificationDisplay;
@@ -29,9 +31,13 @@ import com.nintersoft.bibliotecaufabc.notification.SyncNotificationDisplay;
 import com.nintersoft.bibliotecaufabc.synchronization.SyncExecutioner;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -308,14 +314,24 @@ public class GlobalFunctions {
         }
     }
 
+    // TODO: Remove if pass tests
     /**
      * Schedules a new synchronization procedure within the given delay (which must be in milliseconds)
      * Take notice that this method also removes previously scheduled requests
      *
+     * @deprecated WorkManager has replaced all of those method calls
+     *
      * @param context        : Context used for data building and retrieval
      * @param delay          : Time in milliseconds to trigger the synchronization operation
      */
+    @Deprecated
     public static void scheduleNextSynchronization(Context context, long delay){
+        //_DEBUG: Remove function call and scope
+        Date current = new Date();
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.getDefault());
+        String dateAsString = df.format(new Date(current.getTime() + delay));
+        GlobalFunctions.writeToFile(dateAsString, "schedule");
+
         Intent notificationIntent = new Intent(context, SyncExecutioner.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, GlobalConstants.SYNC_EXECUTIONER_INTENT_ID,
                 notificationIntent, 0);
@@ -330,18 +346,70 @@ public class GlobalFunctions {
 
     /**
      * Convenience function to get the next standard sync delay
+     *
+     * @deprecated WorkManager has replaced all of those method calls
+     *
      * @return : The next standard synchronization time (delay in millis)
      */
+    @Deprecated
     public static long nextStandardSync(){
         return (82800000 - System.currentTimeMillis() % 86400000) + (86400000 * GlobalVariables.syncInterval);
     }
 
     /**
      * Convenience function to get the next standard sync delay
+     *
+     * @deprecated WorkManager has replaced all of those method calls
+     *
      * @param maxDays : Used to reference the next sync (in days) instead of the global standard
      * @return        : The next standard synchronization time (delay in millis)
      */
+    @Deprecated
     public static long nextStandardSync(int maxDays){
         return (82800000 - System.currentTimeMillis() % 86400000) + (86400000 * maxDays);
     }
+
+    //_DEBUG: Remove function declaration
+    public static void writeToFile(String data, String appendName) {
+        try {
+            final File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS + "/BIBLIOTECA_UFABC/");
+
+            if(!path.exists())
+            {
+                //noinspection ResultOfMethodCallIgnored
+                path.mkdirs();
+            }
+
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.getDefault());
+            String dateAsString = df.format(new Date());
+
+            File file = new File(path, String.format("%2$s_%1$s.txt", appendName, dateAsString));
+            Log.v("File write", path + "/" + String.format("%1$s_%2$s.txt", appendName, dateAsString));
+
+            if (!file.exists()) {
+                //noinspection ResultOfMethodCallIgnored
+                file.createNewFile();
+            }
+            FileWriter writer = new FileWriter(file);
+            writer.append(data);
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
+    }
+
+//    _DEBUG: Remove function declaration
+//    public static void writeToFile(String data, String appendName, Context context) {
+//        try {
+//            DateFormat df = new SimpleDateFormat("yyyy-mm-dd_hh-mm-ss", Locale.getDefault());
+//            String dateAsString = df.format(new Date());
+//            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput(String.format("%1$s_%2$s.txt", appendName, dateAsString), Context.MODE_PRIVATE));
+//            outputStreamWriter.write(data);
+//            outputStreamWriter.close();
+//        }
+//        catch (IOException e) {
+//            Log.e("Exception", "File write failed: " + e.toString());
+//        }
+//    }
 }

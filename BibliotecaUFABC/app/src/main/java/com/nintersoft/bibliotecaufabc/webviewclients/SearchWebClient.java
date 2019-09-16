@@ -9,14 +9,11 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.nintersoft.bibliotecaufabc.SearchActivity;
+import com.nintersoft.bibliotecaufabc.activities.SearchActivity;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
 
 import androidx.annotation.RequiresApi;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class SearchWebClient extends WebViewClient {
     private int search_home_finished;

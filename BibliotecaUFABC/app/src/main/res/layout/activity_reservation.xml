@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:gravity="center_vertical"
     android:layout_gravity="center_vertical"
-    tools:context=".ReservationActivity">
+    tools:context=".activities.ReservationActivity">
 
     <LinearLayout
         android:id="@+id/reservation_loading_layout"

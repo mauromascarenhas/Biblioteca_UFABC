@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!--_DEBUG: Remove this thing later-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".appcontext.ContextApp"
@@ -20,11 +22,11 @@
         tools:ignore="AllowBackup,UnusedAttribute">
 
         <activity
-            android:name=".ReservationActivity"
+            android:name=".activities.ReservationActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/title_activity_reservation" />
         <activity
-            android:name=".BookViewerActivity"
+            android:name=".activities.BookViewerActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/title_activity_book_details">
             <intent-filter>
@@ -44,31 +46,31 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SearchFiltersActivity"
+            android:name=".activities.SearchFiltersActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/title_activity_search_filters" />
         <activity
-            android:name=".SettingsActivity"
+            android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings" />
         <activity
-            android:name=".SearchActivity"
+            android:name=".activities.SearchActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/title_activity_search"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".RenewalActivity"
+            android:name=".activities.RenewalActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/title_activity_renewal" />
         <activity
-            android:name=".BookLoansActivity"
+            android:name=".activities.BookLoansActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/title_activity_loans" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.LoginActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/title_activity_login" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">

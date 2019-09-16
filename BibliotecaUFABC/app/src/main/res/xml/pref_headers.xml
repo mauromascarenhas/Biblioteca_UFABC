@@ -3,19 +3,19 @@
     <!-- These settings headers are only used on tablets. -->
 
     <header
-        android:fragment="com.nintersoft.bibliotecaufabc.SettingsActivity$GeneralPreferenceFragment"
+        android:fragment="com.nintersoft.bibliotecaufabc.activities.SettingsActivity$GeneralPreferenceFragment"
         android:icon="@drawable/ic_pref_info"
         android:title="@string/pref_header_general"
         android:summary="@string/pref_summary_general"/>
 
     <header
-        android:fragment="com.nintersoft.bibliotecaufabc.SettingsActivity$NotificationPreferenceFragment"
+        android:fragment="com.nintersoft.bibliotecaufabc.activities.SettingsActivity$NotificationPreferenceFragment"
         android:icon="@drawable/ic_pref_notifications"
         android:title="@string/pref_header_notifications"
         android:summary="@string/pref_description_notifications"/>
 
     <header
-        android:fragment="com.nintersoft.bibliotecaufabc.SettingsActivity$PrivacyPreferenceFragment"
+        android:fragment="com.nintersoft.bibliotecaufabc.activities.SettingsActivity$PrivacyPreferenceFragment"
         android:icon="@drawable/ic_menu_login"
         android:title="@string/pref_header_privacy"
         android:summary="@string/pref_summary_privacy"/>

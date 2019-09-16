@@ -23,7 +23,7 @@ public class SyncService extends Service {
 
     private WebView dataSource;
     private WindowManager windowManager;
-    private boolean isScheduled;
+    //private boolean isScheduled;
 
     public SyncService() {
     }
@@ -77,8 +77,11 @@ public class SyncService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        //_DEBUG: Remove function call and scope
+        GlobalFunctions.writeToFile("__REQUESTED!", "request");
+
         if (dataSource != null) {
-            isScheduled = intent.getBooleanExtra("service", true);
+            //isScheduled = intent.getBooleanExtra("service", true);
             startForeground(GlobalConstants.SYNC_NOTIFICATION_ID, createSyncingNotification());
             dataSource.loadUrl(GlobalConstants.URL_LIBRARY_RENEWAL);
             return super.onStartCommand(intent, flags, startId);
@@ -110,8 +113,12 @@ public class SyncService extends Service {
                 .build();
     }
 
+    // TODO: Remove parameter
+    @SuppressWarnings("unused")
     public void finish(long delay){
-        if (isScheduled) GlobalFunctions.scheduleNextSynchronization(this, delay);
+        //_DEBUG: Remove function call and scope
+        GlobalFunctions.writeToFile("Seems that there was an error", "error");
+        //if (isScheduled) GlobalFunctions.scheduleNextSynchronization(this, delay);
         finish();
     }
 

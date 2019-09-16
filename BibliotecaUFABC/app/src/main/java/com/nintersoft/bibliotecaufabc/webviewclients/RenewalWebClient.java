@@ -8,7 +8,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.nintersoft.bibliotecaufabc.RenewalActivity;
+import com.nintersoft.bibliotecaufabc.activities.RenewalActivity;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
 

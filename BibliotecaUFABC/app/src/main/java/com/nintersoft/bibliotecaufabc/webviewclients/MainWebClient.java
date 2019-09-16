@@ -9,7 +9,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.nintersoft.bibliotecaufabc.MainActivity;
+import com.nintersoft.bibliotecaufabc.activities.MainActivity;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
 
 import androidx.annotation.RequiresApi;

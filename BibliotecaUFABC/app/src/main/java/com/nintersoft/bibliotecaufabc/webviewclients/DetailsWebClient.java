@@ -9,7 +9,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.nintersoft.bibliotecaufabc.BookViewerActivity;
+import com.nintersoft.bibliotecaufabc.activities.BookViewerActivity;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
 

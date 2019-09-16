@@ -21,6 +21,10 @@ public class GlobalConstants {
     public static final String CHANNEL_SYNC_ID = "SYNC_NOTIFICATION_CHANNEL";
     static final String CHANNEL_RENEWAL_ID = "RENEWAL_NOTIFICATION_CHANNEL";
 
+    // Sync work constants
+    public static final String SYNC_WORK_TAG = "ufabc_library_sync_work";
+
+    // URL constants
     public static final String URL_ACCESS_PAGE = "https://acesso.ufabc.edu.br/";
     public static final String URL_LIBRARY_HOME = "http://biblioteca.ufabc.edu.br/mobile/busca.php";
     public static final String URL_LIBRARY_LOGIN = "http://biblioteca.ufabc.edu.br/login.php";

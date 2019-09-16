@@ -8,7 +8,7 @@
     android:gravity="center_vertical"
     android:orientation="vertical"
     android:padding="@dimen/activity_horizontal_margin"
-    tools:context=".LoginActivity">
+    tools:context=".activities.LoginActivity">
 
     <ScrollView
         android:id="@+id/form_login"
