@@ -10,7 +10,7 @@ import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
 
 public class NotificationBootScheduler extends BroadcastReceiver {
 
-    // TODO: Remove when complete!
+    // TODO: Remove if pass or fix if don't
 
     @Override
     public void onReceive(Context context, Intent intent) {

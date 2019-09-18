@@ -83,6 +83,7 @@ public class SyncWebClient extends WebViewClient {
                         user_login, user_password);
                 view.evaluateJavascript(script, null);
                 login_page_finished++;
+                // TODO: Add timeout (or check for "null" fields)
             }
 
             String script = String.format("%1$s \ncheckForErrors();",

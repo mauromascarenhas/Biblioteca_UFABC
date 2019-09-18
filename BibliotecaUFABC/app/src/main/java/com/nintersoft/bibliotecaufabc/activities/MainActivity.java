@@ -1,6 +1,7 @@
 package com.nintersoft.bibliotecaufabc.activities;
 
 import android.Manifest;
+import android.app.AlarmManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,7 +23,6 @@ import com.nintersoft.bibliotecaufabc.R;
 import com.nintersoft.bibliotecaufabc.book_search_model.BookSearchDAO;
 import com.nintersoft.bibliotecaufabc.book_search_model.BookSearchDatabaseSingletonFactory;
 import com.nintersoft.bibliotecaufabc.book_search_model.BookSearchProperties;
-import com.nintersoft.bibliotecaufabc.synchronization.SyncManager;
 import com.nintersoft.bibliotecaufabc.synchronization.SyncService;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
@@ -42,10 +42,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.work.Constraints;
-import androidx.work.NetworkType;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkManager;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -59,7 +55,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -233,6 +228,25 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+    // TODO: Change method evocation to an appropriate time + check which version is gonna be used
+    private void setSyncSchedule(){
+        SharedPreferences prefs;
+        // TODO: Remove "or true" from conditional
+        //noinspection ConstantConditions,PointlessBooleanExpression
+        if ((prefs = PreferenceManager.getDefaultSharedPreferences(this))
+                .getBoolean(getString(R.string.key_app_first_run), true)
+                || true){
+
+            GlobalFunctions.schedulePeriodicSync(getApplicationContext(),
+                    //600000, GlobalVariables.syncInterval * AlarmManager.INTERVAL_DAY);
+                    120000, AlarmManager.INTERVAL_FIFTEEN_MINUTES);
+
+            prefs.edit()
+                    .putBoolean(getString(R.string.key_app_first_run), false)
+                    .apply();
+        }
+    }
+    /*
     private void setSyncSchedule(){
         SharedPreferences prefs;
         // TODO: Remove "or true" from conditional
@@ -268,7 +282,7 @@ public class MainActivity extends AppCompatActivity
                     .putBoolean(getString(R.string.key_app_first_run), false)
                     .apply();
         }
-    }
+    }*/
 
     @Override
     public void onBackPressed() {

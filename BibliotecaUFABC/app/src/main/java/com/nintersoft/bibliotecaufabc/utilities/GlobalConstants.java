@@ -8,19 +8,11 @@ public class GlobalConstants {
 
     public static final String CONNECTED_STATUS_USER_NAME = "connected_status_user_name";
 
-    /**
-     * Gets notification content as parcelable extra from intent
-     * You must use NOTIFICATION_MESSAGE instead
-     *
-     * @see #NOTIFICATION_MESSAGE
-     */
-    @Deprecated
-    public static final String NOTIFICATION_CONTENT = "notification_content";
-
     // Notification channel constants
     public static final String CHANNEL_SYNC_ID = "SYNC_NOTIFICATION_CHANNEL";
     static final String CHANNEL_RENEWAL_ID = "RENEWAL_NOTIFICATION_CHANNEL";
 
+    // TODO: Remove if test fails
     // Sync work constants
     public static final String SYNC_WORK_TAG = "ufabc_library_sync_work";
 

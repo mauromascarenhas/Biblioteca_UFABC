@@ -318,36 +318,6 @@ public class GlobalFunctions {
 
     // TODO: Remove if pass tests
     /**
-     * Schedules a new synchronization procedure within the given delay (which must be in milliseconds)
-     * Take notice that this method also removes previously scheduled requests
-     *
-     * @deprecated WorkManager has replaced all of those method calls
-     *
-     * @param context        : Context used for data building and retrieval
-     * @param delay          : Time in milliseconds to trigger the synchronization operation
-     */
-    @Deprecated
-    public static void scheduleNextSynchronization(Context context, long delay){
-        //_DEBUG: Remove function call and scope
-        Date current = new Date();
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.getDefault());
-        String dateAsString = df.format(new Date(current.getTime() + delay));
-        GlobalFunctions.writeToFile(dateAsString, "schedule");
-
-        Intent notificationIntent = new Intent(context, SyncExecutioner.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, GlobalConstants.SYNC_EXECUTIONER_INTENT_ID,
-                notificationIntent, 0);
-
-        long futureInMillis = SystemClock.elapsedRealtime() + delay;
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        if (alarmManager != null){
-            alarmManager.cancel(pendingIntent);
-            alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
-        }
-    }
-
-    // TODO: Remove if pass tests
-    /**
      * Schedules a recurrent synchronization procedure within the given initial
      * delay and periodic interval (which must be in milliseconds)
      * Take notice that this method also removes previously scheduled requests
@@ -389,14 +359,14 @@ public class GlobalFunctions {
         //_DEBUG: Remove function call and scope
         Date current = new Date();
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.getDefault());
-        String dateAsString = df.format(new Date(current.getTime() + 900000));
+        String dateAsString = df.format(new Date(current.getTime() + AlarmManager.INTERVAL_FIFTEEN_MINUTES));
         GlobalFunctions.writeToFile(dateAsString, "retry_schedule");
 
         // Do not sync if matches with a scheduled one
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        if (prefs.getLong(context.getString(R.string.key_synchronization_schedule), 0)
+        if (prefs.getLong(context.getString(R.string.key_synchronization_schedule), SystemClock.elapsedRealtime() - 1)
                 + (prefs.getLong(context.getString(R.string.key_notification_sync_interval), 2)
-                    * 86400000L) - SystemClock.elapsedRealtime() + 900000 <= 0)
+                    * AlarmManager.INTERVAL_DAY) - SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_FIFTEEN_MINUTES <= 0)
             return;
 
         Intent notificationIntent = new Intent(context, SyncExecutioner.class);
@@ -408,35 +378,10 @@ public class GlobalFunctions {
             alarmManager.cancel(pendingIntent);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
                 alarmManager.setAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                        SystemClock.elapsedRealtime() + 900000, pendingIntent);
+                        SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
             else alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                    SystemClock.elapsedRealtime() + 900000, pendingIntent);
+                    SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
         }
-    }
-
-    /**
-     * Convenience function to get the next standard sync delay
-     *
-     * @deprecated WorkManager has replaced all of those method calls
-     *
-     * @return : The next standard synchronization time (delay in millis)
-     */
-    @Deprecated
-    public static long nextStandardSync(){
-        return (82800000 - System.currentTimeMillis() % 86400000) + (86400000 * GlobalVariables.syncInterval);
-    }
-
-    /**
-     * Convenience function to get the next standard sync delay
-     *
-     * @deprecated WorkManager has replaced all of those method calls
-     *
-     * @param maxDays : Used to reference the next sync (in days) instead of the global standard
-     * @return        : The next standard synchronization time (delay in millis)
-     */
-    @Deprecated
-    public static long nextStandardSync(int maxDays){
-        return (82800000 - System.currentTimeMillis() % 86400000) + (86400000 * maxDays);
     }
 
     //_DEBUG: Remove function declaration
