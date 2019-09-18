@@ -235,8 +235,11 @@ public class MainActivity extends AppCompatActivity
 
     private void setSyncSchedule(){
         SharedPreferences prefs;
+        // TODO: Remove "or true" from conditional
+        //noinspection ConstantConditions,PointlessBooleanExpression
         if ((prefs = PreferenceManager.getDefaultSharedPreferences(this))
-                .getBoolean(getString(R.string.key_app_first_run), true)){
+                .getBoolean(getString(R.string.key_app_first_run), true)
+                || true){
 
             Constraints constraints = new Constraints.Builder()
                     .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -247,13 +250,19 @@ public class MainActivity extends AppCompatActivity
             PeriodicWorkRequest syncRequest = new PeriodicWorkRequest.Builder(SyncManager.class,
                     //GlobalVariables.syncInterval, TimeUnit.DAYS)
                     PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS, TimeUnit.MILLISECONDS)
-                    .setInitialDelay(10, TimeUnit.MINUTES)
                     .setConstraints(constraints)
                     .addTag(GlobalConstants.SYNC_WORK_TAG)
                     .build();
 
-            WorkManager.getInstance(this).cancelAllWorkByTag(GlobalConstants.SYNC_WORK_TAG);
-            WorkManager.getInstance(this).enqueue(syncRequest);
+            WorkManager workManager = WorkManager.getInstance(getApplicationContext());
+
+            workManager.cancelAllWork();
+            workManager.pruneWork();
+
+            workManager.enqueue(syncRequest);
+            // TODO: Change evocation to this one?
+            //workManager.enqueueUniquePeriodicWork(GlobalConstants.SYNC_WORK_TAG,
+                    //ExistingPeriodicWorkPolicy.KEEP, syncRequest);
 
             prefs.edit()
                     .putBoolean(getString(R.string.key_app_first_run), false)
@@ -562,6 +571,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     //_DEBUG: Remove later
+    @SuppressWarnings("UnusedReturnValue")
     public  boolean isStoragePermissionGranted() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)

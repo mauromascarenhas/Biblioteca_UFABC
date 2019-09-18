@@ -12,6 +12,7 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import com.nintersoft.bibliotecaufabc.R;
+import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
 
 public class SyncManager extends Worker {
 
@@ -28,6 +29,8 @@ public class SyncManager extends Worker {
     @Override
     @SuppressWarnings("StatementWithEmptyBody")
     public Result doWork() {
+        //_DEBUG: Remove function call and scope
+        GlobalFunctions.writeToFile("__REQUESTED!", "request-manager");
         // Acquires last sync time
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(mContext);
         lastSync = pref.getLong(mContext.getString(R.string.key_synchronization_schedule), System.currentTimeMillis());

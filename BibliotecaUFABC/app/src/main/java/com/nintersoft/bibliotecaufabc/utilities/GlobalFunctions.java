@@ -8,10 +8,12 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.os.Build;
 import android.os.Environment;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -341,6 +343,74 @@ public class GlobalFunctions {
         if (alarmManager != null){
             alarmManager.cancel(pendingIntent);
             alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
+        }
+    }
+
+    // TODO: Remove if pass tests
+    /**
+     * Schedules a recurrent synchronization procedure within the given initial
+     * delay and periodic interval (which must be in milliseconds)
+     * Take notice that this method also removes previously scheduled requests
+     *
+     * @param context          : Context used for data building and retrieval
+     * @param initialDelay     : Time in milliseconds to trigger the first synchronization operation
+     * @param periodicInterval : Periodic interval in which the task must be executed (milliseconds)
+     */
+    public static void schedulePeriodicSync(Context context, long initialDelay, long periodicInterval){
+        //_DEBUG: Remove function call and scope
+        Date current = new Date();
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.getDefault());
+        String dateAsString = df.format(new Date(current.getTime() + initialDelay))
+                + " . Interval " + periodicInterval;
+        GlobalFunctions.writeToFile(dateAsString, "periodic_schedule");
+
+        Intent notificationIntent = new Intent(context, SyncExecutioner.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, GlobalConstants.SYNC_EXECUTIONER_INTENT_ID,
+                notificationIntent, 0);
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        if (alarmManager != null){
+            alarmManager.cancel(pendingIntent);
+            alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                    SystemClock.elapsedRealtime() + initialDelay, periodicInterval,
+                    pendingIntent);
+        }
+    }
+
+    // TODO: Remove if pass tests
+    /**
+     * Schedules a new synchronization procedure with 15 minutes of delay.
+     * If a recurrent sync is already scheduled, then it is ignored (nothing is done)
+     * Take notice that this method also removes previously scheduled requests
+     *
+     * @param context        : Context used for data building and retrieval
+     */
+    public static void scheduleRetrySync(Context context){
+        //_DEBUG: Remove function call and scope
+        Date current = new Date();
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.getDefault());
+        String dateAsString = df.format(new Date(current.getTime() + 900000));
+        GlobalFunctions.writeToFile(dateAsString, "retry_schedule");
+
+        // Do not sync if matches with a scheduled one
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        if (prefs.getLong(context.getString(R.string.key_synchronization_schedule), 0)
+                + (prefs.getLong(context.getString(R.string.key_notification_sync_interval), 2)
+                    * 86400000L) - SystemClock.elapsedRealtime() + 900000 <= 0)
+            return;
+
+        Intent notificationIntent = new Intent(context, SyncExecutioner.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, GlobalConstants.SYNC_EXECUTIONER_INTENT_RETRY_ID,
+                notificationIntent, 0);
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        if (alarmManager != null){
+            alarmManager.cancel(pendingIntent);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                alarmManager.setAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                        SystemClock.elapsedRealtime() + 900000, pendingIntent);
+            else alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                    SystemClock.elapsedRealtime() + 900000, pendingIntent);
         }
     }
 
