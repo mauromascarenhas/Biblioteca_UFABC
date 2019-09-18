@@ -228,7 +228,7 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    // TODO: Change method evocation to an appropriate time + check which version is gonna be used
+    // TODO: Change method evocation to an appropriate time
     private void setSyncSchedule(){
         SharedPreferences prefs;
         // TODO: Remove "or true" from conditional
@@ -246,43 +246,6 @@ public class MainActivity extends AppCompatActivity
                     .apply();
         }
     }
-    /*
-    private void setSyncSchedule(){
-        SharedPreferences prefs;
-        // TODO: Remove "or true" from conditional
-        //noinspection ConstantConditions,PointlessBooleanExpression
-        if ((prefs = PreferenceManager.getDefaultSharedPreferences(this))
-                .getBoolean(getString(R.string.key_app_first_run), true)
-                || true){
-
-            Constraints constraints = new Constraints.Builder()
-                    .setRequiredNetworkType(NetworkType.CONNECTED)
-                    .setRequiresBatteryNotLow(true)
-                    .build();
-
-            // FIXME: Change to scheduled days again
-            PeriodicWorkRequest syncRequest = new PeriodicWorkRequest.Builder(SyncManager.class,
-                    //GlobalVariables.syncInterval, TimeUnit.DAYS)
-                    PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS, TimeUnit.MILLISECONDS)
-                    .setConstraints(constraints)
-                    .addTag(GlobalConstants.SYNC_WORK_TAG)
-                    .build();
-
-            WorkManager workManager = WorkManager.getInstance(getApplicationContext());
-
-            workManager.cancelAllWork();
-            workManager.pruneWork();
-
-            workManager.enqueue(syncRequest);
-            // TODO: Change evocation to this one?
-            //workManager.enqueueUniquePeriodicWork(GlobalConstants.SYNC_WORK_TAG,
-                    //ExistingPeriodicWorkPolicy.KEEP, syncRequest);
-
-            prefs.edit()
-                    .putBoolean(getString(R.string.key_app_first_run), false)
-                    .apply();
-        }
-    }*/
 
     @Override
     public void onBackPressed() {
@@ -398,7 +361,7 @@ public class MainActivity extends AppCompatActivity
             }
             if (!hasRequestedSync){
                 ContextCompat.startForegroundService(this,
-                        new Intent(this, SyncService.class)/*.putExtra("service", false)*/);
+                        new Intent(this, SyncService.class).putExtra(GlobalConstants.SYNC_INTENT_SCHEDULED, false));
                 hasRequestedSync = true;
             }
         }
@@ -422,14 +385,14 @@ public class MainActivity extends AppCompatActivity
                     }
                     else {
                         ContextCompat.startForegroundService(this,
-                                new Intent(this, SyncService.class)/*.putExtra("service", false)*/);
+                                new Intent(this, SyncService.class).putExtra(GlobalConstants.SYNC_INTENT_SCHEDULED, false));
                         hasRequestedSync = true;
                     }
                     isFirstRequest = false;
                 }
                 else {
                     ContextCompat.startForegroundService(this,
-                            new Intent(this, SyncService.class)/*.putExtra("service", false)*/);
+                            new Intent(this, SyncService.class).putExtra(GlobalConstants.SYNC_INTENT_SCHEDULED, false));
                     hasRequestedSync = true;
                 }
             }
@@ -522,7 +485,7 @@ public class MainActivity extends AppCompatActivity
             }
             else {
                 ContextCompat.startForegroundService(this,
-                        new Intent(this, SyncService.class)/*.putExtra("service", false)*/);
+                        new Intent(this, SyncService.class).putExtra(GlobalConstants.SYNC_INTENT_SCHEDULED, false));
                 hasRequestedSync = true;
             }
             isFirstRequest = false;
@@ -578,7 +541,7 @@ public class MainActivity extends AppCompatActivity
         }
         else if (permReqState == PermReqState.REQUESTING_SYNC){
             ContextCompat.startForegroundService(this,
-                    new Intent(this, SyncService.class)/*.putExtra("service", false)*/);
+                    new Intent(this, SyncService.class).putExtra(GlobalConstants.SYNC_INTENT_SCHEDULED, false));
             hasRequestedSync = true;
         }
         else permReqState = PermReqState.REQUESTED;

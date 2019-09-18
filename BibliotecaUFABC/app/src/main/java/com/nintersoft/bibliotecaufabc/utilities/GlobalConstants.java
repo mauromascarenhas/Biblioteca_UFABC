@@ -12,9 +12,7 @@ public class GlobalConstants {
     public static final String CHANNEL_SYNC_ID = "SYNC_NOTIFICATION_CHANNEL";
     static final String CHANNEL_RENEWAL_ID = "RENEWAL_NOTIFICATION_CHANNEL";
 
-    // TODO: Remove if test fails
-    // Sync work constants
-    public static final String SYNC_WORK_TAG = "ufabc_library_sync_work";
+    public static final String SYNC_INTENT_SCHEDULED = "is_sync_scheduled";
 
     // URL constants
     public static final String URL_ACCESS_PAGE = "https://acesso.ufabc.edu.br/";

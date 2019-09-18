@@ -93,6 +93,7 @@ public class GlobalFunctions {
         }
     }
 
+    // TODO: Check this one
     /**
      * Schedules a synchronization warning/notification for the current time plus the
      * given delay (in milliseconds). It is important to notice that it cancels any previous
@@ -118,6 +119,7 @@ public class GlobalFunctions {
         }
     }
 
+    // TODO: Check this one
     /**
      * Schedules a renewal notification/warning with the given Id and time (which must be in milliseconds)
      * Help from : https://stackoverflow.com/questions/36902667/how-to-schedule-notification-in-android
@@ -169,6 +171,7 @@ public class GlobalFunctions {
         return builder.build();
     }
 
+    // TODO: Check this one
     /**
      * Creates a notification with a pending intent to RenewalActivity and post it.
      * @param context     : Context used for data building and retrieval
@@ -182,6 +185,7 @@ public class GlobalFunctions {
             notificationManager.notify(id, GlobalFunctions.createSyncNotification(context, title_rId, message_rId));
     }
 
+    // TODO: Check this one
     /**
      * Creates a renewal notification with the given message.
      * If no message is passed to the method, it will build a generic one to be displayed
@@ -214,6 +218,7 @@ public class GlobalFunctions {
         return builder.build();
     }
 
+    // TODO: Check this one
     /**
      * This method cancels the scheduling of the notification which has the given Id.
      * @param context        : Context used for building intent building and comparison
@@ -267,6 +272,7 @@ public class GlobalFunctions {
         }
     }
 
+    // TODO: Check if not causes interferences in sync schedules
     /**
      * Cancels every existing pending renewal warning
      * @param context : Used for intents comparison
@@ -278,6 +284,7 @@ public class GlobalFunctions {
             GlobalFunctions.cancelScheduledNotification(context, (int)b.getId());
     }
 
+    // TODO: Check this one
     /**
      * Schedules notification alarms for every #BookRenewalProperties available at DAO
      * @param context : Context used for building intent building
@@ -316,7 +323,6 @@ public class GlobalFunctions {
         }
     }
 
-    // TODO: Remove if pass tests
     /**
      * Schedules a recurrent synchronization procedure within the given initial
      * delay and periodic interval (which must be in milliseconds)
@@ -347,7 +353,6 @@ public class GlobalFunctions {
         }
     }
 
-    // TODO: Remove if pass tests
     /**
      * Schedules a new synchronization procedure with 15 minutes of delay.
      * If a recurrent sync is already scheduled, then it is ignored (nothing is done)
@@ -413,18 +418,4 @@ public class GlobalFunctions {
             Log.e("Exception", "File write failed: " + e.toString());
         }
     }
-
-//    _DEBUG: Remove function declaration
-//    public static void writeToFile(String data, String appendName, Context context) {
-//        try {
-//            DateFormat df = new SimpleDateFormat("yyyy-mm-dd_hh-mm-ss", Locale.getDefault());
-//            String dateAsString = df.format(new Date());
-//            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput(String.format("%1$s_%2$s.txt", appendName, dateAsString), Context.MODE_PRIVATE));
-//            outputStreamWriter.write(data);
-//            outputStreamWriter.close();
-//        }
-//        catch (IOException e) {
-//            Log.e("Exception", "File write failed: " + e.toString());
-//        }
-//    }
 }

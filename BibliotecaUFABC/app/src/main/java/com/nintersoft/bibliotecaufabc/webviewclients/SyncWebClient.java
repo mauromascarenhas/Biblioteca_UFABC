@@ -56,10 +56,10 @@ public class SyncWebClient extends WebViewClient {
         user_password = pref.getString(mContext.getString(R.string.key_privacy_login_password), "");
 
         if (user_login == null || user_password == null)
-            ((SyncService)mContext).finish(86400000);
+            ((SyncService)mContext).finish();
         if (!GlobalVariables.storeUserFormData || user_login.isEmpty()
                 || user_password.isEmpty())
-            ((SyncService)mContext).finish(86400000);
+            ((SyncService)mContext).finish();
     }
 
     @Override
@@ -83,7 +83,8 @@ public class SyncWebClient extends WebViewClient {
                         user_login, user_password);
                 view.evaluateJavascript(script, null);
                 login_page_finished++;
-                // TODO: Add timeout (or check for "null" fields)
+
+                ((SyncService)mContext).killLater();
             }
 
             String script = String.format("%1$s \ncheckForErrors();",
@@ -98,10 +99,10 @@ public class SyncWebClient extends WebViewClient {
                                     R.string.notification_sync_error_title,
                                     R.string.notification_sync_error_message,
                                     GlobalConstants.SYNC_NOTIFICATION_UPDATE_ID);
-                            ((SyncService)mContext).finish(86400000);
+                            ((SyncService)mContext).finish();
                         }
                     } catch (JSONException e){
-                        ((SyncService)mContext).finish(3600000);
+                        ((SyncService)mContext).retryAndFinish();
                     }
                 }
             });
@@ -137,7 +138,7 @@ public class SyncWebClient extends WebViewClient {
                                     result.getJSONArray("renewalBooks"));
                         else view.loadUrl(GlobalConstants.URL_LIBRARY_LOGIN);
                     } catch (JSONException e){
-                        ((SyncService)mContext).finish(3600000);
+                        ((SyncService)mContext).retryAndFinish();
                     }
                 }
             });
@@ -148,13 +149,13 @@ public class SyncWebClient extends WebViewClient {
     @Override
     public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
         super.onReceivedError(view, request, error);
-        ((SyncService)mContext).finish(900000);
+        ((SyncService)mContext).retryAndFinish();
     }
 
     @Override
     public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
         super.onReceivedError(view, errorCode, description, failingUrl);
-        ((SyncService)mContext).finish(900000);
+        ((SyncService)mContext).retryAndFinish();
     }
 
     private void setReservationBooks(JSONArray jsResultsArr){
@@ -180,7 +181,7 @@ public class SyncWebClient extends WebViewClient {
             GlobalFunctions.writeToFile(jsResultsArr.toString(), "complete");
             ((SyncService)mContext).finish();
         }catch (JSONException e){
-            ((SyncService)mContext).finish(3600000);
+            ((SyncService)mContext).retryAndFinish();
         }
     }
 

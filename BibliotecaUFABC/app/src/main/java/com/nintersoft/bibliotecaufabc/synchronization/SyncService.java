@@ -5,6 +5,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.view.Gravity;
@@ -23,7 +24,10 @@ public class SyncService extends Service {
 
     private WebView dataSource;
     private WindowManager windowManager;
-    //private boolean isScheduled;
+    private boolean isScheduled;
+
+    private Handler mHandler;
+    private Runnable killService;
 
     public SyncService() {
     }
@@ -81,7 +85,7 @@ public class SyncService extends Service {
         GlobalFunctions.writeToFile("__REQUESTED!", "request");
 
         if (dataSource != null) {
-            //isScheduled = intent.getBooleanExtra("service", true);
+            isScheduled = intent.getBooleanExtra(GlobalConstants.SYNC_INTENT_SCHEDULED, true);
             startForeground(GlobalConstants.SYNC_NOTIFICATION_ID, createSyncingNotification());
             dataSource.loadUrl(GlobalConstants.URL_LIBRARY_RENEWAL);
             return super.onStartCommand(intent, flags, startId);
@@ -95,7 +99,20 @@ public class SyncService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+
         if (dataSource != null) windowManager.removeView(dataSource);
+        if (mHandler != null) mHandler.removeCallbacks(killService);
+    }
+
+    public void killLater(){
+        killService = new Runnable() {
+            @Override
+            public void run() {
+                SyncService.this.retryAndFinish();
+            }
+        };
+        mHandler = new Handler();
+        mHandler.postDelayed(killService, 300000);
     }
 
     private Notification createSyncingNotification(){
@@ -113,12 +130,10 @@ public class SyncService extends Service {
                 .build();
     }
 
-    // TODO: Remove parameter
-    @SuppressWarnings("unused")
-    public void finish(long delay){
+    public void retryAndFinish(){
         //_DEBUG: Remove function call and scope
         GlobalFunctions.writeToFile("Seems that there was an error", "error");
-        //if (isScheduled) GlobalFunctions.scheduleNextSynchronization(this, delay);
+        if (isScheduled) GlobalFunctions.scheduleRetrySync(getApplicationContext());
         finish();
     }
 
