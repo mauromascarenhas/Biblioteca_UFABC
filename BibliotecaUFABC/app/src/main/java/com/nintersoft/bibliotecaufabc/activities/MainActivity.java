@@ -231,7 +231,7 @@ public class MainActivity extends AppCompatActivity
     // TODO: Change method evocation to an appropriate time
     private void setSyncSchedule(){
         SharedPreferences prefs;
-        // TODO: Remove "or true" from conditional
+        // _DEBUG: Remove "or true" from conditional
         //noinspection ConstantConditions,PointlessBooleanExpression
         if ((prefs = PreferenceManager.getDefaultSharedPreferences(this))
                 .getBoolean(getString(R.string.key_app_first_run), true)
@@ -240,6 +240,8 @@ public class MainActivity extends AppCompatActivity
             GlobalFunctions.schedulePeriodicSync(getApplicationContext(),
                     //600000, GlobalVariables.syncInterval * AlarmManager.INTERVAL_DAY);
                     120000, AlarmManager.INTERVAL_FIFTEEN_MINUTES);
+            GlobalFunctions.schedulePeriodicSyncReminder(getApplicationContext(),
+                    AlarmManager.INTERVAL_DAY, AlarmManager.INTERVAL_DAY * GlobalConstants.SYNC_REMINDER_NOTIFICATION_INTERVAL);
 
             prefs.edit()
                     .putBoolean(getString(R.string.key_app_first_run), false)

@@ -70,19 +70,15 @@ public class GlobalFunctions {
      * Retrieves the asset content as a text, using the #context to get the specified asset
      *
      * @param context  : Context used for data building and retrieval
-     * @param filePath : Relative path to the desired assed (must be inside "assets" folder)
-     * @return         : Returns the file content as a string or null if an exeption has occurred
+     * @param filePath : Relative path to the desired asset (must be inside "assets" folder)
+     * @return         : Returns the file content as a string or null if an exception has occurred
      */
-    @SuppressWarnings("all")
     public static String getScriptFromAssets(Context context, String filePath) {
         try {
             StringBuilder sb = new StringBuilder();
             InputStream is = context.getResources().getAssets().open(filePath);
 
-            BufferedReader br;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-                br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-            else br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
 
             String str;
             while ((str = br.readLine()) != null) sb.append(str).append("\n");
@@ -93,18 +89,21 @@ public class GlobalFunctions {
         }
     }
 
-    // TODO: Check this one
+    // TODO: Remove later
     /**
      * Schedules a synchronization warning/notification for the current time plus the
      * given delay (in milliseconds). It is important to notice that it cancels any previous
      * notifications and then schedules a new one. Besides doing that, it will store the scheduling
      * as a SharedPreferences key so as to retrieve it in case of reboot.
      *
+     * @deprecated use #schedulePeriodicSyncReminder(Context,long,long) instead
+     *
      * @param context :  Context used for data building and retrieval
      * @param delay   :  Time in milliseconds to trigger the notification exhibition
      *                   if the delay is negative, then it try to get the last scheduled sync request time.
      *                   Useful for rescheduling on boot
      */
+    @Deprecated
     public static void scheduleSyncNotification(Context context, long delay){
         if (delay < 0) delay = 1000;
 
@@ -116,6 +115,30 @@ public class GlobalFunctions {
         if (alarmManager != null){
             alarmManager.cancel(pendingIntent);
             alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
+        }
+    }
+
+    /**
+     * Schedules a recurrent synchronization reminder within the given initial
+     * delay and periodic interval (which must be in milliseconds)
+     * Take notice that this method also removes previously scheduled requests
+     *
+     * @param context :  Context used for data building and retrieval
+     * @param initialDelay     : Time in milliseconds to trigger the first synchronization operation
+     * @param periodicInterval : Periodic interval in which the task must be executed (milliseconds)
+     */
+    public static void schedulePeriodicSyncReminder(Context context, long initialDelay, long periodicInterval){
+        if (initialDelay < 0) initialDelay = 1000;
+
+        Intent notificationIntent = new Intent(context, SyncNotificationDisplay.class)
+                .putExtra(GlobalConstants.NOTIFICATION_ID, GlobalConstants.SYNC_NOTIFICATION_REMINDER_ID);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, GlobalConstants.SYNC_NOTIFICATION_REMINDER_ID, notificationIntent, 0);
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        if (alarmManager != null){
+            alarmManager.cancel(pendingIntent);
+            alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, initialDelay,
+                    periodicInterval, pendingIntent);
         }
     }
 
@@ -218,9 +241,9 @@ public class GlobalFunctions {
         return builder.build();
     }
 
-    // TODO: Check this one
     /**
      * This method cancels the scheduling of the notification which has the given Id.
+     *
      * @param context        : Context used for building intent building and comparison
      * @param notificationId : Id of the notification to be cancelled
      */
@@ -229,11 +252,9 @@ public class GlobalFunctions {
         Intent notificationIntent = new Intent(context, NotificationDisplay.class);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         if (alarmManager != null)
-            for (int i = 0; i < 3; ++i){
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(context, notificationId + (i * 500),
-                        notificationIntent, 0);
-                alarmManager.cancel(pendingIntent);
-            }
+            for (int i = 0; i < 3; ++i)
+                alarmManager.cancel(PendingIntent.getBroadcast(context, notificationId + (i * 500),
+                        notificationIntent, 0));
     }
 
     /**
@@ -256,6 +277,7 @@ public class GlobalFunctions {
 
     /**
      * Creates notification channel for book renewal
+     *
      * @param context : Used for getting string messages
      */
     public static void createRenewalNotificationChannel(Context context){
@@ -272,9 +294,9 @@ public class GlobalFunctions {
         }
     }
 
-    // TODO: Check if not causes interferences in sync schedules
     /**
      * Cancels every existing pending renewal warning
+     *
      * @param context : Used for intents comparison
      * @param dao     : Used for getting previous book details
      */

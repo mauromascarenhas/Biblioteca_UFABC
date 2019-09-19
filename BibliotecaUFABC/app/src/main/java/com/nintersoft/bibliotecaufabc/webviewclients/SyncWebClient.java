@@ -191,9 +191,7 @@ public class SyncWebClient extends WebViewClient {
 
         dao.removeAll();
         for (BookRenewalProperties b: availableBooks) dao.insert(b);
-
         GlobalFunctions.scheduleRenewalAlarms(mContext, dao);
-        GlobalFunctions.scheduleSyncNotification(mContext, 432000000);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         SharedPreferences.Editor editor = preferences.edit();

@@ -32,6 +32,8 @@ public class GlobalConstants {
     public static final String MANDATORY_APPEND_URL_LIBRARY_DETAILS = "&tipo=1&detalhe=0";
     public static final String MANDATORY_APPEND_URL_LIBRARY_BOOK_COVER = "?obra=";
 
+    public static final long SYNC_REMINDER_NOTIFICATION_INTERVAL = 5;
+
     public static final int ACTIVITY_LOGIN_REQUEST_CODE = 11;
     public static final int ACTIVITY_SEARCH_REQUEST_CODE = 12;
     public static final int ACTIVITY_RENEWAL_REQUEST_CODE = 13;
@@ -41,6 +43,7 @@ public class GlobalConstants {
     public static final int SYNC_NOTIFICATION_ID = 9000;
     public static final int SYNC_NOTIFICATION_UPDATE_ID = 9001;
     public static final int SYNC_NOTIFICATION_REVOKED_ID = 9002;
+    public static final int SYNC_NOTIFICATION_REMINDER_ID = 9003;
 
     public static final int SYNC_EXECUTIONER_INTENT_ID = 10000;
     public static final int SYNC_EXECUTIONER_INTENT_RETRY_ID = 10010;

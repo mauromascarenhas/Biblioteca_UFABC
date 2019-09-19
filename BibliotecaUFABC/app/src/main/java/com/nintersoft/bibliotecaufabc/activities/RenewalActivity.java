@@ -262,9 +262,7 @@ public class RenewalActivity extends AppCompatActivity {
 
         dao.removeAll();
         for (BookRenewalProperties b: availableBooks) dao.insert(b);
-
         GlobalFunctions.scheduleRenewalAlarms(this, dao);
-        GlobalFunctions.scheduleSyncNotification(this, 432000000);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor editor = preferences.edit();
