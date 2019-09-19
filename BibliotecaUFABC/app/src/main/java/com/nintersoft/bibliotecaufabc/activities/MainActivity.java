@@ -228,8 +228,6 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    // TODO: Check for permission
-    // TODO: Change method evocation to an appropriate moment
     private void setSyncSchedule(){
         SharedPreferences prefs;
         // _DEBUG: Remove "or true" from conditional
@@ -379,8 +377,8 @@ public class MainActivity extends AppCompatActivity
                             .setPositiveButton(R.string.dialog_button_ok, null)
                             .create().show();
                 }
+                else setSyncSchedule();
 
-                // TODO: Check here!
                 if (permReqState == PermReqState.REQUESTING_LOGIN){
                     permReqState = PermReqState.REQUESTED;
                     if (GlobalVariables.loginAutomatically){
@@ -487,7 +485,7 @@ public class MainActivity extends AppCompatActivity
                 Intent acIntent = new Intent(this, LoginActivity.class);
                 startActivityForResult(acIntent, GlobalConstants.ACTIVITY_LOGIN_REQUEST_CODE);
             }
-            else {
+            else if (!hasRequestedSync){
                 ContextCompat.startForegroundService(this,
                         new Intent(this, SyncService.class).putExtra(GlobalConstants.SYNC_INTENT_SCHEDULED, false));
                 hasRequestedSync = true;
@@ -523,6 +521,9 @@ public class MainActivity extends AppCompatActivity
     synchronized public void requestSyncPermission(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
             permReqState = permReqState == PermReqState.BEFORE_REQ ? PermReqState.REQUESTING : PermReqState.REQUESTING_LOGIN;
+            PreferenceManager.getDefaultSharedPreferences(this)
+                    .edit().putBoolean(getString(R.string.key_app_first_run), true)
+                    .apply();
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.notification_sync_rationale_title)
@@ -538,17 +539,20 @@ public class MainActivity extends AppCompatActivity
                         }
                     }).create().show();
         }
-        else if (permReqState == PermReqState.REQUESTING_LOGIN) {
-            Intent acIntent = new Intent(this, LoginActivity.class);
-            startActivityForResult(acIntent, GlobalConstants.ACTIVITY_LOGIN_REQUEST_CODE);
-            permReqState = PermReqState.REQUESTED;
+        else {
+            setSyncSchedule();
+            if (permReqState == PermReqState.REQUESTING_LOGIN) {
+                Intent acIntent = new Intent(this, LoginActivity.class);
+                startActivityForResult(acIntent, GlobalConstants.ACTIVITY_LOGIN_REQUEST_CODE);
+                permReqState = PermReqState.REQUESTED;
+            }
+            else if (permReqState == PermReqState.REQUESTING_SYNC){
+                ContextCompat.startForegroundService(this,
+                        new Intent(this, SyncService.class).putExtra(GlobalConstants.SYNC_INTENT_SCHEDULED, false));
+                hasRequestedSync = true;
+            }
+            else permReqState = PermReqState.REQUESTED;
         }
-        else if (permReqState == PermReqState.REQUESTING_SYNC){
-            ContextCompat.startForegroundService(this,
-                    new Intent(this, SyncService.class).putExtra(GlobalConstants.SYNC_INTENT_SCHEDULED, false));
-            hasRequestedSync = true;
-        }
-        else permReqState = PermReqState.REQUESTED;
     }
 
     //_DEBUG: Remove later

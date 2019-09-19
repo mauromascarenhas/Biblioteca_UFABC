@@ -50,6 +50,7 @@ public class SyncService extends Service {
                         R.string.notification_sync_removed_title,
                         R.string.notification_sync_removed_message,
                         GlobalConstants.SYNC_NOTIFICATION_REVOKED_ID);
+                GlobalFunctions.cancelPeriodicSync(getApplicationContext());
                 return;
             }
         }
