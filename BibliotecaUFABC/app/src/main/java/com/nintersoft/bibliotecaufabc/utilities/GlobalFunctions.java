@@ -42,8 +42,10 @@ import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -89,35 +91,6 @@ public class GlobalFunctions {
         }
     }
 
-    // TODO: Remove later
-    /**
-     * Schedules a synchronization warning/notification for the current time plus the
-     * given delay (in milliseconds). It is important to notice that it cancels any previous
-     * notifications and then schedules a new one. Besides doing that, it will store the scheduling
-     * as a SharedPreferences key so as to retrieve it in case of reboot.
-     *
-     * @deprecated use #schedulePeriodicSyncReminder(Context,long,long) instead
-     *
-     * @param context :  Context used for data building and retrieval
-     * @param delay   :  Time in milliseconds to trigger the notification exhibition
-     *                   if the delay is negative, then it try to get the last scheduled sync request time.
-     *                   Useful for rescheduling on boot
-     */
-    @Deprecated
-    public static void scheduleSyncNotification(Context context, long delay){
-        if (delay < 0) delay = 1000;
-
-        Intent notificationIntent = new Intent(context, SyncNotificationDisplay.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, GlobalConstants.SYNC_NOTIFICATION_ID, notificationIntent, 0);
-
-        long futureInMillis = SystemClock.elapsedRealtime() + delay;
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        if (alarmManager != null){
-            alarmManager.cancel(pendingIntent);
-            alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
-        }
-    }
-
     /**
      * Schedules a recurrent synchronization reminder within the given initial
      * delay and periodic interval (which must be in milliseconds)
@@ -142,7 +115,6 @@ public class GlobalFunctions {
         }
     }
 
-    // TODO: Check this one
     /**
      * Schedules a renewal notification/warning with the given Id and time (which must be in milliseconds)
      * Help from : https://stackoverflow.com/questions/36902667/how-to-schedule-notification-in-android
@@ -161,9 +133,14 @@ public class GlobalFunctions {
         notificationIntent.putExtra(GlobalConstants.NOTIFICATION_MESSAGE, message);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, notificationId, notificationIntent, 0);
 
-        long futureInMillis = SystemClock.elapsedRealtime() + delay;
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        if (alarmManager != null) alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
+        if (alarmManager != null){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                alarmManager.setAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                        SystemClock.elapsedRealtime() + delay, pendingIntent);
+            else alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                    SystemClock.elapsedRealtime() + delay, pendingIntent);
+        }
     }
 
     /**
@@ -194,7 +171,6 @@ public class GlobalFunctions {
         return builder.build();
     }
 
-    // TODO: Check this one
     /**
      * Creates a notification with a pending intent to RenewalActivity and post it.
      * @param context     : Context used for data building and retrieval
@@ -208,7 +184,6 @@ public class GlobalFunctions {
             notificationManager.notify(id, GlobalFunctions.createSyncNotification(context, title_rId, message_rId));
     }
 
-    // TODO: Check this one
     /**
      * Creates a renewal notification with the given message.
      * If no message is passed to the method, it will build a generic one to be displayed
@@ -245,15 +220,16 @@ public class GlobalFunctions {
      * This method cancels the scheduling of the notification which has the given Id.
      *
      * @param context        : Context used for building intent building and comparison
-     * @param notificationId : Id of the notification to be cancelled
+     * @param bookId         : Id of the notification to be cancelled
      */
     @SuppressWarnings("WeakerAccess")
-    public static void cancelScheduledNotification(Context context, int notificationId){
+    public static void cancelScheduledNotification(Context context, long bookId){
         Intent notificationIntent = new Intent(context, NotificationDisplay.class);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         if (alarmManager != null)
             for (int i = 0; i < 3; ++i)
-                alarmManager.cancel(PendingIntent.getBroadcast(context, notificationId + (i * 500),
+                alarmManager.cancel(PendingIntent.getBroadcast(context,
+                        (int)((bookId + (i * 500)) % (Integer.MAX_VALUE + 1L)),
                         notificationIntent, 0));
     }
 
@@ -303,10 +279,9 @@ public class GlobalFunctions {
     public static void cancelExistingScheduledAlarms(Context context, BookRenewalDAO dao){
         List<BookRenewalProperties> oldData = dao.getAll();
         for (BookRenewalProperties b : oldData)
-            GlobalFunctions.cancelScheduledNotification(context, (int)b.getId());
+            GlobalFunctions.cancelScheduledNotification(context.getApplicationContext(), b.getId());
     }
 
-    // TODO: Check this one
     /**
      * Schedules notification alarms for every #BookRenewalProperties available at DAO
      * @param context : Context used for building intent building
@@ -316,12 +291,43 @@ public class GlobalFunctions {
         List<BookRenewalProperties> availableBooks = dao.getAll();
 
         if (GlobalVariables.ringAlarm) {
-            for (int i = availableBooks.size() - 1; i > -1; --i) {
-                BookRenewalProperties b = availableBooks.get(i);
-                long id = b.getId();
+            HashMap<String, ArrayList<BookRenewalProperties>> groupedBooks = new HashMap<>();
+
+            // Groups books by date
+            for (BookRenewalProperties brp : availableBooks){
+                ArrayList<BookRenewalProperties> brps = groupedBooks.get(brp.getDate());
+
+                if (brps == null){
+                    brps = new ArrayList<>();
+                    groupedBooks.put(brp.getDate(), brps);
+                }
+                brps.add(brp);
+            }
+
+            // Performs schedules
+            for (String d : groupedBooks.keySet()){
+                ArrayList<BookRenewalProperties> brps = groupedBooks.get(d);
+                if (brps == null || brps.isEmpty()) return;
+
+                BookRenewalProperties min = brps.get(0);
+                for (int i = 1; i < brps.size(); ++i)
+                    if (min.getId() > brps.get(i).getId()) min = brps.get(i);
+
+                String nMessage;
+                if (brps.size() == 1)
+                    nMessage = context.getString(R.string.notification_book_renewal_specific_content, brps.get(0).getTitle());
+                else {
+                    StringBuilder bNames = new StringBuilder();
+                    bNames.append("- ").append(brps.get(0).getTitle()).append(";");
+                    for (int i = 1; i < brps.size(); ++i)
+                        bNames.append("\n- ")
+                                .append(brps.get(i).getTitle())
+                                .append(";");
+                    nMessage = context.getString(R.string.notification_book_renewal_specific_content_multiple, bNames.toString());
+                }
 
                 Matcher m = Pattern.compile("(\\d{2}/\\d{2}/\\d{2})", Pattern.CASE_INSENSITIVE)
-                        .matcher(b.getDate());
+                        .matcher(min.getDate());
 
                 if (m.find()){
                     try {
@@ -330,12 +336,12 @@ public class GlobalFunctions {
                             calendar.setTime(new SimpleDateFormat("dd/MM/yy HH:mm:ss",
                                     new Locale("pt", "BR"))
                                     .parse(m.group(1) + String.format(new Locale("pt", "BR"),
-                                                                        " %02d:%02d:00", 8 + (5 * k), i)));
+                                            " %02d:00:00", 8 + (5 * k))));
                             calendar.add(Calendar.DAY_OF_MONTH, GlobalVariables.ringAlarmOffset);
 
                             long millis = calendar.getTime().getTime() - (new Date()).getTime();
                             if (millis > 0) GlobalFunctions.scheduleBookNotification(context.getApplicationContext(), millis,
-                                    (int) id + (500 * k), context.getString(R.string.notification_book_renewal_specific_content, b.getTitle()));
+                                    (int) ((min.getId() + (500 * k)) % (Integer.MAX_VALUE + 1L)), nMessage);
                         }
                     } catch (ParseException e) {
                         Toast.makeText(context, context.getString(R.string.snack_message_parse_fail), Toast.LENGTH_LONG).show();

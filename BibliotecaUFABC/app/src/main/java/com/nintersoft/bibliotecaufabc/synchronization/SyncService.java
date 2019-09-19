@@ -82,7 +82,7 @@ public class SyncService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         //_DEBUG: Remove function call and scope
-        GlobalFunctions.writeToFile("__REQUESTED!", "request");
+        GlobalFunctions.writeToFile("__REQUESTED! Is Scheduled : " + isScheduled, "request");
 
         if (dataSource != null) {
             isScheduled = intent.getBooleanExtra(GlobalConstants.SYNC_INTENT_SCHEDULED, true);
@@ -132,7 +132,7 @@ public class SyncService extends Service {
 
     public void retryAndFinish(){
         //_DEBUG: Remove function call and scope
-        GlobalFunctions.writeToFile("Seems that there was an error", "error");
+        GlobalFunctions.writeToFile("Seems that there was an error. Is Scheduled : " + isScheduled, "error");
         if (isScheduled) GlobalFunctions.scheduleRetrySync(getApplicationContext());
         finish();
     }

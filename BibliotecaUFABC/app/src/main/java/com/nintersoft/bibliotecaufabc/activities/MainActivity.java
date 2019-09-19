@@ -228,7 +228,7 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    // TODO: Change method evocation to an appropriate time
+    // TODO: Change method evocation to an appropriate moment
     private void setSyncSchedule(){
         SharedPreferences prefs;
         // _DEBUG: Remove "or true" from conditional
@@ -239,7 +239,7 @@ public class MainActivity extends AppCompatActivity
 
             GlobalFunctions.schedulePeriodicSync(getApplicationContext(),
                     //600000, GlobalVariables.syncInterval * AlarmManager.INTERVAL_DAY);
-                    120000, AlarmManager.INTERVAL_FIFTEEN_MINUTES);
+                    120000, AlarmManager.INTERVAL_HALF_HOUR);
             GlobalFunctions.schedulePeriodicSyncReminder(getApplicationContext(),
                     AlarmManager.INTERVAL_DAY, AlarmManager.INTERVAL_DAY * GlobalConstants.SYNC_REMINDER_NOTIFICATION_INTERVAL);
 

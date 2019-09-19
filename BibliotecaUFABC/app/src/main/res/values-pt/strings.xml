@@ -169,6 +169,9 @@
         "O livro/obra %1$s está esperando para ser"
         "renovado ou devolvido!"
     </string>
+    <string name="notification_book_renewal_specific_content_multiple">
+        Os seguintes livros/obras estão aguardando pela renovação ou devolução: \n %1$s
+    </string>
     <string name="notification_book_renewal_title">Biblioteca UFABC - Aviso de renovação</string>
     <string name="notification_renewal_channel_description">Alertas de datas limite de devolução de livros</string>
     <string name="notification_renewal_channel_title">Aviso de renovação de livros</string>

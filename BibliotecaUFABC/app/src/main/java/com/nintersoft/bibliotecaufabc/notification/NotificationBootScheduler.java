@@ -16,8 +16,6 @@ import com.nintersoft.bibliotecaufabc.utilities.GlobalVariables;
 
 public class NotificationBootScheduler extends BroadcastReceiver {
 
-    // TODO: Remove if pass or fix if don't
-
     @Override
     public void onReceive(Context context, Intent intent) {
         if (Intent.ACTION_BOOT_COMPLETED.equalsIgnoreCase(intent.getAction()) ||
@@ -31,9 +29,12 @@ public class NotificationBootScheduler extends BroadcastReceiver {
             GlobalFunctions.schedulePeriodicSyncReminder(context.getApplicationContext(),
                     -1, AlarmManager.INTERVAL_DAY * GlobalConstants.SYNC_REMINDER_NOTIFICATION_INTERVAL);
             GlobalFunctions.scheduleRenewalAlarms(context, dao);
-            GlobalFunctions.schedulePeriodicSync(context.getApplicationContext(), AlarmManager.INTERVAL_FIFTEEN_MINUTES,
-                    preferences.getLong(context.getString(R.string.key_synchronization_schedule), GlobalVariables.syncInterval)
-                        * AlarmManager.INTERVAL_DAY);
+            //GlobalFunctions.schedulePeriodicSync(context.getApplicationContext(), AlarmManager.INTERVAL_FIFTEEN_MINUTES,
+                    //preferences.getLong(context.getString(R.string.key_synchronization_schedule), GlobalVariables.syncInterval)
+                        //* AlarmManager.INTERVAL_DAY);
+            //_DEBUG: Remove it!
+            GlobalFunctions.schedulePeriodicSync(context.getApplicationContext(),
+                    120000, AlarmManager.INTERVAL_HALF_HOUR);
         }
     }
 }
