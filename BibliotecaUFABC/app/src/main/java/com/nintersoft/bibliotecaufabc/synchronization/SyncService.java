@@ -81,17 +81,20 @@ public class SyncService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        //_DEBUG: Remove function call and scope
-        GlobalFunctions.writeToFile("__REQUESTED! Is Scheduled : " + isScheduled, "request");
-
         if (dataSource != null) {
             isScheduled = intent.getBooleanExtra(GlobalConstants.SYNC_INTENT_SCHEDULED, true);
             startForeground(GlobalConstants.SYNC_NOTIFICATION_ID, createSyncingNotification());
             dataSource.loadUrl(GlobalConstants.URL_LIBRARY_RENEWAL);
+
+            //_DEBUG: Remove function call and scope
+            GlobalFunctions.writeToFile("__REQUESTED! Is Scheduled : " + isScheduled, "request");
             return super.onStartCommand(intent, flags, startId);
         }
         else{
             stopSelf();
+
+            //_DEBUG: Remove function call and scope
+            GlobalFunctions.writeToFile("__REQUESTED! Is (not - sure) Scheduled : " + isScheduled, "request");
             return START_NOT_STICKY;
         }
     }

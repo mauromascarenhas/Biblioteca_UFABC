@@ -228,6 +228,7 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+    // TODO: Check for permission
     // TODO: Change method evocation to an appropriate moment
     private void setSyncSchedule(){
         SharedPreferences prefs;
@@ -379,6 +380,7 @@ public class MainActivity extends AppCompatActivity
                             .create().show();
                 }
 
+                // TODO: Check here!
                 if (permReqState == PermReqState.REQUESTING_LOGIN){
                     permReqState = PermReqState.REQUESTED;
                     if (GlobalVariables.loginAutomatically){

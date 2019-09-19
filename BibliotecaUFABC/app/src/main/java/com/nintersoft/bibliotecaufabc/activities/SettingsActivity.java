@@ -1,5 +1,6 @@
 package com.nintersoft.bibliotecaufabc.activities;
 
+import android.app.AlarmManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -16,6 +17,7 @@ import android.view.MenuItem;
 
 import com.nintersoft.bibliotecaufabc.R;
 import com.nintersoft.bibliotecaufabc.appcontext.ContextApp;
+import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
 
 import java.util.List;
 
@@ -184,9 +186,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // updated to reflect the new value, per the Android Design
             // guidelines.
             bindPreferenceSummaryToValue(findPreference(getString(R.string.key_notification_warning_delay)));
-            bindPreferenceSummaryToValue(findPreference(getString(R.string.key_notification_sync_interval)));
 
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ContextApp.getContext());
+            final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ContextApp.getContext());
             boolean hasPasswordStored = preferences.getBoolean(getString(R.string.key_privacy_store_password), true);
             findPreference(getString(R.string.key_notification_enable_warning)).setEnabled(hasPasswordStored);
             findPreference(getString(R.string.key_notification_warning_delay)).setEnabled(hasPasswordStored);
@@ -198,6 +199,28 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                         public boolean onPreferenceChange(Preference preference, Object newValue) {
                             findPreference(getString(R.string.key_notification_warning_delay)).setEnabled((Boolean)newValue);
                             findPreference(getString(R.string.key_notification_sync_interval)).setEnabled((Boolean)newValue);
+
+                            if ((Boolean)newValue){
+                                String asString = preferences.getString(getString(R.string.key_notification_sync_interval), "2");
+                                GlobalFunctions.schedulePeriodicSync(getActivity().getApplicationContext(),
+                                        AlarmManager.INTERVAL_FIFTEEN_MINUTES,
+                                        AlarmManager.INTERVAL_DAY
+                                                * Integer.parseInt(asString == null ? "2" : asString));
+                            }
+                            else GlobalFunctions.cancelPeriodicSync(getActivity().getApplicationContext());
+
+                            return true;
+                        }
+                    });
+
+            findPreference(getString(R.string.key_notification_sync_interval))
+                    .setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                        @Override
+                        public boolean onPreferenceChange(Preference preference, Object newValue) {
+                            GlobalFunctions.schedulePeriodicSync(getActivity().getApplicationContext(),
+                                    AlarmManager.INTERVAL_FIFTEEN_MINUTES,
+                                    AlarmManager.INTERVAL_DAY * Integer.parseInt(newValue.toString()));
+                            preference.setSummary(newValue.toString());
                             return true;
                         }
                     });

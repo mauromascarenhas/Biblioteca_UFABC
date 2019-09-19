@@ -382,6 +382,21 @@ public class GlobalFunctions {
     }
 
     /**
+     * Cancels the recurrent synchronization scheduled with
+     * #schedulePeriodicSync(Context, long, long)
+     *
+     * @param context          : Context used for data building and retrieval
+     */
+    public static void cancelPeriodicSync(Context context){
+        Intent notificationIntent = new Intent(context, SyncExecutioner.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, GlobalConstants.SYNC_EXECUTIONER_INTENT_ID,
+                notificationIntent, 0);
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        if (alarmManager != null) alarmManager.cancel(pendingIntent);
+    }
+
+    /**
      * Schedules a new synchronization procedure with 15 minutes of delay.
      * If a recurrent sync is already scheduled, then it is ignored (nothing is done)
      * Take notice that this method also removes previously scheduled requests
