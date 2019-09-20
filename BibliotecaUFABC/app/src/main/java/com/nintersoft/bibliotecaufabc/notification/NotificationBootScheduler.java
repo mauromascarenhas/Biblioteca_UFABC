@@ -34,7 +34,7 @@ public class NotificationBootScheduler extends BroadcastReceiver {
                         //* AlarmManager.INTERVAL_DAY);
             //_DEBUG: Remove it!
             GlobalFunctions.schedulePeriodicSync(context.getApplicationContext(),
-                    120000, AlarmManager.INTERVAL_HALF_HOUR);
+                    120000, AlarmManager.INTERVAL_HOUR);
         }
     }
 }

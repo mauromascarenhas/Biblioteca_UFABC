@@ -412,9 +412,10 @@ public class GlobalFunctions {
 
         // Do not sync if matches with a scheduled one
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        if (prefs.getLong(context.getString(R.string.key_synchronization_schedule), SystemClock.elapsedRealtime() - 1)
-                + (prefs.getLong(context.getString(R.string.key_notification_sync_interval), 2)
-                    * AlarmManager.INTERVAL_DAY) - SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_FIFTEEN_MINUTES <= 0)
+        String syncInterval = prefs.getString(context.getString(R.string.key_notification_sync_interval), "2");
+        if (prefs.getLong(context.getString(R.string.key_synchronization_schedule), System.currentTimeMillis() - 1)
+                + (Integer.parseInt(syncInterval == null ? "2" : syncInterval) * AlarmManager.INTERVAL_DAY)
+                - System.currentTimeMillis() <= AlarmManager.INTERVAL_FIFTEEN_MINUTES)
             return;
 
         Intent notificationIntent = new Intent(context, SyncExecutioner.class);

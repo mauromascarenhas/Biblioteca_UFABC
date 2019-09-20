@@ -238,7 +238,7 @@ public class MainActivity extends AppCompatActivity
 
             GlobalFunctions.schedulePeriodicSync(getApplicationContext(),
                     //600000, GlobalVariables.syncInterval * AlarmManager.INTERVAL_DAY);
-                    120000, AlarmManager.INTERVAL_HALF_HOUR);
+                    120000, AlarmManager.INTERVAL_HOUR);
             GlobalFunctions.schedulePeriodicSyncReminder(getApplicationContext(),
                     AlarmManager.INTERVAL_DAY, AlarmManager.INTERVAL_DAY * GlobalConstants.SYNC_REMINDER_NOTIFICATION_INTERVAL);
 
