@@ -361,13 +361,6 @@ public class GlobalFunctions {
      * @param periodicInterval : Periodic interval in which the task must be executed (milliseconds)
      */
     public static void schedulePeriodicSync(Context context, long initialDelay, long periodicInterval){
-        //_DEBUG: Remove function call and scope
-        Date current = new Date();
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.getDefault());
-        String dateAsString = df.format(new Date(current.getTime() + initialDelay))
-                + " . Interval " + periodicInterval;
-        GlobalFunctions.writeToFile(dateAsString, "periodic_schedule");
-
         Intent notificationIntent = new Intent(context, SyncExecutioner.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, GlobalConstants.SYNC_EXECUTIONER_INTENT_ID,
                 notificationIntent, 0);
@@ -404,12 +397,6 @@ public class GlobalFunctions {
      * @param context        : Context used for data building and retrieval
      */
     public static void scheduleRetrySync(Context context){
-        //_DEBUG: Remove function call and scope
-        Date current = new Date();
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.getDefault());
-        String dateAsString = df.format(new Date(current.getTime() + AlarmManager.INTERVAL_FIFTEEN_MINUTES));
-        GlobalFunctions.writeToFile(dateAsString, "retry_schedule");
-
         // Do not sync if matches with a scheduled one
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         String syncInterval = prefs.getString(context.getString(R.string.key_notification_sync_interval), "2");
@@ -430,36 +417,6 @@ public class GlobalFunctions {
                         SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
             else alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,
                     SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
-        }
-    }
-
-    //_DEBUG: Remove function declaration
-    public static void writeToFile(String data, String appendName) {
-        try {
-            final File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS + "/BIBLIOTECA_UFABC/");
-
-            if(!path.exists())
-            {
-                //noinspection ResultOfMethodCallIgnored
-                path.mkdirs();
-            }
-
-            DateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.getDefault());
-            String dateAsString = df.format(new Date());
-
-            File file = new File(path, String.format("%2$s_%1$s.txt", appendName, dateAsString));
-            Log.v("File write", path + "/" + String.format("%1$s_%2$s.txt", appendName, dateAsString));
-
-            if (!file.exists()) {
-                //noinspection ResultOfMethodCallIgnored
-                file.createNewFile();
-            }
-            FileWriter writer = new FileWriter(file);
-            writer.append(data);
-            writer.flush();
-            writer.close();
-        } catch (IOException e) {
-            Log.e("Exception", "File write failed: " + e.toString());
         }
     }
 }

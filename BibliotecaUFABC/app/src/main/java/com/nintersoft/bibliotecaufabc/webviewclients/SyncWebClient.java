@@ -177,8 +177,6 @@ public class SyncWebClient extends WebViewClient {
                 availableBooks.add(newBook);
             }
             bindAlarms(availableBooks);
-            //_DEBUG: Remove function call and scope
-            GlobalFunctions.writeToFile(jsResultsArr.toString(), "complete");
             ((SyncService)mContext).finish();
         }catch (JSONException e){
             ((SyncService)mContext).retryAndFinish();

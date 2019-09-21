@@ -1,11 +1,9 @@
 package com.nintersoft.bibliotecaufabc.activities;
 
-import android.Manifest;
 import android.app.AlarmManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,7 +31,6 @@ import com.nintersoft.bibliotecaufabc.webviewclients.MainWebClient;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -95,10 +92,6 @@ public class MainActivity extends AppCompatActivity
         setWebViewSettings();
         setupBookList();
         setListeners();
-
-        setSyncSchedule();
-
-        isStoragePermissionGranted();
     }
 
     @Override
@@ -230,11 +223,8 @@ public class MainActivity extends AppCompatActivity
 
     private void setSyncSchedule(){
         SharedPreferences prefs;
-        // _DEBUG: Remove "or true" from conditional
-        //noinspection ConstantConditions,PointlessBooleanExpression
         if ((prefs = PreferenceManager.getDefaultSharedPreferences(this))
-                .getBoolean(getString(R.string.key_app_first_run), true)
-                || true){
+                .getBoolean(getString(R.string.key_app_first_run), true)){
 
             GlobalFunctions.schedulePeriodicSync(getApplicationContext(),
                     AlarmManager.INTERVAL_FIFTEEN_MINUTES, GlobalVariables.syncInterval * AlarmManager.INTERVAL_DAY);
@@ -551,23 +541,6 @@ public class MainActivity extends AppCompatActivity
                 hasRequestedSync = true;
             }
             else permReqState = PermReqState.REQUESTED;
-        }
-    }
-
-    //_DEBUG: Remove later
-    @SuppressWarnings("UnusedReturnValue")
-    public  boolean isStoragePermissionGranted() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
-                return true;
-            } else {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-                return false;
-            }
-        }
-        else { //permission is automatically granted on sdk<23 upon installation
-            return true;
         }
     }
 }

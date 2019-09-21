@@ -224,6 +224,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                             return true;
                         }
                     });
+            findPreference(getString(R.string.key_notification_sync_interval))
+                    .setSummary(preferences.getString(getString(R.string.key_notification_sync_interval), ""));
         }
 
         @Override
