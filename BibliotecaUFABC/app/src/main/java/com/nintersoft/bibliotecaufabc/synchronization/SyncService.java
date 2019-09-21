@@ -86,16 +86,10 @@ public class SyncService extends Service {
             isScheduled = intent.getBooleanExtra(GlobalConstants.SYNC_INTENT_SCHEDULED, true);
             startForeground(GlobalConstants.SYNC_NOTIFICATION_ID, createSyncingNotification());
             dataSource.loadUrl(GlobalConstants.URL_LIBRARY_RENEWAL);
-
-            //_DEBUG: Remove function call and scope
-            GlobalFunctions.writeToFile("__REQUESTED! Is Scheduled : " + isScheduled, "request");
             return super.onStartCommand(intent, flags, startId);
         }
         else{
             stopSelf();
-
-            //_DEBUG: Remove function call and scope
-            GlobalFunctions.writeToFile("__REQUESTED! Is (not - sure) Scheduled : " + isScheduled, "request");
             return START_NOT_STICKY;
         }
     }
@@ -116,7 +110,7 @@ public class SyncService extends Service {
             }
         };
         mHandler = new Handler();
-        mHandler.postDelayed(killService, 300000);
+        mHandler.postDelayed(killService, 180000);
     }
 
     private Notification createSyncingNotification(){
@@ -135,8 +129,6 @@ public class SyncService extends Service {
     }
 
     public void retryAndFinish(){
-        //_DEBUG: Remove function call and scope
-        GlobalFunctions.writeToFile("Seems that there was an error. Is Scheduled : " + isScheduled, "error");
         if (isScheduled) GlobalFunctions.scheduleRetrySync(getApplicationContext());
         finish();
     }

@@ -12,7 +12,6 @@ import com.nintersoft.bibliotecaufabc.book_renewal_model.BookRenewalDAO;
 import com.nintersoft.bibliotecaufabc.book_renewal_model.BookRenewalDatabaseSingletonFactory;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
-import com.nintersoft.bibliotecaufabc.utilities.GlobalVariables;
 
 public class NotificationBootScheduler extends BroadcastReceiver {
 
@@ -23,18 +22,16 @@ public class NotificationBootScheduler extends BroadcastReceiver {
 
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
             BookRenewalDAO dao = BookRenewalDatabaseSingletonFactory.getInstance().bookRenewalDAO();
+            String syncInterval = preferences.getString(context.getString(R.string.key_synchronization_schedule), "2");
+            if (syncInterval == null) syncInterval = "2";
 
             GlobalFunctions.createSyncNotificationChannel(context.getApplicationContext());
             GlobalFunctions.createRenewalNotificationChannel(context.getApplicationContext());
             GlobalFunctions.schedulePeriodicSyncReminder(context.getApplicationContext(),
                     -1, AlarmManager.INTERVAL_DAY * GlobalConstants.SYNC_REMINDER_NOTIFICATION_INTERVAL);
             GlobalFunctions.scheduleRenewalAlarms(context, dao);
-            //GlobalFunctions.schedulePeriodicSync(context.getApplicationContext(), AlarmManager.INTERVAL_FIFTEEN_MINUTES,
-                    //preferences.getLong(context.getString(R.string.key_synchronization_schedule), GlobalVariables.syncInterval)
-                        //* AlarmManager.INTERVAL_DAY);
-            //_DEBUG: Remove it!
-            GlobalFunctions.schedulePeriodicSync(context.getApplicationContext(),
-                    120000, AlarmManager.INTERVAL_HOUR);
+            GlobalFunctions.schedulePeriodicSync(context.getApplicationContext(), AlarmManager.INTERVAL_FIFTEEN_MINUTES,
+                    Integer.parseInt(syncInterval) * AlarmManager.INTERVAL_DAY);
         }
     }
 }
