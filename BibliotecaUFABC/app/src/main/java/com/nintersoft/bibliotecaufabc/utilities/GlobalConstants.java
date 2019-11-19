@@ -15,15 +15,19 @@ public class GlobalConstants {
     public static final String SYNC_INTENT_SCHEDULED = "is_sync_scheduled";
 
     // URL constants
+    @Deprecated
+    public static final String URL_LIBRARY_LOGIN = "http://biblioteca.ufabc.edu.br/login.php";
+
     public static final String URL_ACCESS_PAGE = "https://acesso.ufabc.edu.br/";
     public static final String URL_LIBRARY_HOME = "http://biblioteca.ufabc.edu.br/mobile/busca.php";
-    public static final String URL_LIBRARY_LOGIN = "http://biblioteca.ufabc.edu.br/login.php";
+    public static final String URL_LIBRARY_LOGIN_P = "http://biblioteca.ufabc.edu.br/mobile/login.php";
     public static final String URL_LIBRARY_LOGOUT = "http://biblioteca.ufabc.edu.br/mobile/logout.php";
     public static final String URL_LIBRARY_SEARCH = "http://biblioteca.ufabc.edu.br/mobile/resultado.php";
     public static final String URL_LIBRARY_NEWEST = "http://biblioteca.ufabc.edu.br/mobile/resultado.php?busca=3";
     public static final String URL_LIBRARY_RENEWAL = "http://biblioteca.ufabc.edu.br/mobile/renovacoes.php";
     public static final String URL_LIBRARY_DETAILS = "http://biblioteca.ufabc.edu.br/mobile/detalhe.php";
     public static final String URL_LIBRARY_RESERVE = "http://biblioteca.ufabc.edu.br/mobile/reservar.php";
+    public static final String URL_LIBRARY_SERVICES = "http://biblioteca.ufabc.edu.br/mobile/servicos.php";
     public static final String URL_LIBRARY_BOOK_COVER = "http://biblioteca.ufabc.edu.br/mobile/capa.php";
     public static final String URL_LIBRARY_RESERVATION = "http://biblioteca.ufabc.edu.br/mobile/reservas.php";
     public static final String URL_LIBRARY_PERFORM_RENEWAL = "http://biblioteca.ufabc.edu.br/mobile/renovar.php";

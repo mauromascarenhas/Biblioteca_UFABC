@@ -7,12 +7,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.ValueCallback;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,11 +28,16 @@ import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalVariables;
 import com.nintersoft.bibliotecaufabc.webviewclients.LoginWebClient;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class LoginActivity extends AppCompatActivity {
 
     private WebView dataSource;
+    private Handler errorHandler;
     private EditText edt_login;
     private EditText edt_password;
+    private Runnable errorChecker;
     private ScrollView loginForm;
     private LinearLayout errorLayout;
     private LinearLayout progressForm;
@@ -90,7 +97,16 @@ public class LoginActivity extends AppCompatActivity {
         dataSource = new WebView(this);
         GlobalFunctions.configureStandardWebView(dataSource);
         dataSource.setWebViewClient(new LoginWebClient(this));
-        dataSource.loadUrl(GlobalConstants.URL_LIBRARY_LOGIN);
+        dataSource.loadUrl(GlobalConstants.URL_LIBRARY_LOGIN_P);
+
+        errorHandler = new Handler();
+        errorChecker = new Runnable() {
+            @Override
+            public void run() {
+                if (dataSource.getUrl().contains(GlobalConstants.URL_LIBRARY_LOGIN_P))
+                    checkForErrors();
+            }
+        };
     }
 
     protected void setListeners(){
@@ -126,7 +142,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 setupInterface(false);
-                dataSource.loadUrl(GlobalConstants.URL_LIBRARY_LOGIN);
+                dataSource.loadUrl(GlobalConstants.URL_LIBRARY_LOGIN_P);
             }
         });
     }
@@ -182,9 +198,13 @@ public class LoginActivity extends AppCompatActivity {
             editor.putString(getString(R.string.key_privacy_login_password), pass);
             editor.apply();
         }
+
+        errorHandler.postDelayed(errorChecker, 1000);
     }
 
     public void hasLoggedIn(String userName){
+        errorHandler.removeCallbacks(errorChecker);
+
         Intent data = new Intent();
         data.putExtra(GlobalConstants.CONNECTED_STATUS_USER_NAME, userName.replace("\"", ""));
         setResult(RESULT_OK, data);
@@ -197,5 +217,28 @@ public class LoginActivity extends AppCompatActivity {
         ab.setMessage(message);
         ab.setPositiveButton(R.string.dialog_button_ok, null);
         ab.create().show();
+    }
+
+    private void checkForErrors(){
+        String script = String.format("%1$s \ncheckForErrors();",
+                GlobalFunctions.getScriptFromAssets(this, "javascript/login_scraper.js"));
+        dataSource.evaluateJavascript(script, new ValueCallback<String>() {
+            @Override
+            public void onReceiveValue(final String value) {
+                LoginActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            JSONObject result = new JSONObject(value);
+                            if (result.getBoolean("hasFormError"))
+                                LoginActivity.this.showLoginError(result.getString("errorDetails"));
+                            else errorHandler.postDelayed(errorChecker, 250);
+                        } catch (JSONException e){
+                            LoginActivity.this.showLoginError("UNKNOWN");
+                        }
+                    }
+                });
+            }
+        });
     }
 }

@@ -16,12 +16,9 @@ import com.nintersoft.bibliotecaufabc.utilities.GlobalVariables;
 
 import androidx.annotation.RequiresApi;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 public class LoginWebClient extends WebViewClient {
     private int login_page_finished;
-    private int login_home_finished;
+    private int login_services_finished;
 
     private Context mContext;
 
@@ -29,7 +26,7 @@ public class LoginWebClient extends WebViewClient {
         super();
         mContext = context;
         login_page_finished = 0;
-        login_home_finished = 0;
+        login_services_finished = 0;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -52,7 +49,7 @@ public class LoginWebClient extends WebViewClient {
     public void onPageFinished(WebView view, String url) {
         super.onPageFinished(view, url);
 
-        if (url.contains(GlobalConstants.URL_ACCESS_PAGE)){
+        if (url.contains(GlobalConstants.URL_LIBRARY_LOGIN_P)){
             if (login_page_finished == 0){
                 if (GlobalVariables.storeUserFormData)
                     ((LoginActivity)mContext).setSavedUserLogin();
@@ -60,30 +57,10 @@ public class LoginWebClient extends WebViewClient {
                     ((LoginActivity)mContext).setupInterface(true);
                 login_page_finished++;
             }
-
-            String script = String.format("%1$s \ncheckForErrors();",
-                    GlobalFunctions.getScriptFromAssets(mContext, "javascript/login_scraper.js"));
-            view.evaluateJavascript(script, new ValueCallback<String>() {
-                @Override
-                public void onReceiveValue(final String value) {
-                    ((LoginActivity)mContext).runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                JSONObject result = new JSONObject(value);
-                                if (result.getBoolean("hasFormError"))
-                                    ((LoginActivity)mContext).showLoginError(result.getString("errorDetails"));
-                            } catch (JSONException e){
-                                ((LoginActivity)mContext).showLoginError("UNKNOWN");
-                            }
-                        }
-                    });
-                }
-            });
         }
-        else if (url.contains(GlobalConstants.URL_LIBRARY_HOME)){
-            if (login_home_finished < 1){
-                login_home_finished++;
+        else if (url.contains(GlobalConstants.URL_LIBRARY_SERVICES)){
+            if (login_services_finished < 1){
+                login_services_finished++;
                 return;
             }
 

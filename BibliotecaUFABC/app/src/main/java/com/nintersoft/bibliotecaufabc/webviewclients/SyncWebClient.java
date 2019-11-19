@@ -136,7 +136,7 @@ public class SyncWebClient extends WebViewClient {
                         if (result.getBoolean("connected"))
                             setReservationBooks(result.getBoolean("hasErrorDiv") ? new JSONArray() :
                                     result.getJSONArray("renewalBooks"));
-                        else view.loadUrl(GlobalConstants.URL_LIBRARY_LOGIN);
+                        else view.loadUrl(GlobalConstants.URL_LIBRARY_LOGIN_P);
                     } catch (JSONException e){
                         ((SyncService)mContext).retryAndFinish();
                     }

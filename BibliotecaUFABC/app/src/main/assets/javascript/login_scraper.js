@@ -1,12 +1,12 @@
 function performLogin(username, password){
-    document.getElementById('username').value = username;
-    document.getElementById('password').value = password;
-    document.getElementsByName('_eventId_proceed')[0].click();
+    document.getElementById('login').value = username;
+    document.getElementById('senha').value = password;
+    document.getElementById('botao_autenticar').click();
 }
 
 function checkForErrors(){
-    var error = document.querySelector('.form-error');
-    var hasError = error != null;
+    var error = document.querySelector('#informacao');
+    var hasError = error.textContent != '';
     return {
         hasFormError : hasError,
         errorDetails : hasError ? error.textContent : ""
