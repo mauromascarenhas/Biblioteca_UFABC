@@ -10,6 +10,7 @@ import android.os.IBinder;
 import android.provider.Settings;
 import android.view.Gravity;
 import android.view.WindowManager;
+import android.webkit.ValueCallback;
 import android.webkit.WebView;
 
 import androidx.core.app.NotificationCompat;
@@ -20,6 +21,9 @@ import com.nintersoft.bibliotecaufabc.utilities.GlobalConstants;
 import com.nintersoft.bibliotecaufabc.utilities.GlobalFunctions;
 import com.nintersoft.bibliotecaufabc.webviewclients.SyncWebClient;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class SyncService extends Service {
 
     private WebView dataSource;
@@ -28,6 +32,7 @@ public class SyncService extends Service {
 
     private Handler mHandler;
     private Runnable killService;
+    private Runnable errorChecker;
 
     public SyncService() {
     }
@@ -111,6 +116,40 @@ public class SyncService extends Service {
         };
         mHandler = new Handler();
         mHandler.postDelayed(killService, 180000);
+    }
+
+    public void scheduleChecking(){
+        errorChecker = new Runnable() {
+            @Override
+            public void run() {
+                if (dataSource.getUrl().contains(GlobalConstants.URL_LIBRARY_LOGIN_P))
+                    checkForErrors();
+            }
+        };
+        mHandler.postDelayed(errorChecker, 1000);
+    }
+
+    public void checkForErrors(){
+        String script = String.format("%1$s \ncheckForErrors();",
+                GlobalFunctions.getScriptFromAssets(getApplicationContext(), "javascript/login_scraper.js"));
+        dataSource.evaluateJavascript(script, new ValueCallback<String>() {
+            @Override
+            public void onReceiveValue(final String value) {
+                try {
+                    JSONObject result = new JSONObject(value);
+                    if (result.getBoolean("hasFormError")) {
+                        GlobalFunctions.createSyncNotification(getApplicationContext(),
+                                R.string.notification_sync_error_title,
+                                R.string.notification_sync_error_message,
+                                GlobalConstants.SYNC_NOTIFICATION_UPDATE_ID);
+                        SyncService.this.finish();
+                    }
+                    else mHandler.postDelayed(errorChecker, 250);
+                } catch (JSONException e){
+                    SyncService.this.retryAndFinish();
+                }
+            }
+        });
     }
 
     private Notification createSyncingNotification(){

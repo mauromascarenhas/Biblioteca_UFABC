@@ -29,7 +29,7 @@ import java.util.ArrayList;
 
 public class SyncWebClient extends WebViewClient {
     private int login_page_finished;
-    private int login_home_finished;
+    private int login_services_finished;
     private int renewal_page_finished;
 
     private String user_login;
@@ -42,7 +42,7 @@ public class SyncWebClient extends WebViewClient {
         mContext = context;
 
         login_page_finished = 0;
-        login_home_finished = 0;
+        login_services_finished = 0;
         renewal_page_finished = 0;
 
         loadSettings();
@@ -76,40 +76,23 @@ public class SyncWebClient extends WebViewClient {
     public void onPageFinished(final WebView view, String url) {
         super.onPageFinished(view, url);
 
-        if (url.contains(GlobalConstants.URL_ACCESS_PAGE)){
-            if (login_page_finished == 0){
-                String script = String.format("%1$s \nperformLogin(\"%2$s\",\"%3$s\");",
-                        GlobalFunctions.getScriptFromAssets(mContext, "javascript/login_scraper.js"),
-                        user_login, user_password);
-                view.evaluateJavascript(script, null);
+        if (url.contains(GlobalConstants.URL_LIBRARY_LOGIN_P)){
+            if (login_page_finished < 1){
                 login_page_finished++;
-
-                ((SyncService)mContext).killLater();
+                return;
             }
 
-            String script = String.format("%1$s \ncheckForErrors();",
-                    GlobalFunctions.getScriptFromAssets(mContext, "javascript/login_scraper.js"));
-            view.evaluateJavascript(script, new ValueCallback<String>() {
-                @Override
-                public void onReceiveValue(final String value) {
-                    try {
-                        JSONObject result = new JSONObject(value);
-                        if (result.getBoolean("hasFormError")) {
-                            GlobalFunctions.createSyncNotification(mContext,
-                                    R.string.notification_sync_error_title,
-                                    R.string.notification_sync_error_message,
-                                    GlobalConstants.SYNC_NOTIFICATION_UPDATE_ID);
-                            ((SyncService)mContext).finish();
-                        }
-                    } catch (JSONException e){
-                        ((SyncService)mContext).retryAndFinish();
-                    }
-                }
-            });
+            String script = String.format("%1$s \nperformLogin(\"%2$s\",\"%3$s\");",
+                    GlobalFunctions.getScriptFromAssets(mContext, "javascript/login_scraper.js"),
+                    user_login, user_password);
+            view.evaluateJavascript(script, null);
+
+            ((SyncService)mContext).killLater();
+            ((SyncService)mContext).scheduleChecking();
         }
-        else if (url.contains(GlobalConstants.URL_LIBRARY_HOME)){
-            if (login_home_finished < 1){
-                login_home_finished++;
+        else if (url.contains(GlobalConstants.URL_LIBRARY_SERVICES)){
+            if (login_services_finished < 1){
+                login_services_finished++;
                 return;
             }
 
@@ -123,8 +106,8 @@ public class SyncWebClient extends WebViewClient {
                 return;
             }
 
+            login_services_finished = 0;
             login_page_finished = 0;
-            login_home_finished = 0;
 
             String script = String.format("%1$s \ngetRenewals();",
                     GlobalFunctions.getScriptFromAssets(mContext, "javascript/renewal_scraper.js"));

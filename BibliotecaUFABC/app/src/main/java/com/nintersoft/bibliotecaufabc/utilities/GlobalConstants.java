@@ -16,9 +16,10 @@ public class GlobalConstants {
 
     // URL constants
     @Deprecated
+    public static final String URL_ACCESS_PAGE = "https://acesso.ufabc.edu.br/";
+    @Deprecated
     public static final String URL_LIBRARY_LOGIN = "http://biblioteca.ufabc.edu.br/login.php";
 
-    public static final String URL_ACCESS_PAGE = "https://acesso.ufabc.edu.br/";
     public static final String URL_LIBRARY_HOME = "http://biblioteca.ufabc.edu.br/mobile/busca.php";
     public static final String URL_LIBRARY_LOGIN_P = "http://biblioteca.ufabc.edu.br/mobile/login.php";
     public static final String URL_LIBRARY_LOGOUT = "http://biblioteca.ufabc.edu.br/mobile/logout.php";
