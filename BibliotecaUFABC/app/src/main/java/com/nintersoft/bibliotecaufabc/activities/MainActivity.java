@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity
 
     private PermReqState permReqState;
 
+    private boolean askedLogout;
     private boolean isFirstRequest;
     private boolean hasRequestedSync;
 
@@ -154,6 +155,7 @@ public class MainActivity extends AppCompatActivity
         String warningDelay = pref.getString(getString(R.string.key_notification_warning_delay), "0");
         GlobalVariables.ringAlarmOffset = Integer.parseInt(warningDelay == null ? "0" : warningDelay);
 
+        askedLogout = false;
         isFirstRequest = true;
         hasRequestedSync = false;
 
@@ -301,9 +303,10 @@ public class MainActivity extends AppCompatActivity
                 break;
             }
             case R.id.nav_logout:
-                dataSource.loadUrl(GlobalConstants.URL_LIBRARY_LOGOUT);
+                askedLogout = true;
                 navViewMenu.findItem(R.id.nav_login).setVisible(false);
                 navViewMenu.findItem(R.id.nav_logout).setVisible(false);
+                dataSource.loadUrl(GlobalConstants.URL_LIBRARY_LOGOUT);
                 break;
             case R.id.nav_share: {
                 Intent share = new Intent(Intent.ACTION_SEND);
@@ -470,7 +473,7 @@ public class MainActivity extends AppCompatActivity
                 return;
             }
 
-            if (!connected && GlobalVariables.loginAutomatically){
+            if (!connected && GlobalVariables.loginAutomatically && !askedLogout){
                 Intent acIntent = new Intent(this, LoginActivity.class);
                 startActivityForResult(acIntent, GlobalConstants.ACTIVITY_LOGIN_REQUEST_CODE);
             }

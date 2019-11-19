@@ -6,7 +6,7 @@ function performLogin(username, password){
 
 function checkForErrors(){
     var error = document.querySelector('#informacao');
-    var hasError = error.textContent != '';
+    var hasError = error != null && error.textContent != '';
     return {
         hasFormError : hasError,
         errorDetails : hasError ? error.textContent : ""
