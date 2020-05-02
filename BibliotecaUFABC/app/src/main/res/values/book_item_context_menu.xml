@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="book_item_context_menu">
+        <item>View details</item>
+        <item>Share it</item>
+    </string-array>
+</resources>

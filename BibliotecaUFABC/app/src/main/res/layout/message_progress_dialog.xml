@@ -15,6 +15,7 @@
         android:id="@+id/label_message_loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/text_margin"
         android:textSize="@dimen/label_form_title_def_size"
         android:text="@string/snack_message_loading_newest"/>
 

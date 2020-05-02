@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string-array name="search_options_library_campus">
-        <item>Todas as bibliotecas</item>
-        <item>Santo André - SA</item>
-        <item>São Bernardo do Campo - SBC</item>
-    </string-array>
-</resources>

@@ -1,49 +1,51 @@
-<preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- These settings headers are only used on tablets. -->
+    <Preference
+        app:fragment="com.nintersoft.bibliotecaufabc.activities.SettingsActivity$GeneralFragment"
+        app:icon="@drawable/ic_menu_settings"
+        app:title="@string/pref_header_general"
+        app:summary="@string/pref_summary_general"/>
 
-    <header
-        android:fragment="com.nintersoft.bibliotecaufabc.activities.SettingsActivity$GeneralPreferenceFragment"
-        android:icon="@drawable/ic_pref_info"
-        android:title="@string/pref_header_general"
-        android:summary="@string/pref_summary_general"/>
+    <Preference
+        app:fragment="com.nintersoft.bibliotecaufabc.activities.SettingsActivity$SyncFragment"
+        app:icon="@drawable/ic_pref_sync"
+        app:title="@string/pref_header_sync"
+        app:summary="@string/pref_summary_sync"/>
 
-    <header
-        android:fragment="com.nintersoft.bibliotecaufabc.activities.SettingsActivity$NotificationPreferenceFragment"
-        android:icon="@drawable/ic_pref_notifications"
-        android:title="@string/pref_header_notifications"
-        android:summary="@string/pref_description_notifications"/>
+    <Preference
+        app:fragment="com.nintersoft.bibliotecaufabc.activities.SettingsActivity$PrivacyFragment"
+        app:icon="@drawable/ic_pref_privacy"
+        app:title="@string/pref_header_privacy"
+        app:summary="@string/pref_summary_privacy"/>
 
-    <header
-        android:fragment="com.nintersoft.bibliotecaufabc.activities.SettingsActivity$PrivacyPreferenceFragment"
-        android:icon="@drawable/ic_menu_login"
-        android:title="@string/pref_header_privacy"
-        android:summary="@string/pref_summary_privacy"/>
+    <Preference
+        app:icon="@drawable/ic_open_extern"
+        app:title="@string/pref_header_privacy_policy"
+        app:summary="@string/pref_summary_privacy_policy">
 
-    <header
-        android:icon="@drawable/ic_pref_open_policy"
-        android:title="@string/pref_header_privacy_policy"
-        android:summary="@string/pref_summary_privacy_policy">
-
-        <intent android:action="android.intent.action.VIEW"
+        <intent
+            android:action="android.intent.action.VIEW"
             android:data="@string/pref_summary_privacy_policy_intent_data"/>
+    </Preference>
 
-    </header>
+    <Preference
+        app:icon="@drawable/ic_pref_bug"
+        app:title="@string/pref_header_bug_report"
+        app:summary="@string/pref_summary_bug_report">
 
-    <header
-        android:icon="@drawable/ic_pref_bug_report"
-        android:title="@string/pref_header_bug_report"
-        android:summary="@string/pref_summary_bug_report" >
-
-        <intent android:action="android.intent.action.SENDTO"
+        <intent
+            android:action="android.intent.action.SENDTO"
             android:data="@string/pref_summary_bug_intent_data">
             <!--suppress AndroidElementNotAllowed -->
-            <extra android:name="android.intent.extra.SUBJECT"
-                android:value="@string/pref_summary_bug_intent_extra_subject"/>
-            <!--suppress AndroidElementNotAllowed -->
-            <extra android:name="android.intent.extra.TEXT"
+            <extra
+                android:name="android.intent.extra.TEXT"
                 android:value="@string/pref_summary_bug_intent_extra_message"/>
+            <!--suppress AndroidElementNotAllowed -->
+            <extra
+                android:name="android.intent.extra.SUBJECT"
+                android:value="@string/pref_summary_bug_intent_extra_subject"/>
         </intent>
-    </header>
+    </Preference>
 
-</preference-headers>
+</PreferenceScreen>

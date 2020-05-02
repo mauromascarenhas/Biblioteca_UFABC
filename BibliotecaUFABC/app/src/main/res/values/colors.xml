@@ -5,5 +5,16 @@
     <color name="colorAccent">#FFC107</color>
 
     <color name="colorLink">#2196F3</color>
-    <color name="colorLibrary">#FF5722</color>
+
+    <color name="noBookAvailable">#FF5722</color>
+    <color name="fewBooksAvailable">#FFC107</color>
+    <color name="booksAvailable">#009688</color>
+
+    <color name="snack_text_colour">#FFFFFF</color>
+
+    <color name="snack_background_blue">#1775BF</color>
+    <color name="snack_background_gray">#3E3E3E</color>
+    <color name="snack_background_green">#4CAF50</color>
+    <color name="snack_background_red">#F44336</color>
+    <color name="snack_background_yellow">#FFC107</color>
 </resources>

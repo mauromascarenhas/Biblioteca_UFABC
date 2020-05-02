@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_renewal"
+        android:icon="@drawable/ic_nav_renewals"
+        android:title="@string/bottom_nav_renewals" />
+
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_nav_home"
+        android:title="@string/bottom_nav_home" />
+
+    <item
+        android:id="@+id/navigation_reservation"
+        android:icon="@drawable/ic_nav_reservations"
+        android:enabled="false"
+        android:title="@string/bottom_nav_reservations" />
+
+</menu>

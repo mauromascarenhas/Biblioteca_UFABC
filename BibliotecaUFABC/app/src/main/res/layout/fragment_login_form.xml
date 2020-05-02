@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/form_login"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    android:visibility="visible"
+    tools:context=".ui.loginform.LoginForm">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="@dimen/ufabc_login_logo_def_size"
+            android:layout_height="@dimen/ufabc_login_logo_def_size"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/form_items_default_margin"
+            app:srcCompat="@drawable/ic_ufabc_logo" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/form_items_default_margin"
+            android:text="@string/lbl_username"
+            android:textSize="@dimen/label_edit_default_size"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/edt_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="@string/edt_username_placeholder"
+            android:hint="@string/edt_username_placeholder"
+            android:inputType="textEmailAddress"
+            android:textSize="@dimen/label_edit_default_size"
+            tools:ignore="UnusedAttribute" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/form_items_default_margin"
+            android:text="@string/lbl_password"
+            android:textSize="@dimen/label_edit_default_size"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/edt_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="@string/edt_username_placeholder"
+            android:hint="@string/edt_password_placeholder"
+            android:inputType="textPassword"
+            android:textSize="@dimen/label_edit_default_size"
+            tools:ignore="UnusedAttribute" />
+
+        <Button
+            android:id="@+id/bt_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/form_items_default_margin"
+            android:text="@string/bt_login" />
+
+        <Button
+            android:id="@+id/bt_retrieve"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/bt_retrieve" />
+
+    </LinearLayout>
+
+</ScrollView>

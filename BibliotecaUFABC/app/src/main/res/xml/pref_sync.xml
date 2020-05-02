@@ -1,0 +1,33 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <SwitchPreferenceCompat
+        app:iconSpaceReserved="false"
+        app:defaultValue="true"
+        app:key="@string/key_notification_enable_warning"
+        app:title="@string/pref_title_enable_renewal_warning"
+        app:summaryOn="@string/pref_description_enable_renewal_warning_on"
+        app:summaryOff="@string/pref_description_enable_renewal_warning_off"/>
+
+    <ListPreference
+        app:iconSpaceReserved="false"
+        app:defaultValue="0"
+        app:entries="@array/pref_notification_shift_options"
+        app:entryValues="@array/pref_notification_shift_values"
+        app:key="@string/key_notification_warning_delay"
+        app:negativeButtonText="@null"
+        app:positiveButtonText="@null"
+        app:title="@string/pref_notification_shift"
+        />
+
+    <ListPreference
+        app:iconSpaceReserved="false"
+        app:defaultValue="2"
+        app:entries="@array/pref_notification_sync_interval_options"
+        app:entryValues="@array/pref_notification_sync_interval_values"
+        app:key="@string/key_notification_sync_interval"
+        app:negativeButtonText="@null"
+        app:positiveButtonText="@null"
+        app:title="@string/pref_notification_sync_interval"
+        />
+
+</PreferenceScreen>

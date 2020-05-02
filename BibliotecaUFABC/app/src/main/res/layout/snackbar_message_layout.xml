@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:layout_height="wrap_content"
+    tools:layout_width="match_parent"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/snackRootLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/snack_text_padding"
+        android:paddingEnd="@dimen/snack_text_padding"
+        android:background="@color/snack_background_gray">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/icon"
+            android:visibility="gone"
+            android:layout_width="@dimen/snack_icon_size"
+            android:layout_height="@dimen/snack_icon_size"
+            android:layout_margin="@dimen/snack_lateral_margin"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="VectorDrawableCompat" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/message"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:paddingStart="@dimen/snack_text_padding"
+            android:paddingEnd="0dp"
+            android:paddingTop="@dimen/snack_text_padding"
+            android:paddingBottom="@dimen/snack_text_padding"
+            android:textColor="@color/snack_text_colour"
+            android:textSize="@dimen/snack_text_size"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/icon"
+            app:layout_constraintStart_toEndOf="@+id/icon"
+            app:layout_constraintEnd_toStartOf="@+id/actionLabel"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/actionLabel"
+            style="?attr/buttonBarButtonStyle"
+            android:minWidth="0dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="end|center_vertical"
+            android:paddingStart="@dimen/snack_text_padding"
+            android:paddingTop="@dimen/snack_text_padding"
+            android:paddingEnd="@dimen/snack_text_padding"
+            android:paddingBottom="@dimen/snack_text_padding"
+            android:textColor="@color/snack_text_colour"
+            android:textSize="@dimen/snack_text_size"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/message"
+            app:layout_constraintStart_toEndOf="@+id/message"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</merge>

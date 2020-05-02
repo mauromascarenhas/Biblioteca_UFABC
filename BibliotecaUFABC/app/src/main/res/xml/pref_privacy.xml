@@ -1,48 +1,48 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:iconSpaceReserved="false">
 
     <PreferenceCategory
-        android:title="@string/pref_group_local_storage">
+        app:iconSpaceReserved="false"
+        app:title="@string/pref_group_local_storage">
 
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="@string/key_privacy_cache_main_content"
-            android:summary="@string/pref_description_keep_cache"
-            android:title="@string/pref_title_keep_cache" />
+        <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
+            app:defaultValue="true"
+            app:key="@string/key_privacy_cache_main_content"
+            app:summary="@string/pref_description_keep_cache"
+            app:title="@string/pref_title_keep_cache" />
 
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="@string/pref_group_login_storage">
+        app:iconSpaceReserved="false"
+        app:title="@string/pref_group_login_storage">
 
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="@string/key_privacy_store_password"
-            android:summary="@string/pref_description_store_password"
-            android:title="@string/pref_title_store_password" />
+        <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
+            app:defaultValue="true"
+            app:key="@string/key_privacy_store_password"
+            app:summary="@string/pref_description_store_password"
+            app:title="@string/pref_title_store_password" />
 
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="@string/key_privacy_auto_login"
-            android:summary="@string/pref_description_auto_login"
-            android:title="@string/pref_title_auto_login" />
-
-        <EditTextPreference
-            android:capitalize="none"
-            android:inputType="textAutoComplete"
-            android:key="@string/key_privacy_login_username"
-            android:maxLines="1"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:title="@string/pref_title_login_username" />
+        <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
+            app:defaultValue="true"
+            app:key="@string/key_privacy_auto_login"
+            app:summary="@string/pref_description_auto_login"
+            app:title="@string/pref_title_auto_login" />
 
         <EditTextPreference
-            android:capitalize="none"
-            android:inputType="textPassword"
-            android:key="@string/key_privacy_login_password"
-            android:maxLines="1"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:title="@string/pref_title_login_password" />
+            app:iconSpaceReserved="false"
+            app:key="@string/key_privacy_login_username"
+            app:singleLine="true"
+            app:title="@string/pref_title_login_username" />
+
+        <EditTextPreference
+            app:iconSpaceReserved="false"
+            app:key="@string/key_privacy_login_password"
+            app:singleLine="true"
+            app:title="@string/pref_title_login_password" />
 
     </PreferenceCategory>
 

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string-array name="search_options_field">
-        <item>Todos os campos</item>
-        <item>Título</item>
-        <item>Autor</item>
-        <item>Assunto</item>
-    </string-array>
-</resources>

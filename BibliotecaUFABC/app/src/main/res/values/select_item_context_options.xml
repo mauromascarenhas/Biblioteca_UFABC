@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string-array name="item_context_options">
-        <item>Open book/work details</item>
-        <item>Share this book/work</item>
-    </string-array>
-</resources>

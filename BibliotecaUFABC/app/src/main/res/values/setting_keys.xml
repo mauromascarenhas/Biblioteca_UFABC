@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Sync -->
-    <string name="key_synchronization_schedule" translatable="false">key_synchronization_schedule</string>
     <!-- First run for synchronization schedule purposes -->
     <string name="key_app_first_run" translatable="false">key_app_first_run</string>
+
+    <!-- Sync -->
+    <string name="key_synchronization_schedule" translatable="false">key_synchronization_schedule</string>
+    <string name="key_notification_warning_delay" translatable="false">key_notification_warning_delay</string>
+    <string name="key_notification_sync_interval" translatable="false">key_notification_sync_interval</string>
+    <string name="key_notification_enable_warning" translatable="false">key_notification_enable_warning</string>
 
     <!-- General -->
     <string name="key_general_leave_warning" translatable="false">key_general_leave_warning</string>
@@ -17,9 +21,4 @@
 
     <string name="key_privacy_login_username" translatable="false">key_privacy_login_username</string>
     <string name="key_privacy_login_password" translatable="false">key_privacy_login_password</string>
-
-    <!-- Notification -->
-    <string name="key_notification_enable_warning" translatable="false">key_notification_enable_warning</string>
-    <string name="key_notification_warning_delay" translatable="false">key_notification_warning_delay</string>
-    <string name="key_notification_sync_interval" translatable="false">key_notification_sync_interval</string>
 </resources>
