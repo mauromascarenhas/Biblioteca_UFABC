@@ -1,7 +1,6 @@
 package com.nintersoft.bibliotecaufabc.webclient
 
 import android.content.Context
-import android.os.AsyncTask
 import android.os.Build
 import android.webkit.*
 import androidx.annotation.RequiresApi
@@ -12,6 +11,8 @@ import com.nintersoft.bibliotecaufabc.global.Functions
 import com.nintersoft.bibliotecaufabc.model.AppDatabase
 import com.nintersoft.bibliotecaufabc.model.renewal.BookRenewal
 import com.nintersoft.bibliotecaufabc.synchronization.SyncService
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -139,7 +140,7 @@ class SyncWebClient(private val context : Context)
 
     private fun bindAlarms(books : List<BookRenewal>){
         AppDatabase.getInstance()?.bookRenewalDAO()?.let {dao ->
-            AsyncTask.execute {
+            GlobalScope.launch {
                 dao.removeAll()
                 books.forEach { dao.insert(it) }
             }

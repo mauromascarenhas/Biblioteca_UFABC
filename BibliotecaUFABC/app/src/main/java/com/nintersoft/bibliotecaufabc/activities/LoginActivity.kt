@@ -10,7 +10,6 @@ import android.os.Handler
 import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
 import android.webkit.WebView
-import androidx.lifecycle.Observer
 import androidx.preference.PreferenceManager
 import com.nintersoft.bibliotecaufabc.ui.loginform.LoginForm
 import com.nintersoft.bibliotecaufabc.R
@@ -26,15 +25,18 @@ class LoginActivity : AppCompatActivity(), LoginForm.OnFragmentInteractionListen
     private var login : String? = null
     private var password : String? = null
     private var dataSource : WebView? = null
-    private val errorHandler = Handler()
     private val errorChecker = {
-        if (dataSource!!.url.contains(Constants.URL_LIBRARY_LOGIN_P)) checkForErrors()
+        if (dataSource!!.url!!.contains(Constants.URL_LIBRARY_LOGIN_P)) checkForErrors()
     }
+
+    private lateinit var errorHandler : Handler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        errorHandler = Handler(mainLooper)
 
         val fragTransaction = supportFragmentManager.beginTransaction()
         fragTransaction.add(R.id.loginViewGroup, LoadingFragment())
@@ -109,10 +111,10 @@ class LoginActivity : AppCompatActivity(), LoginForm.OnFragmentInteractionListen
     private fun configureWebView(){
         dataSource = WebView(this)
         Functions.configureWebView(dataSource!!, LoginWebClient().also {lwc ->
-            lwc.errorEvent().observe(this, Observer {
+            lwc.errorEvent().observe(this, {
                 if (it == true) displayErrorMessage()
             })
-            lwc.loginStatus().observe(this, Observer {userName ->
+            lwc.loginStatus().observe(this, {userName ->
                 errorHandler.removeCallbacks(errorChecker)
 
                 with (Intent()){
@@ -122,7 +124,7 @@ class LoginActivity : AppCompatActivity(), LoginForm.OnFragmentInteractionListen
                 }
                 finish()
             })
-            lwc.loginRequested().observe(this, Observer {
+            lwc.loginRequested().observe(this, {
                 when (it){
                     true -> setSavedUserLogin()
                     false -> setupInterface()

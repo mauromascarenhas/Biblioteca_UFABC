@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.nintersoft.bibliotecaufabc.R
 import kotlinx.android.synthetic.main.fragment_message.*
@@ -26,24 +25,24 @@ class MessageFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
-        messageViewModel.message.observe(viewLifecycleOwner, Observer {
+        messageViewModel.message.observe(viewLifecycleOwner, {
             lblMessage.text = it
         })
 
-        messageViewModel.drawable.observe(viewLifecycleOwner, Observer {
-            val image = ContextCompat.getDrawable(context!!,
+        messageViewModel.drawable.observe(viewLifecycleOwner, {
+            val image = ContextCompat.getDrawable(requireContext(),
                 it ?: R.drawable.ic_info_image)?.apply { setBounds(0, 0,
                     intrinsicWidth, intrinsicHeight) }
             lblMessage.setCompoundDrawables(null, image,
                 null, null)
         })
 
-        messageViewModel.actLabel.observe(viewLifecycleOwner, Observer {
+        messageViewModel.actLabel.observe(viewLifecycleOwner, {
             btnAction.text = it
             btnAction.visibility = if (it == null) View.GONE else View.VISIBLE
         })
 
-        messageViewModel.action.observe(viewLifecycleOwner, Observer {
+        messageViewModel.action.observe(viewLifecycleOwner, {
             btnAction.setOnClickListener(it)
         })
     }

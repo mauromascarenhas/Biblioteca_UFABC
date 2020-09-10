@@ -69,9 +69,7 @@ class ReservationsFragment : Fragment() {
             messageViewModel.setMessage(getString(R.string.lbl_no_reservation_username,
                 reservationsViewModel.userName.value))
             messageViewModel.setActLabel(getString(R.string.menu_nav_refresh))
-            messageViewModel.setAction(View.OnClickListener {
-                reservationsViewModel.requestReload(true)
-            })
+            messageViewModel.setAction { reservationsViewModel.requestReload(true) }
 
             val fragTransaction = activity?.supportFragmentManager?.beginTransaction()
             MessageFragment().also {frag ->
@@ -80,7 +78,7 @@ class ReservationsFragment : Fragment() {
             }
         })
 
-        reservationsViewModel.reloadRequest.observe(viewLifecycleOwner, Observer {
+        reservationsViewModel.reloadRequest.observe(viewLifecycleOwner, {
             if (it == true) {
                 listener?.refreshReservations()
                 val fragTransaction = activity?.supportFragmentManager?.beginTransaction()

@@ -39,11 +39,11 @@ function setSearchFilter(filterStr){
         else if (filter.field != i && searchFields[i].hasAttribute("selected"))
             searchFields[i].removeAttribute("selected");
 
-    for (let i = 0; i < searchFilters.length; ++i)
+    for (let i = 0; i < searchFilters.length && i < filter.filters.length; ++i)
         if (filter.filters[i].toString() != searchFilters[i].parentNode.getAttribute("aria-selected"))
             searchFilters[i].click();
 
-    for (let i = 0; i < searchLibraries.length; ++i)
+    for (let i = 0; i < searchLibraries.length && i < filter.libraries.length; ++i)
         if (filter.libraries[i].toString() != searchLibraries[i].parentNode.getAttribute("aria-selected"))
             searchLibraries[i].click();
 }

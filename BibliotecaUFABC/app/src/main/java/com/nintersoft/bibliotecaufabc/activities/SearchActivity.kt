@@ -99,7 +99,7 @@ class SearchActivity : AppCompatActivity() {
     private fun configureMessages(){
         messageViewModel.setMessage(getString(R.string.lbl_book_details_connection_error))
         messageViewModel.setActLabel(getString(R.string.bt_error_message_try_again))
-        messageViewModel.setAction(View.OnClickListener { requestNewSearch() })
+        messageViewModel.setAction { performNewSearch(searchViewModel.query.value!!) }
     }
 
     private fun configureListeners(){
@@ -156,11 +156,11 @@ class SearchActivity : AppCompatActivity() {
             }
         })
 
-        searchViewModel.hasMoreBooks.observe(this, Observer {
-            if (it != null && it) btn_more.show()
+        searchViewModel.hasMoreBooks.observe(this, {
+            if (it == true) btn_more.show()
         })
 
-        searchViewModel.internetError.observe(this, Observer {
+        searchViewModel.internetError.observe(this, {
             if (it == true){
                 val fragTransaction = supportFragmentManager.beginTransaction()
                 fragTransaction.replace(R.id.searchScroll, MessageFragment())
@@ -233,7 +233,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun requestNewChangeDetection(){
-        Handler().postDelayed(({
+        Handler(mainLooper).postDelayed(({
             dataSource?.evaluateJavascript("getServerChange();", ({
                 if (it == "null") requestNewChangeDetection()
                 else {

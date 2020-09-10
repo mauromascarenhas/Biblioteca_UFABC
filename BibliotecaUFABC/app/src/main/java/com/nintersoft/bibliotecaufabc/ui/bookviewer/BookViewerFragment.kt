@@ -92,7 +92,7 @@ class BookViewerFragment : Fragment() {
                 with(Intent(Intent.ACTION_SEND)){
                     type = "text/plain"
                     putExtra(Intent.EXTRA_TEXT, shareMessage)
-                    if (resolveActivity(this@BookViewerFragment.activity!!.packageManager) != null)
+                    if (resolveActivity(this@BookViewerFragment.requireActivity().packageManager) != null)
                         startActivity(Intent.createChooser(this,
                             getString(R.string.intent_share_book)))
                 }
@@ -113,6 +113,7 @@ class BookViewerFragment : Fragment() {
             }.create()
     }
 
+    @SuppressLint("CutPasteId")
     private fun setListeners(){
         bookViewerViewModel.bookProperties.observe(viewLifecycleOwner, Observer {props ->
             if (props == null) return@Observer
@@ -123,7 +124,7 @@ class BookViewerFragment : Fragment() {
                 return@Observer
             }
 
-            Glide.with(context!!.applicationContext).load(props.imgURL).apply(glideConf)
+            Glide.with(requireContext().applicationContext).load(props.imgURL).apply(glideConf)
                 .into(imgDetailsBookCover)
 
             lbl_book_title.text = props.title
@@ -336,7 +337,7 @@ class BookViewerFragment : Fragment() {
                         continue
                     }
 
-                    cSpinner?.adapter = object : ArrayAdapter<String>(context!!,
+                    cSpinner?.adapter = object : ArrayAdapter<String>(requireContext(),
                         android.R.layout.simple_spinner_item, cOptions){
                         override fun getDropDownView(position: Int, convertView: View?,
                                                      parent: ViewGroup): View {

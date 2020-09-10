@@ -35,7 +35,7 @@ class SyncService : Service() {
     private var windowManager : WindowManager? = null
     private var isScheduled = true
 
-    private var mHandler : Handler? = Handler()
+    private var mHandler : Handler? = null
     private val killService = Runnable { retryAndFinish() }
     private val errorChecker = Runnable {
         if (dataSource?.url?.contains(Constants.URL_LIBRARY_LOGIN_P) == true)
@@ -46,6 +46,8 @@ class SyncService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+
+        mHandler = Handler(mainLooper)
 
         Functions.createNotificationChannel(
             getString(R.string.notification_sync_channel_description),

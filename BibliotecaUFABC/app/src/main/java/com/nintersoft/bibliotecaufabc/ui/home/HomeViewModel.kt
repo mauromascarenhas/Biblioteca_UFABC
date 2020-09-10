@@ -1,12 +1,13 @@
 package com.nintersoft.bibliotecaufabc.ui.home
 
-import android.os.AsyncTask
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.nintersoft.bibliotecaufabc.model.AppDatabase
 import com.nintersoft.bibliotecaufabc.model.search.BookSearch
 import com.nintersoft.bibliotecaufabc.ui.search.SingleLiveEvent
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONException
 
@@ -26,7 +27,7 @@ class HomeViewModel : ViewModel() {
     fun defineConnectedUserName(uName : String?) { _connectedUserName.value = uName }
     fun defineBookSearchResults(jsonResult : String?){
         if (jsonResult.isNullOrEmpty()) return
-        AsyncTask.execute {
+        GlobalScope.launch {
             try {
                 val dao = AppDatabase.getInstance()?.bookSearchDAO()
                 dao?.removeAll()

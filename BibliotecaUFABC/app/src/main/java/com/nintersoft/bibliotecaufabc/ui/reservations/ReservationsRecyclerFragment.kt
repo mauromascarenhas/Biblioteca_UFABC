@@ -38,7 +38,7 @@ class ReservationsRecyclerFragment : Fragment() {
         if (context is ReservationEvents) listener = context
         else throw RuntimeException("$context must implement OnFragmentInteractionListener")
 
-        cancelLoad = AlertDialog.Builder(activity!!).apply {
+        cancelLoad = AlertDialog.Builder(requireActivity()).apply {
             setView(R.layout.message_progress_dialog)
             setCancelable(false)
         }.create().also {
@@ -76,7 +76,7 @@ class ReservationsRecyclerFragment : Fragment() {
 
         ReservationsViewAdapter(reservationsViewModel).also {
             renewalsRecycler.adapter = it
-            it.cancellationRequest().observe(viewLifecycleOwner, Observer {link ->
+            it.cancellationRequest().observe(viewLifecycleOwner, {link ->
                 listener?.loadCancelLink(link)
                 cancelLoad.show()
             })
@@ -87,7 +87,7 @@ class ReservationsRecyclerFragment : Fragment() {
             if (it == null) return@Observer
             if (cancelLoad.isShowing) cancelLoad.dismiss()
 
-            AlertDialog.Builder(activity!!).apply {
+            AlertDialog.Builder(requireActivity()).apply {
                 setTitle(R.string.dialog_server_response_title)
                 setMessage(it)
                 setPositiveButton(R.string.dialog_button_ok, null)

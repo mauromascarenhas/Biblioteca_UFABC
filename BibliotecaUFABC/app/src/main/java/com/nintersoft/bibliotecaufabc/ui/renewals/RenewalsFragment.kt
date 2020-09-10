@@ -96,8 +96,8 @@ class RenewalsFragment : Fragment() {
         when (item.itemId){
             R.id.action_refresh -> {
                 if (snackMsg.isShown) snackMsg.dismiss()
-                ContextCompat.startForegroundService(activity!!,
-                    Intent(activity!!, SyncService::class.java).
+                ContextCompat.startForegroundService(requireActivity(),
+                    Intent(requireActivity(), SyncService::class.java).
                         putExtra(Constants.SYNC_INTENT_SCHEDULED, false))
             }
         }
@@ -105,7 +105,7 @@ class RenewalsFragment : Fragment() {
     }
 
     private fun createAlerts(){
-        renewalLoad = AlertDialog.Builder(activity!!).apply {
+        renewalLoad = AlertDialog.Builder(requireActivity()).apply {
             setView(R.layout.message_progress_dialog)
             setCancelable(false)
         }.create().also { dlg ->
@@ -117,19 +117,19 @@ class RenewalsFragment : Fragment() {
         snackMsg = MessageSnackbar.make(renewalFragment,
             R.string.snack_message_no_renewal, Snackbar.LENGTH_INDEFINITE,
             MessageSnackbar.Type.INFO)?.setAction(R.string.dialog_button_ok, ({ snackMsg.dismiss() }))?.
-            setAnchorView(activity!!.nav_view)!!
+            setAnchorView(requireActivity().nav_view)!!
     }
 
     private fun configureRList(){
         renewalBookList.adapter = RenewalsViewAdapter().also {
             it.renewalRequest().observe(viewLifecycleOwner, Observer { url ->
                 if (!homeViewModel.loginStatus.value!!){
-                    AlertDialog.Builder(activity!!).apply {
+                    AlertDialog.Builder(requireActivity()).apply {
                         setTitle(R.string.dialog_warning_title)
                         setMessage(R.string.dialog_warning_message_must_be_connected)
                         setPositiveButton(R.string.dialog_button_yes, ({ _, _ ->
                             activity?.startActivityForResult(
-                                Intent(activity!!, LoginActivity::class.java),
+                                Intent(requireActivity(), LoginActivity::class.java),
                                 Constants.ACTIVITY_LOGIN_REQUEST_CODE)
                         }))
                         setNegativeButton(R.string.dialog_button_no, null)
@@ -146,7 +146,7 @@ class RenewalsFragment : Fragment() {
     }
 
     private fun configureWebView(){
-        dataSource = WebView(activity)
+        dataSource = WebView(requireActivity())
         Functions.configureWebView(dataSource!!, RenewalsWebClient(renewalsViewModel))
     }
 
@@ -154,13 +154,13 @@ class RenewalsFragment : Fragment() {
         PreferenceManager.getDefaultSharedPreferences(context).
             registerOnSharedPreferenceChangeListener(prefListener)
 
-        renewalsViewModel.lastSync.observe(viewLifecycleOwner, Observer {
+        renewalsViewModel.lastSync.observe(viewLifecycleOwner, {
             lblLastRenewal.text = getString(R.string.lbl_renewal_last_sync, it)
         })
 
         renewalsViewModel.navError.observe(viewLifecycleOwner, Observer {
             if (it.isNullOrEmpty()) return@Observer
-            AlertDialog.Builder(activity!!).apply {
+            AlertDialog.Builder(requireActivity()).apply {
                 setTitle(R.string.dialog_error_title)
                 setMessage(it)
                 setCancelable(false)
@@ -191,10 +191,10 @@ class RenewalsFragment : Fragment() {
                 MessageSnackbar.make(renewalFragment,
                     R.string.snack_message_parse_fail,
                     Snackbar.LENGTH_LONG, MessageSnackbar.Type.ERROR)?.
-                    setAnchorView(activity!!.nav_view)?.show()
+                    setAnchorView(requireActivity().nav_view)?.show()
             }
 
-            AlertDialog.Builder(activity!!).apply {
+            AlertDialog.Builder(requireActivity()).apply {
                 setTitle(R.string.dialog_server_response_title)
                 setMessage(sb.toString())
                 setPositiveButton(R.string.dialog_button_ok, null)
@@ -204,7 +204,7 @@ class RenewalsFragment : Fragment() {
         })
 
         AppDatabase.getInstance()?.bookRenewalDAO()?.getAll()?.observe(viewLifecycleOwner,
-            Observer {
+            {
                 if (it.isEmpty() && !snackMsg.isShown) snackMsg.show()
                 else if (snackMsg.isShownOrQueued) snackMsg.dismiss()
             }

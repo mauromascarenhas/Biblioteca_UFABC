@@ -48,7 +48,6 @@ object Functions {
         val settings = v.settings
         settings.domStorageEnabled = true
         settings.javaScriptEnabled = true
-        settings.setAppCacheEnabled(true)
         v.webViewClient = wvc
     }
 

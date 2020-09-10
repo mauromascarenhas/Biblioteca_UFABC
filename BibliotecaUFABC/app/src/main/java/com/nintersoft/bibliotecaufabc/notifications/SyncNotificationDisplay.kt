@@ -1,15 +1,12 @@
 package com.nintersoft.bibliotecaufabc.notifications
 
 import android.content.Context
-import android.content.Intent
-import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.nintersoft.bibliotecaufabc.R
 import com.nintersoft.bibliotecaufabc.global.Constants
 import com.nintersoft.bibliotecaufabc.global.Functions
-import com.nintersoft.bibliotecaufabc.synchronization.SyncService
 import java.util.concurrent.TimeUnit
 
 class SyncNotificationDisplay(private val context: Context, workerParams: WorkerParameters) :

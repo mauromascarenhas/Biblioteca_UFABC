@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.view.MenuItem
-import android.view.View
 import android.webkit.WebView
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
@@ -74,7 +73,7 @@ class BookViewerActivity : AppCompatActivity(), BookViewerFragment.ReservationEv
                 bookViewerViewModel.setLoginRequest(true)
                 bookViewerViewModel.setReservationRequest(true)
 
-                dataSource?.loadUrl(bookViewerViewModel.bookURL.value)
+                dataSource?.loadUrl(bookViewerViewModel.bookURL.value!!)
                 Snackbar.make(bookViewerParent,
                     getString(R.string.snack_message_connected,
                         data.getStringExtra(Constants.CONNECTED_STATUS_USER_NAME)),
@@ -107,7 +106,7 @@ class BookViewerActivity : AppCompatActivity(), BookViewerFragment.ReservationEv
     private fun configureLoginCanceledMessage(){
         messageViewModel.setActLabel(getString(R.string.menu_nav_refresh))
         messageViewModel.setMessage(getString(R.string.lbl_book_details_connection_canceled))
-        messageViewModel.setAction(View.OnClickListener {
+        messageViewModel.setAction {
             with(supportFragmentManager.beginTransaction()){
                 replace(R.id.bookViewerParent, LoadingFragment())
                 commitAllowingStateLoss()
@@ -118,13 +117,13 @@ class BookViewerActivity : AppCompatActivity(), BookViewerFragment.ReservationEv
                 bookViewerViewModel.setLoginCancelled(false)
             }
             else dataSource?.reload()
-        })
+        }
     }
 
     private fun configureErrorMessage(){
         messageViewModel.setActLabel(getString(R.string.bt_error_message_try_again))
         messageViewModel.setMessage(getString(R.string.lbl_book_details_connection_error))
-        messageViewModel.setAction(View.OnClickListener {
+        messageViewModel.setAction {
             with(supportFragmentManager.beginTransaction()){
                 replace(R.id.bookViewerParent, LoadingFragment())
                 commitAllowingStateLoss()
@@ -135,7 +134,7 @@ class BookViewerActivity : AppCompatActivity(), BookViewerFragment.ReservationEv
                 bookViewerViewModel.setLoginCancelled(false)
             }
             else dataSource?.reload()
-        })
+        }
     }
 
     private fun configureWebView(){
@@ -165,8 +164,8 @@ class BookViewerActivity : AppCompatActivity(), BookViewerFragment.ReservationEv
         }
 
         detailsWebClient?.resetCounters()
-        dataSource?.webViewClient = detailsWebClient
-        dataSource?.loadUrl(bookViewerViewModel.bookURL.value)
+        dataSource?.webViewClient = detailsWebClient!!
+        dataSource?.loadUrl(bookViewerViewModel.bookURL.value!!)
     }
 
     override fun requestReservation(options : String) {
@@ -179,7 +178,7 @@ class BookViewerActivity : AppCompatActivity(), BookViewerFragment.ReservationEv
 
     override fun reservationRequested() {
         reserveWebClient?.resetCounters()
-        dataSource?.webViewClient = reserveWebClient
+        dataSource?.webViewClient = reserveWebClient!!
         dataSource?.evaluateJavascript("\nreserveBook();", null)
     }
 
@@ -195,7 +194,7 @@ class BookViewerActivity : AppCompatActivity(), BookViewerFragment.ReservationEv
                 commitAllowingStateLoss()
             }
         })
-        bookViewerViewModel.dataSourceDetailsError.observe(this, Observer {
+        bookViewerViewModel.dataSourceDetailsError.observe(this, {
             if (it == true) {
                 configureErrorMessage()
                 with(supportFragmentManager.beginTransaction()){
@@ -205,7 +204,7 @@ class BookViewerActivity : AppCompatActivity(), BookViewerFragment.ReservationEv
             }
         })
 
-        bookViewerViewModel.loginCancelled.observe(this, Observer {
+        bookViewerViewModel.loginCancelled.observe(this, {
             if (it == true) {
                 configureLoginCanceledMessage()
                 with(supportFragmentManager.beginTransaction()){
@@ -217,7 +216,7 @@ class BookViewerActivity : AppCompatActivity(), BookViewerFragment.ReservationEv
     }
 
     private fun requestNewChangeDetection(){
-        Handler().postDelayed(({
+        Handler(mainLooper).postDelayed(({
             dataSource?.evaluateJavascript("getServerChange();", ({
                 if (it == "null") requestNewChangeDetection()
                 else bookViewerViewModel.setReservationResult(it.substring(1, it.length - 1))

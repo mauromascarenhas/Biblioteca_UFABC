@@ -4,8 +4,8 @@ import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.Runnable
 
+@Suppress("unused")
 class MessageViewModel : ViewModel() {
     private val _action = MutableLiveData<View.OnClickListener?>().apply { value = null }
     private val _message = MutableLiveData<String?>().apply { value = null }

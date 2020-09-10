@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
-import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -38,6 +37,8 @@ import com.nintersoft.bibliotecaufabc.ui.snackbar.MessageSnackbar
 import com.nintersoft.bibliotecaufabc.webclient.HomeWebClient
 import com.nintersoft.bibliotecaufabc.webclient.ReservationWebClient
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.lang.Exception
 import java.util.*
 import java.util.concurrent.ExecutionException
@@ -96,7 +97,7 @@ class MainActivity : AppCompatActivity(), ReservationsRecyclerFragment.Reservati
     override fun onDestroy() {
         prefs.unregisterOnSharedPreferenceChangeListener(prefListener)
         if (!prefs.getBoolean(getString(R.string.key_privacy_cache_main_content), true)){
-            AsyncTask.execute { Glide.get(applicationContext).clearDiskCache() }
+            GlobalScope.launch { Glide.get(applicationContext).clearDiskCache() }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 CookieManager.getInstance().removeAllCookies(null)
                 CookieManager.getInstance().flush()
@@ -174,7 +175,7 @@ class MainActivity : AppCompatActivity(), ReservationsRecyclerFragment.Reservati
     }
 
     private fun configureObservers(){
-        homeViewModel.loginStatus.observe(this, Observer {
+        homeViewModel.loginStatus.observe(this, {
             when (it){
                 null -> dataSource?.loadUrl(Constants.URL_LIBRARY_NEWEST)
                 true -> {
@@ -223,13 +224,13 @@ class MainActivity : AppCompatActivity(), ReservationsRecyclerFragment.Reservati
                 Snackbar.LENGTH_LONG, MessageSnackbar.Type.INFO)?.setAnchorView(nav_view)?.show()
         })
 
-        reservationsViewModel.loadError.observe(this, Observer {
+        reservationsViewModel.loadError.observe(this, {
             if (it == true) MessageSnackbar.make(container,
                 getString(R.string.snack_message_loading_reservation_error),
                 Snackbar.LENGTH_LONG, MessageSnackbar.Type.ERROR)?.setAnchorView(nav_view)?.show()
         })
 
-        BookViewerActivity.loggedInAs.observe(this, Observer {
+        BookViewerActivity.loggedInAs.observe(this, {
             if (!it.isNullOrEmpty()){
                 homeViewModel.defineLoginStatus(true)
                 homeViewModel.defineConnectedUserName(it)

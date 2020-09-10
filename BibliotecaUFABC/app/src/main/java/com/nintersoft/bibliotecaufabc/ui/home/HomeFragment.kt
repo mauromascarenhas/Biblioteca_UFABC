@@ -42,16 +42,16 @@ class HomeFragment : Fragment() {
         super.onStart()
         HomeViewAdapter().also {
             homeBookList.adapter = it
-            it.clickedBook().observe(viewLifecycleOwner, Observer {book ->
-                Functions.viewBookDetails(book, activity!!)
+            it.clickedBook().observe(viewLifecycleOwner, {book ->
+                Functions.viewBookDetails(book, requireActivity())
             })
-            it.selectedBook().observe(viewLifecycleOwner, Observer {book ->
+            it.selectedBook().observe(viewLifecycleOwner, {book ->
                 AlertDialog.Builder(activity).apply {
                     setItems(R.array.book_item_context_menu,
                         ({ _, which ->
                             when (which) {
-                                0 -> Functions.viewBookDetails(book, activity!!)
-                                1 -> Functions.shareBookDetails(book, activity!!)
+                                0 -> Functions.viewBookDetails(book, requireActivity())
+                                1 -> Functions.shareBookDetails(book, requireActivity())
                             }
                         }))
                 }.create().show()
@@ -81,7 +81,7 @@ class HomeFragment : Fragment() {
         inflater.inflate(R.menu.home_frag_options_menu, menu)
 
         val searchView = SearchView((context as MainActivity).
-            supportActionBar?.themedContext ?: context!!).apply {
+            supportActionBar?.themedContext ?: requireActivity()).apply {
             imeOptions = EditorInfo.IME_ACTION_SEARCH
         }
         menu.findItem(R.id.search).apply {
@@ -135,7 +135,7 @@ class HomeFragment : Fragment() {
                     type = "text/plain"
                     putExtra(Intent.EXTRA_TEXT, getString(R.string.share_app_structure))
                 }.also {
-                    if (it.resolveActivity(activity!!.packageManager) != null)
+                    if (it.resolveActivity(requireActivity().packageManager) != null)
                         activity?.startActivity(Intent.createChooser(it,
                             getString(R.string.intent_share_app)))
                 }

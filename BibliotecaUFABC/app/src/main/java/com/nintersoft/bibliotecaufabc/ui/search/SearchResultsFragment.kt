@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.nintersoft.bibliotecaufabc.R
@@ -26,16 +25,16 @@ class SearchResultsFragment : Fragment() {
             ViewModelProvider(this)[SearchViewModel::class.java]
         } ?: throw Exception("Invalid activity!")).also {
             searchResultsList.adapter = it
-            it.clickedBook().observe(viewLifecycleOwner, Observer { book ->
-                Functions.viewBookDetails(book, activity!!)
+            it.clickedBook().observe(viewLifecycleOwner, { book ->
+                Functions.viewBookDetails(book, requireActivity())
             })
-            it.selectedBook().observe(viewLifecycleOwner, Observer {book ->
+            it.selectedBook().observe(viewLifecycleOwner, {book ->
                 AlertDialog.Builder(activity).apply {
                     setItems(R.array.book_item_context_menu,
                         ({ _, which ->
                             when (which) {
-                                0 -> Functions.viewBookDetails(book, activity!!)
-                                1 -> Functions.shareBookDetails(book, activity!!)
+                                0 -> Functions.viewBookDetails(book, requireActivity())
+                                1 -> Functions.shareBookDetails(book, requireActivity())
                             }
                         }))
                 }.create().show()

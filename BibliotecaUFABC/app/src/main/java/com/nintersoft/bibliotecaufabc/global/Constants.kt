@@ -39,19 +39,19 @@ object Constants {
     const val SYNC_INTENT_SCHEDULED = "is_sync_scheduled"
 
     // URL Constants
-    const val URL_LIBRARY_HOME = "http://biblioteca.ufabc.edu.br/mobile/busca.php"
-    const val URL_LIBRARY_LOGIN_P = "http://biblioteca.ufabc.edu.br/mobile/login.php"
-    const val URL_LIBRARY_LOGOUT = "http://biblioteca.ufabc.edu.br/mobile/logout.php"
-    const val URL_LIBRARY_SEARCH = "http://biblioteca.ufabc.edu.br/mobile/resultado.php"
-    const val URL_LIBRARY_NEWEST = "http://biblioteca.ufabc.edu.br/mobile/resultado.php?busca=3"
-    const val URL_LIBRARY_RENEWAL = "http://biblioteca.ufabc.edu.br/mobile/renovacoes.php"
-    const val URL_LIBRARY_DETAILS = "http://biblioteca.ufabc.edu.br/mobile/detalhe.php"
-    const val URL_LIBRARY_RESERVE = "http://biblioteca.ufabc.edu.br/mobile/reservar.php"
-    const val URL_LIBRARY_SERVICES = "http://biblioteca.ufabc.edu.br/mobile/servicos.php"
-    const val URL_LIBRARY_BOOK_COVER = "http://biblioteca.ufabc.edu.br/mobile/capa.php"
-    const val URL_LIBRARY_RESERVATION = "http://biblioteca.ufabc.edu.br/mobile/reservas.php"
-    const val URL_LIBRARY_PERFORM_RENEWAL = "http://biblioteca.ufabc.edu.br/mobile/renovar.php"
-    const val URL_LIBRARY_CANCEL_RESERVATION = "http://biblioteca.ufabc.edu.br/mobile/cancelar_reserva.php"
+    const val URL_LIBRARY_HOME = "https://biblioteca.ufabc.edu.br/mobile/busca.php"
+    const val URL_LIBRARY_LOGIN_P = "https://biblioteca.ufabc.edu.br/mobile/login.php"
+    const val URL_LIBRARY_LOGOUT = "https://biblioteca.ufabc.edu.br/mobile/logout.php"
+    const val URL_LIBRARY_SEARCH = "https://biblioteca.ufabc.edu.br/mobile/resultado.php"
+    const val URL_LIBRARY_NEWEST = "https://biblioteca.ufabc.edu.br/mobile/resultado.php?busca=3"
+    const val URL_LIBRARY_RENEWAL = "https://biblioteca.ufabc.edu.br/mobile/renovacoes.php"
+    const val URL_LIBRARY_DETAILS = "https://biblioteca.ufabc.edu.br/mobile/detalhe.php"
+    const val URL_LIBRARY_RESERVE = "https://biblioteca.ufabc.edu.br/mobile/reservar.php"
+    const val URL_LIBRARY_SERVICES = "https://biblioteca.ufabc.edu.br/mobile/servicos.php"
+    const val URL_LIBRARY_BOOK_COVER = "https://biblioteca.ufabc.edu.br/mobile/capa.php"
+    const val URL_LIBRARY_RESERVATION = "https://biblioteca.ufabc.edu.br/mobile/reservas.php"
+    const val URL_LIBRARY_PERFORM_RENEWAL = "https://biblioteca.ufabc.edu.br/mobile/renovar.php"
+    const val URL_LIBRARY_CANCEL_RESERVATION = "https://biblioteca.ufabc.edu.br/mobile/cancelar_reserva.php"
 
     const val MANDATORY_APPEND_URL_LIBRARY_DETAILS = "&tipo=1&detalhe=0"
     const val MANDATORY_APPEND_URL_LIBRARY_BOOK_COVER = "?obra="
@@ -77,7 +77,8 @@ object Constants {
     val SYNC_CONSTRAINTS = Constraints.Builder().apply {
         setRequiresCharging(false)
         setRequiresBatteryNotLow(true)
-        setRequiresDeviceIdle(false)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
+            setRequiresDeviceIdle(false)
         setRequiresStorageNotLow(false)
         setRequiredNetworkType(NetworkType.CONNECTED)
     }.build()
