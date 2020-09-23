@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="search_options_types">
-        <item>Every patrimony</item>
+        <item>Every type</item>
         <item>Directory</item>
         <item>Handout</item>
         <item>Presentation</item>
@@ -16,7 +16,7 @@
         <item>Specialization</item>
         <item>Event/Congress</item>
         <item>Fascicle</item>
-        <item>Flyer</item>
+        <item>Textile</item>
         <item>Photo/Image</item>
         <item>Newspaper</item>
         <item>Legislation</item>
@@ -33,9 +33,9 @@
         <item>Seem</item>
         <item>Academic periodic</item>
         <item>Report</item>
-        <item>Offprint</item>
         <item>Resolution</item>
         <item>Magazine</item>
+        <item>Offprint</item>
         <item>Thesis</item>
         <item>Video</item>
     </string-array>
