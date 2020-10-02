@@ -283,7 +283,7 @@
         <item>Two days</item>
         <item>Three days</item>
     </string-array>
-    <string-array name="pref_notification_shift_values">
+    <string-array name="pref_notification_shift_values" translatable="false">
         <item>0</item>
         <item>-1</item>
         <item>-2</item>
@@ -297,7 +297,7 @@
         <item>Three days</item>
         <item>Four days</item>
     </string-array>
-    <string-array name="pref_notification_sync_interval_values">
+    <string-array name="pref_notification_sync_interval_values" translatable="false">
         <item>1</item>
         <item>2</item>
         <item>3</item>
@@ -312,7 +312,7 @@
 
     <string name="pref_title_share_app">Share app button</string>
     <string name="pref_description_share_app">Would you like to keep \"Share this app!\" into your navigation
-    drawer?</string>
+    menu?</string>
 
     <!-- Privacy Preferences Fragment -->
     <string name="pref_group_local_storage">Storage settings</string>
@@ -331,17 +331,6 @@
 
     <string name="pref_title_login_username">Username</string>
     <string name="pref_title_login_password">Password</string>
-
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
-
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
     <string name="empty_edt_form">This field cannot be empty!</string>
 

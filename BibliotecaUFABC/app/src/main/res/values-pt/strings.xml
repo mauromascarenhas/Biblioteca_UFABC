@@ -1,0 +1,348 @@
+<resources>
+    <string name="app_name">Biblioteca UFABC</string>
+
+    <string name="bottom_nav_home">Início</string>
+    <string name="bottom_nav_renewals">Renovações</string>
+    <string name="bottom_nav_reservations">Reservas</string>
+
+    <string name="menu_nav_exit">Sair</string>
+    <string name="menu_nav_save">Salvar</string>
+    <string name="menu_nav_login">Login</string>
+    <string name="menu_nav_share">Compartilhe este app!</string>
+    <string name="menu_nav_search">Buscar</string>
+    <string name="menu_nav_refresh">Atualizar</string>
+    <string name="menu_nav_sign_out">Desconectar (%1$s)</string>
+    <string name="menu_nav_settings">Configurações</string>
+
+    <string name="activity_login">Conectar (UFABC)</string>
+    <string name="activity_search">Buscar</string>
+    <string name="activity_settings">Configurações</string>
+    <string name="activity_book_details">Detalhes do livro</string>
+
+    <!-- Home Activity -->
+    <string name="title_home">Início</string>
+    <string name="title_renewals">Renovações</string>
+    <string name="title_reservations">Reservas</string>
+
+    <!-- BookDetails Activity -->
+    <string name="bt_share_books">Compartilhar livro</string>
+    <string name="bt_error_message_try_again">Tentar novamente</string>
+
+    <string name="book_details_image_description">Foto da capa do livro</string>
+
+    <string name="lbl_book_details_incorrect_data">
+        "Infelizmente a URL requisitada é incompatível."
+        "Ela deve conter, ao menos, o código do livro."
+    </string>
+
+    <string name="lbl_book_details_connection_error">
+        "Parece que ocorreu um erro durante a tentativa de comunicação"
+        "com os servidores da universidade."
+    </string>
+    <string name="lbl_book_details_connection_canceled">
+        "Não foi possível conectar-se aos servidores da universidade. Operação abortada."
+    </string>
+
+
+    <!-- Action Share Book/App -->
+    <string name="intent_share_app">Compartilhar Biblioteca UFABC&#8230;</string>
+    <string name="intent_share_book">Compartilhar livro usando&#8230;</string>
+
+    <string name="share_app_structure">
+        "O aplicativo Biblioteca UFABC está disponível na Google Play Store!\n"
+        "Adquira-o em: https://play.google.com/store/apps/details?id=com.nintersoft.bibliotecaufabc"
+    </string>
+    <string name="share_book_structure">
+        "Livro/Obra: %1$s\n"
+        "Autor: %2$s\n"
+        "Disponível em (URL): %3$s"
+    </string>
+
+    <!-- Loading fragment -->
+    <string name="label_loading">Carregando…</string>
+
+    <!-- Dialog messages -->
+    <string name="dialog_ops_title">Oops</string>
+    <string name="dialog_error_title">Erro</string>
+    <string name="dialog_warning_title">Aviso</string>
+    <string name="dialog_permission_title">%1$s - Pedido de permissão</string>
+    <string name="dialog_input_title_search">Termos de busca</string>
+    <string name="dialog_filter_changed_title">Alteração detectada</string>
+    <string name="dialog_server_response_title">Resposta do servidor</string>
+    <string name="dialog_reservation_options_title">Configurações de reserva</string>
+
+    <string name="dialog_button_ok">OK</string>
+    <string name="dialog_button_no">não</string>
+    <string name="dialog_button_yes">sim</string>
+    <string name="dialog_button_exit">Sair</string>
+    <string name="dialog_button_search">Buscar</string>
+    <string name="dialog_button_submit">Enviar</string>
+    <string name="dialog_button_cancel">Cancelar</string>
+
+    <string name="dialog_message_login_error">
+        "Aconteceu alguma coisa errada durante a tentativa de conexão "
+        "aos servidores da universidade. Gostaria de tentar novamente?"
+    </string>
+    <string name="dialog_filter_changed_message">
+        "Foram detectadas alterações nos filtros de busca. "
+        "Gostaria de fazer uma nova pesquisa com os mesmos termos e estas novas configurações? "
+        "(Os termos de busca não serão afetados)"</string>
+    <string name="dialog_permission_message">
+        "%1$s necessita de sua permissão para iniciar-se automaticamente para que suas funções de sincronização "
+        "funcionem corretamente (Também recomendamos que você remova-o das configurações de economia de energia). "
+        "Gostaria de concedê-la agora?"
+    </string>
+    <string name="dialog_warning_message_no_results">
+        "Infelizmente nada correspondeu aos seus termos de busca. "
+        "Gostaria de tentar uma nova pesquisa com termos diferentes?"
+    </string>
+    <string name="dialog_warning_message_external_link">
+        "Você está prestes a abrir o seguinte link externo: %1$s"
+    </string>
+    <string name="dialog_warning_message_loading_error">
+        "Houve um erro durante a tentativa de comunicação com os servidores da universidade. "
+        "Gostaria de tentar novamente?"
+    </string>
+    <string name="dialog_warning_message_user_disconnected">
+        "Você encontra-se desconectado dos servidores da universidade atualmente. "
+        "Gostaria de conectar-se para realizar a reserva?"
+    </string>
+    <string name="dialog_warning_message_must_be_connected">
+        "Você deve estar conectado para realizar esta ação."
+    </string>
+    <string name="dialog_warning_message_loading_reservation">
+        "Carregando opções de reserva&#8230;"
+    </string>
+    <string name="dialog_warning_message_loading_server_response">
+        "Aguardando a resposta do servidor&#8230;"
+    </string>
+
+    <string name="dialog_reservation_options_year_header">Ano</string>
+    <string name="dialog_reservation_options_volume_header">Volume</string>
+    <string name="dialog_reservation_options_edition_header">Edição</string>
+    <string name="dialog_reservation_options_library_header">Biblioteca</string>
+    <string name="dialog_reservation_options_support_header">Suporte</string>
+
+    <string name="dialog_reserve_parse_error">
+        "Ocorreu um erro durante a tentativa de interpretar os dados de resposta do servidor :( "
+    </string>
+    <string name="dialog_reservation_options_error_message">
+        "Todos os campos devem possuir uma seleção válida!"
+    </string>
+
+    <!-- SnackBar messages -->
+    <string name="snack_message_no_renewal">
+        "Não há circulação aberta para você neste momento."
+    </string>
+
+    <string name="snack_message_connected">Conectado como %1$s&#8230;</string>
+    <string name="snack_message_parse_fail">
+        "Ocorreu um erro ao interpretar a resposta do servidor :("
+    </string>
+    <string name="snack_message_loading_newest">
+        Carregando novas aquisições&#8230;
+    </string>
+    <string name="snack_message_refreshing_newest">
+        Atualizando aquisições recentes&#8230;
+    </string>
+    <string name="snack_message_loaded_more_items">
+        Obras adicionais acabaram de ser carregada!
+    </string>
+    <string name="snack_message_loading_more_items">
+        Carregando mais livros&#8230;
+    </string>
+    <string name="snack_message_loading_main_error">
+        Erro ao solicitar dados do servidor.
+    </string>
+    <string name="snack_message_loading_reservation_error">
+        Erro ao carregar dados de reserva de livros.
+    </string>
+
+    <string name="snack_button_reload">Recarregar</string>
+
+    <!-- Notification texts -->
+    <string name="notification_sync_title">Biblioteca UFABC - Lembrete de sincronização</string>
+    <string name="notification_syncing_title">Biblioteca UFABC - Sincronizando</string>
+    <string name="notification_sync_error_title">Biblioteca UFABC - Erro de sincronização</string>
+    <string name="notification_sync_denied_title">Biblioteca UFABC - Permissão negada</string>
+    <string name="notification_book_renewal_title">Biblioteca UFABC - Lembrete de renovação</string>
+    <string name="notification_sync_removed_title">Biblioteca UFABC - Permissão revogada</string>
+    <string name="notification_sync_rationale_title">Biblioteca UFABC - Permissão necessária</string>
+
+    <string name="notification_sync_message">
+        "Parece que há um bom tempo desde a última sincronização."
+        "É importante manter os dados de renovação atualizados para que você possa"
+        " continuar recebendo avisos/notificações a respeito de devolições próximas."
+    </string>
+    <string name="notification_syncing_message">Sincronizando dados de renovação&#8230;</string>
+    <string name="notification_sync_error_message">
+        "Erro durante o processo de sincronização."
+        "Seu nome de usuário ou senha não são mais válidos."
+        " Por favor, tente reconectar-se através da aplicação,"
+        " assim poderemos sincronizar os detalhes de renovação novamente."
+    </string>
+    <string name="notification_sync_denied_message">
+        "Como você negou a permissão,"
+        " não poderemos sincronizar seus livros &#128557;"
+    </string>
+    <string name="notification_sync_removed_message">
+        "Parece que você revogou a permissão para sincronizar"
+        "os dados de empréstimo. Sem ela, não poderemos notificá-lo"
+        " a respeito de datas limite de empréstimo &#128557;"
+    </string>
+    <string name="notification_book_renewal_content">
+        "Parece que você tem ao menos um libro/obra aguardando"
+        " para ser renovado ou devolvido!"
+    </string>
+    <string name="notification_sync_rationale_message">
+        "A fim de manter os dados sincronizados,"
+        " devemos obter sua permissão para sobrepor a outros aplicativos. "
+        "Se você não permitir, não será possível notificá-lo a respeito de "
+        "prazos de devolução propriamente."
+    </string>
+    <string name="notification_book_renewal_specific_content">
+        "O livro/obra %1$s está aguardando para ser"
+        " renovado ou devolvido!"
+    </string>
+    <string name="notification_book_renewal_specific_content_multiple">
+        "Os seguintes livros/obras estão aguardando para serem"
+        " renovados ou devolvidos: \n %1$s"
+    </string>
+
+    <!-- ??? -->
+
+    <string name="card_image_description">Foto da capa do livro</string>
+
+    <string name="search_hint">Minha dica</string>
+    <string name="action_settings">Configurações</string>
+
+    <!-- Renewal fragment -->
+    <string name="lbl_renewal_last_sync">Última atualização em %1$s</string>
+
+    <!-- Renewal Card -->
+    <string name="btn_card_renewal_renew">Renove-o</string>
+    <string name="btn_card_renewal_renewing">Renovando…</string>
+    <string name="card_renewal_limit_date_text">Devolução: %1$s</string>
+
+    <!-- Reservation Card -->
+    <string name="btn_card_reservation_remove">Cancelar</string>
+
+    <!-- Search Filter Activity-->
+    <string name="lbl_filter_type">Filtro (tipo de patrimônio)</string>
+    <string name="lbl_filter_field">Campo (de busca)</string>
+    <string name="lbl_filter_library">Biblioteca</string>
+
+    <string name="btn_filter_show_hide">Mostrar/Esconder filtros</string>
+
+    <!-- Book Viewer Activity -->
+    <string name="lbl_book_viewer_media_action">⏩ %1$s</string>
+    <string name="lbl_book_viewer_available_header">Cópias disponíveis</string>
+    <string name="lbl_book_viewer_available_details">[ %1$s ] - %2$s</string>
+    <string name="lbl_book_viewer_available_counting_sep">de</string>
+
+    <string name="btn_book_viewer_reserve">Reserve-o!</string>
+
+    <!-- General Info-->
+    <string name="on_error_def_username">{INDEFINIDO}</string>
+
+    <!-- Preferences Activity-->
+    <string name="pref_header_sync">Notificações e sincronização</string>
+    <string name="pref_header_general">Geral</string>
+    <string name="pref_header_privacy">Privacidade</string>
+    <string name="pref_header_bug_report">Reportar problema</string>
+    <string name="pref_header_privacy_policy">Política de Privacidade</string>
+
+    <string name="pref_summary_sync">Configure opções de sincronização de informação de renovação de livros e de alarmes</string>
+    <string name="pref_summary_general">Gerencie opções e comportamentos globais da aplicação</string>
+    <string name="pref_summary_privacy">Controle quais dados esta aplicação pode armazenar</string>
+    <string name="pref_summary_bug_report">Envie-nos um e-mail reportando possíveis problemas para que possamos ajudá-lo a resolvê-los</string>
+    <string name="pref_summary_privacy_policy">Visualize a Política de Privacidade do applicativo em um navegador ou leitor de PDF</string>
+
+    <string name="pref_summary_privacy_policy_intent_data">https://github.com/mauromascarenhas/Biblioteca_UFABC/raw/master/privacy_policy/pt/privacidade.pdf</string>
+
+    <!-- Bug report settings -->
+    <string name="pref_summary_bug_intent_data">mailto:suporte@nintersoft.com</string>
+    <string name="pref_summary_bug_intent_extra_subject">[ REPORTAR PROBLEMA ] Biblioteca UFABC</string>
+    <string name="pref_summary_bug_intent_extra_message">
+        "Olá.\n\n"
+        "Por favor, nos explique o que está acontecendo com a aplicação.\n"
+        "Você também pode anexar capturas de tela, se for necessário."
+    </string>
+
+    <!-- Sync Preferences Fragment -->
+    <string name="pref_title_enable_renewal_warning">Ativar sincronização e avisos</string>
+    <string name="pref_description_enable_renewal_warning_on">Atualmente, o Biblioteca UFABC
+        está permitido a buscar por empréstimos em segundo plano</string>
+    <string name="pref_description_enable_renewal_warning_off">Atualmente, o Biblioteca UFABC NÃO
+        ESTÁ permitido a buscar por empréstimos em segundo plano</string>
+
+    <string name="pref_notification_shift">Adiantamento de notificação</string>
+    <string-array name="pref_notification_shift_options">
+        <item>Sem adiantamento</item>
+        <item>Um dia</item>
+        <item>Dois dias</item>
+        <item>Três dias</item>
+    </string-array>
+
+    <string name="pref_notification_sync_interval">Intervalo de sincronização</string>
+    <string-array name="pref_notification_sync_interval_options">
+        <item>Um dia</item>
+        <item>Dois dias</item>
+        <item>Três dias</item>
+        <item>Quatro dias</item>
+    </string-array>
+
+    <!-- General Preferences Fragment -->
+    <string name="pref_title_leave_waning">Mostrar avisos da aplicação</string>
+    <string name="pref_description_leave_waning">Define se a aplicação deve mostrar uma mensagem
+        caso a abertura de URLs externas for requisitada.
+    </string>
+
+    <string name="pref_title_share_app">Botão de compartilhar aplicação</string>
+    <string name="pref_description_share_app">Gostaria de manter o botão \"Compartilhe este app!\" em seu
+    menu de navegação?</string>
+
+    <!-- Privacy Preferences Fragment -->
+    <string name="pref_group_local_storage">Configurações de armazenamento</string>
+    <string name="pref_title_keep_cache">Manter cache de conteúdo</string>
+    <string name="pref_description_keep_cache">Se estiver desmarcado, a aplicação limpará seu cache assim
+        que ela for fechada. Isto reiniciará conexões atuais e também removerá dados temporários.</string>
+
+    <string name="pref_group_login_storage">Opções de login</string>
+    <string name="pref_title_store_password">Armazenar senha</string>
+    <string name="pref_description_store_password">Permite que a aplicação armazene seus dados de login.
+        Isto torna o processo de login um pouco mais rápido para você. (Veja a Política de Privacidade para mais detalhes)</string>
+
+    <string name="pref_title_auto_login">Conectar automaticamente</string>
+    <string name="pref_description_auto_login">Se a aplicação já tiver suas credenciais salvas,
+        ela poderá conectá-lo automaticamente (apenas quando for iniciada através de seu launcher principal).</string>
+
+    <string name="pref_title_login_username">Usuário</string>
+    <string name="pref_title_login_password">Senha</string>
+
+    <string name="empty_edt_form">Este campo não pode estar vazio!</string>
+
+    <!-- Login fragment -->
+    <string name="lbl_password">Senha:</string>
+    <string name="lbl_username">Usuário:</string>
+
+    <string name="edt_password_placeholder">senha</string>
+    <string name="edt_username_placeholder">usuário@xxxufabc.edu.br</string>
+
+    <string name="bt_login">Login</string>
+    <string name="bt_retrieve">Recuperar senha</string>
+
+    <!-- Reservation fragment -->
+    <string name="lbl_no_reservation_username">
+        Não há livros reservados para %1$s neste momento.
+    </string>
+
+    <!-- Message fragment -->
+    <string name="lbl_default_frame_message">{SUBSTITUA POR SUA PRÓPRIA MENSAGEM}</string>
+
+    <!-- Notifications -->
+    <string name="notification_sync_channel_title">Tentativa de sincronização</string>
+    <string name="notification_renewal_channel_title">Aviso de renovação de livos</string>
+    <string name="notification_sync_channel_description">Alertas sobre problemas de sincronização</string>
+    <string name="notification_renewal_channel_description">Alertas sobre prazos de devolução de livros</string>
+</resources>
