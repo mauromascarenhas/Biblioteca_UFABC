@@ -3,6 +3,7 @@ package com.nintersoft.bibliotecaufabc.activities
 import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -15,7 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
@@ -67,7 +68,8 @@ class MainActivity : AppCompatActivity(), ReservationsRecyclerFragment.Reservati
         homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
         reservationsViewModel = ViewModelProvider(this)[ReservationsViewModel::class.java]
 
-        val navController = findNavController(R.id.nav_host_fragment)
+        val navFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navFragment.navController
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_home,
@@ -79,7 +81,7 @@ class MainActivity : AppCompatActivity(), ReservationsRecyclerFragment.Reservati
         navView.setupWithNavController(navController)
 
         Functions.createNotificationChannel(
-            getString(R.string.notification_sync_channel_description),
+            getString(R.string.notification_sync_channel_title),
             getString(R.string.notification_sync_channel_description),
             Constants.CHANNEL_SYNC_ID
         )
@@ -251,7 +253,7 @@ class MainActivity : AppCompatActivity(), ReservationsRecyclerFragment.Reservati
                     dlg.cancel()
                     Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                         Uri.parse("package:$packageName")).also {
-                        if (it.resolveActivity(packageManager) != null)
+                        if (packageManager.resolveActivity(it, PackageManager.MATCH_DEFAULT_ONLY) != null)
                             startActivityForResult(it, Constants.SYNC_PERMISSION_REQUEST_ID)
                     }
                 }))
@@ -260,7 +262,7 @@ class MainActivity : AppCompatActivity(), ReservationsRecyclerFragment.Reservati
         else if (!homeViewModel.hasRequestedSync.value!!) {
             setSyncSchedule()
 
-            if (SyncService.isRunning.value == false)
+            if (SyncService.status.value == SyncService.Companion.LStatus.STOPPED)
                 ContextCompat.startForegroundService(this,
                     Intent(this, SyncService::class.java).
                         putExtra(Constants.SYNC_INTENT_SCHEDULED, false))

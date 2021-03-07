@@ -42,6 +42,7 @@
         android:layout_margin="@dimen/fab_margin"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|end"
+        android:contentDescription="@string/fab_search_filters_description"
         app:srcCompat="@drawable/ic_nav_filter" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -51,6 +52,7 @@
         android:layout_margin="@dimen/fab_margin"
         android:visibility="gone"
         android:layout_gravity="bottom|end"
+        android:contentDescription="@string/fab_search_more_results_description"
         app:srcCompat="@drawable/ic_fab_more" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

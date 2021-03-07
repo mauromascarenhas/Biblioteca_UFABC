@@ -77,6 +77,7 @@ class BookViewerFragment : Fragment() {
         inflater.inflate(R.menu.menu_book_details, menu)
     }
 
+    @SuppressLint("QueryPermissionsNeeded")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId){
             android.R.id.home -> {
@@ -113,7 +114,7 @@ class BookViewerFragment : Fragment() {
             }.create()
     }
 
-    @SuppressLint("CutPasteId")
+    @SuppressLint("CutPasteId", "QueryPermissionsNeeded")
     private fun setListeners(){
         bookViewerViewModel.bookProperties.observe(viewLifecycleOwner, Observer {props ->
             if (props == null) return@Observer

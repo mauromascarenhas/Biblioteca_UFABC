@@ -20,7 +20,7 @@
     <string name="activity_book_details">Detalhes do livro</string>
 
     <!-- Home Activity -->
-    <string name="title_home">Início</string>
+    <string name="title_home">@string/app_name</string>
     <string name="title_renewals">Renovações</string>
     <string name="title_reservations">Reservas</string>
 
@@ -99,10 +99,6 @@
     <string name="dialog_warning_message_external_link">
         "Você está prestes a abrir o seguinte link externo: %1$s"
     </string>
-    <string name="dialog_warning_message_loading_error">
-        "Houve um erro durante a tentativa de comunicação com os servidores da universidade. "
-        "Gostaria de tentar novamente?"
-    </string>
     <string name="dialog_warning_message_user_disconnected">
         "Você encontra-se desconectado dos servidores da universidade atualmente. "
         "Gostaria de conectar-se para realizar a reserva?"
@@ -172,7 +168,7 @@
     <string name="notification_sync_message">
         "Parece que há um bom tempo desde a última sincronização."
         "É importante manter os dados de renovação atualizados para que você possa"
-        " continuar recebendo avisos/notificações a respeito de devolições próximas."
+        " continuar recebendo avisos/notificações a respeito de devoluções próximas."
     </string>
     <string name="notification_syncing_message">Sincronizando dados de renovação&#8230;</string>
     <string name="notification_sync_error_message">
@@ -212,9 +208,7 @@
     <!-- ??? -->
 
     <string name="card_image_description">Foto da capa do livro</string>
-
     <string name="search_hint">Minha dica</string>
-    <string name="action_settings">Configurações</string>
 
     <!-- Renewal fragment -->
     <string name="lbl_renewal_last_sync">Última atualização em %1$s</string>
@@ -226,6 +220,10 @@
 
     <!-- Reservation Card -->
     <string name="btn_card_reservation_remove">Cancelar</string>
+
+    <!-- Search Activity -->
+    <string name="fab_search_filters_description">Alterar filtros de busca</string>
+    <string name="fab_search_more_results_description">Carregar mais resultados</string>
 
     <!-- Search Filter Activity-->
     <string name="lbl_filter_type">Filtro (tipo de patrimônio)</string>

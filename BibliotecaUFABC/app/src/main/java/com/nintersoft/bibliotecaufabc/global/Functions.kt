@@ -1,5 +1,6 @@
 package com.nintersoft.bibliotecaufabc.global
 
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -103,7 +104,7 @@ object Functions {
                 type = "text/plain"
                 putExtra(Intent.EXTRA_TEXT, bookShare)
             }.also {
-                if (it.resolveActivity(packageManager)!= null)
+                if (packageManager.resolveActivity(it, PackageManager.MATCH_DEFAULT_ONLY) != null)
                     startActivity(Intent.createChooser(it, getString(R.string.intent_share_book)))
             }
         }
@@ -326,30 +327,9 @@ object Functions {
     }
 
     /**
-     * Schedules a new synchronization procedure with 15 minutes of delay.
-     * If a recurrent sync is already scheduled, then it is ignored (nothing is done)
-     * Take notice that this method also removes previously scheduled requests
-     */
-    fun scheduleRetrySync(){
-        val c = AppContext.context!!
-        PreferenceManager.getDefaultSharedPreferences(c).also{prefs ->
-            val interval = Integer.parseInt(prefs.
-                getString(c.getString(R.string.key_notification_sync_interval), "2")!!)
-            if (prefs.getLong(c.getString(R.string.key_synchronization_schedule),
-                    System.currentTimeMillis() - 1) +
-                    TimeUnit.DAYS.toMillis(interval.toLong()) - System.currentTimeMillis()
-                <= TimeUnit.MINUTES.toMillis(20)) return
-
-            WorkManager.getInstance(c).enqueue(OneTimeWorkRequest.
-                Builder(SyncWorker::class.java).
-                    setInitialDelay(15, TimeUnit.MINUTES).build())
-        }
-    }
-
-
-    /**
      *  Checks whether the given intent is callable
      */
+    @SuppressLint("QueryPermissionsNeeded")
     fun isCallable(i : Intent) : Boolean {
         return AppContext.context!!.packageManager.queryIntentActivities(i,
             PackageManager.MATCH_DEFAULT_ONLY).size > 0

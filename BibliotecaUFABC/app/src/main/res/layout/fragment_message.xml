@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_gravity="center"
     android:gravity="center"
     android:orientation="vertical"
@@ -10,7 +11,7 @@
     tools:context=".ui.message.MessageFragment">
 
     <TextView
-        android:drawableTop="@drawable/ic_info_image"
+        app:drawableTopCompat="@drawable/ic_info_image"
         android:drawablePadding="@dimen/form_items_default_margin"
 
         android:id="@+id/lblMessage"

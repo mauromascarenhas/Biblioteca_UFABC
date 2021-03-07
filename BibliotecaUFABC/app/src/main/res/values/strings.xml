@@ -20,7 +20,7 @@
     <string name="activity_book_details">Book Details</string>
 
     <!-- Home Activity -->
-    <string name="title_home">Home</string>
+    <string name="title_home">@string/app_name</string>
     <string name="title_renewals">Renewals</string>
     <string name="title_reservations">Reservations</string>
 
@@ -98,10 +98,6 @@
     </string>
     <string name="dialog_warning_message_external_link">
         "You are about to open the following external link: %1$s"
-    </string>
-    <string name="dialog_warning_message_loading_error">
-        "There was an error while we tried to communicate to the university's servers. "
-        "Would you like to try again?"
     </string>
     <string name="dialog_warning_message_user_disconnected">
         "You are currently disconnected from the university's servers. "
@@ -212,9 +208,7 @@
     <!-- ??? -->
 
     <string name="card_image_description">Photo of the book cover</string>
-
     <string name="search_hint">My hint</string>
-    <string name="action_settings">Settings</string>
 
     <!-- Renewal fragment -->
     <string name="lbl_renewal_last_sync">Last update on %1$s</string>
@@ -226,6 +220,10 @@
 
     <!-- Reservation Card -->
     <string name="btn_card_reservation_remove">Cancel</string>
+
+    <!-- Search Activity -->
+    <string name="fab_search_filters_description">Change current search filters</string>
+    <string name="fab_search_more_results_description">Load more search results</string>
 
     <!-- Search Filter Activity-->
     <string name="lbl_filter_type">Filter (patrimony type)</string>

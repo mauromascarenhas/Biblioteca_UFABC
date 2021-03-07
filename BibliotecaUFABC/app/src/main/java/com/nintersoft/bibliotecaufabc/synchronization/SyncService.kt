@@ -16,6 +16,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.nintersoft.bibliotecaufabc.R
 import com.nintersoft.bibliotecaufabc.global.Constants
 import com.nintersoft.bibliotecaufabc.global.Functions
@@ -27,16 +28,30 @@ class SyncService : Service() {
 
     @Suppress("ObjectPropertyName")
     companion object {
-        private val _isRunning = MutableLiveData<Boolean>().apply{ value = false }
-        val isRunning : LiveData<Boolean> = _isRunning
+        enum class LStatus {
+            FINISHED_SUCCESS,
+            FINISHED_FAILURE,
+            RUNNING,
+            STOPPED
+        }
+
+        private val _status = MutableLiveData<LStatus>().apply { value = LStatus.STOPPED }
+        val status : LiveData<LStatus> = _status
     }
 
     private var dataSource : WebView? = null
     private var windowManager : WindowManager? = null
     private var isScheduled = true
 
+    private val selfObs : Observer<LStatus> = Observer { st ->
+        when (st) {
+            LStatus.FINISHED_FAILURE, LStatus.FINISHED_SUCCESS -> finish()
+            else -> return@Observer
+        }
+    }
+
     private var mHandler : Handler? = null
-    private val killService = Runnable { retryAndFinish() }
+    private val killService = Runnable { _status.value = LStatus.FINISHED_FAILURE }
     private val errorChecker = Runnable {
         if (dataSource?.url?.contains(Constants.URL_LIBRARY_LOGIN_P) == true)
             checkForErrors()
@@ -50,7 +65,7 @@ class SyncService : Service() {
         mHandler = Handler(mainLooper)
 
         Functions.createNotificationChannel(
-            getString(R.string.notification_sync_channel_description),
+            getString(R.string.notification_sync_channel_title),
             getString(R.string.notification_sync_channel_description),
             Constants.CHANNEL_SYNC_ID
         )
@@ -61,7 +76,7 @@ class SyncService : Service() {
         )
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                !Settings.canDrawOverlays(this)){
+            !Settings.canDrawOverlays(this)){
             Functions.createSyncNotification(R.string.notification_sync_removed_title,
                 R.string.notification_sync_removed_message,
                 Constants.SYNC_NOTIFICATION_REVOKED_ID)
@@ -92,13 +107,14 @@ class SyncService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        _isRunning.value = true
+        _status.value = LStatus.RUNNING
+        _status.observeForever(selfObs)
         return if (dataSource == null) {
             stopSelf()
             START_NOT_STICKY
         } else {
             isScheduled = intent?.
-                getBooleanExtra(Constants.SYNC_INTENT_SCHEDULED, true) ?: true
+            getBooleanExtra(Constants.SYNC_INTENT_SCHEDULED, true) ?: true
             startForeground(Constants.SYNC_NOTIFICATION_ID, createSyncNotification())
             dataSource?.loadUrl(Constants.URL_LIBRARY_RENEWAL)
             super.onStartCommand(intent, flags, startId)
@@ -108,7 +124,7 @@ class SyncService : Service() {
     override fun onDestroy() {
         super.onDestroy()
 
-        _isRunning.value = false
+        _status.value = LStatus.STOPPED
         if (dataSource != null) windowManager?.removeView(dataSource)
         mHandler?.removeCallbacks(killService)
     }
@@ -128,7 +144,7 @@ class SyncService : Service() {
                     finish()
                 }
                 else mHandler?.postDelayed(errorChecker, 250)
-            } catch (_ : JSONException) { retryAndFinish() }
+            } catch (_ : JSONException) { _status.value = LStatus.FINISHED_FAILURE }
         }))
     }
 
@@ -140,20 +156,18 @@ class SyncService : Service() {
             color = ContextCompat.getColor(applicationContext, android.R.color.holo_blue_dark)
             setContentText(getString(R.string.notification_syncing_message))
             setStyle(NotificationCompat.BigTextStyle().
-                bigText(getString(R.string.notification_syncing_message)))
+            bigText(getString(R.string.notification_syncing_message)))
             setProgress(0, 0, true)
             setAutoCancel(false)
             setOngoing(true)
         }.build()
     }
 
-    fun retryAndFinish(){
-        if (isScheduled) Functions.scheduleRetrySync()
-        finish()
-    }
+    fun setStatus(st : LStatus) { _status.value = st }
 
-    fun finish(){
-        _isRunning.value = false
+    private fun finish(){
+        _status.value = LStatus.STOPPED
+        _status.removeObserver(selfObs)
         stopForeground(true)
         stopSelf()
     }

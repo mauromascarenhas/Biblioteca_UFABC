@@ -39,7 +39,7 @@ class SyncWebClient(private val context : Context)
             if (!it.getBoolean(context
                     .getString(R.string.key_privacy_store_password), true) ||
                     uLogin.isNullOrEmpty() || uPassword.isNullOrEmpty())
-                (context as SyncService).finish()
+                (context as SyncService).setStatus(SyncService.Companion.LStatus.FINISHED_SUCCESS)
         }
     }
 
@@ -97,7 +97,7 @@ class SyncWebClient(private val context : Context)
                                     JSONArray() else getJSONArray("renewalBooks"))
                             else view.loadUrl(Constants.URL_LIBRARY_LOGIN_P)
                         }
-                    } catch (_ : JSONException) { (context as SyncService).retryAndFinish() }
+                    } catch (_ : JSONException) { (context as SyncService).setStatus(SyncService.Companion.LStatus.FINISHED_FAILURE) }
                 }))
             }
         }
@@ -107,14 +107,14 @@ class SyncWebClient(private val context : Context)
     override fun onReceivedError(view: WebView?, request: WebResourceRequest?,
         error: WebResourceError?) {
         super.onReceivedError(view, request, error)
-        (context as SyncService).retryAndFinish()
+        (context as SyncService).setStatus(SyncService.Companion.LStatus.FINISHED_FAILURE)
     }
 
     @Suppress("DEPRECATION")
     override fun onReceivedError(view: WebView?, errorCode: Int, description: String?,
                                  failingUrl: String?) {
         super.onReceivedError(view, errorCode, description, failingUrl)
-        (context as SyncService).retryAndFinish()
+        (context as SyncService).setStatus(SyncService.Companion.LStatus.FINISHED_FAILURE)
     }
 
     private fun setReservationBooks(jsBooks : JSONArray){
@@ -134,8 +134,8 @@ class SyncWebClient(private val context : Context)
                     })
                 }
             })
-            (context as SyncService).finish()
-        } catch (_ : JSONException) { (context as SyncService).retryAndFinish() }
+            (context as SyncService).setStatus(SyncService.Companion.LStatus.FINISHED_SUCCESS)
+        } catch (_ : JSONException) { (context as SyncService).setStatus(SyncService.Companion.LStatus.FINISHED_FAILURE) }
     }
 
     private fun bindAlarms(books : List<BookRenewal>){

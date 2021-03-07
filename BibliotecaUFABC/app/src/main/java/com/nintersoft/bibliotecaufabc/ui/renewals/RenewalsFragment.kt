@@ -88,7 +88,7 @@ class RenewalsFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.refresh_frag_options_menu, menu)
-        menu.findItem(R.id.action_refresh).isEnabled = !SyncService.isRunning.value!!
+        menu.findItem(R.id.action_refresh).isEnabled = SyncService.status.value == SyncService.Companion.LStatus.STOPPED
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -173,7 +173,7 @@ class RenewalsFragment : Fragment() {
         renewalsViewModel.renewalMessage.observe(viewLifecycleOwner, Observer {msg ->
             if (msg == null) return@Observer
             if (renewalLoad.isShowing) renewalLoad.dismiss()
-            if (SyncService.isRunning.value == false)
+            if (SyncService.status.value == SyncService.Companion.LStatus.STOPPED)
                 ContextCompat.startForegroundService(AppContext.context!!,
                     Intent(AppContext.context!!, SyncService::class.java).
                         putExtra(Constants.SYNC_INTENT_SCHEDULED, false))
@@ -210,7 +210,7 @@ class RenewalsFragment : Fragment() {
             }
         )
 
-        SyncService.isRunning.observe(viewLifecycleOwner, Observer {
+        SyncService.status.observe(viewLifecycleOwner, Observer {
             if (it == null) return@Observer
             activity?.invalidateOptionsMenu()
         })
