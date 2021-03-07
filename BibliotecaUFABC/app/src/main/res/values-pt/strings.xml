@@ -81,7 +81,7 @@
 
     <string name="dialog_message_login_error">
         "Aconteceu alguma coisa errada durante a tentativa de conexão "
-        "aos servidores da universidade. Gostaria de tentar novamente?"
+        "com os servidores da universidade. Gostaria de tentar novamente?"
     </string>
     <string name="dialog_filter_changed_message">
         "Foram detectadas alterações nos filtros de busca. "
@@ -142,7 +142,7 @@
         Atualizando aquisições recentes&#8230;
     </string>
     <string name="snack_message_loaded_more_items">
-        Obras adicionais acabaram de ser carregada!
+        Obras adicionais acabaram de ser carregadas!
     </string>
     <string name="snack_message_loading_more_items">
         Carregando mais livros&#8230;
@@ -208,7 +208,7 @@
     <!-- ??? -->
 
     <string name="card_image_description">Foto da capa do livro</string>
-    <string name="search_hint">Minha dica</string>
+    <string name="search_hint">Livro, periódico, artigo etc</string>
 
     <!-- Renewal fragment -->
     <string name="lbl_renewal_last_sync">Última atualização em %1$s</string>
@@ -270,9 +270,9 @@
     <!-- Sync Preferences Fragment -->
     <string name="pref_title_enable_renewal_warning">Ativar sincronização e avisos</string>
     <string name="pref_description_enable_renewal_warning_on">Atualmente, o Biblioteca UFABC
-        está permitido a buscar por empréstimos em segundo plano</string>
+        está autorizado a buscar por empréstimos em segundo plano</string>
     <string name="pref_description_enable_renewal_warning_off">Atualmente, o Biblioteca UFABC NÃO
-        ESTÁ permitido a buscar por empréstimos em segundo plano</string>
+        ESTÁ autorizado a buscar por empréstimos em segundo plano</string>
 
     <string name="pref_notification_shift">Adiantamento de notificação</string>
     <string-array name="pref_notification_shift_options">

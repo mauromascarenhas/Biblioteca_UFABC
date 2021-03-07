@@ -208,7 +208,7 @@
     <!-- ??? -->
 
     <string name="card_image_description">Photo of the book cover</string>
-    <string name="search_hint">My hint</string>
+    <string name="search_hint">Book, journal, article etc</string>
 
     <!-- Renewal fragment -->
     <string name="lbl_renewal_last_sync">Last update on %1$s</string>
