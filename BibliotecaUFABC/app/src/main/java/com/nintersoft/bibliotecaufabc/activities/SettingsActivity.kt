@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.*
 import androidx.work.PeriodicWorkRequest
 import com.nintersoft.bibliotecaufabc.R
-import com.nintersoft.bibliotecaufabc.global.Constants
 import com.nintersoft.bibliotecaufabc.global.Functions
 import java.util.concurrent.TimeUnit
 
@@ -156,9 +155,6 @@ class SettingsActivity : AppCompatActivity(),
                         Functions.schedulePeriodicSync(TimeUnit.DAYS.toMillis(preferences.
                             getString(getString(R.string.key_notification_sync_interval), "2")!!.toLong()),
                             PeriodicWorkRequest.MIN_PERIODIC_FLEX_MILLIS)
-                        Functions.schedulePeriodicSyncReminder(TimeUnit.DAYS.toMillis(
-                            Constants.SYNC_REMINDER_NOTIFICATION_INTERVAL), PeriodicWorkRequest.MIN_PERIODIC_FLEX_MILLIS,
-                            TimeUnit.DAYS.toMillis(1))
                     }
                     else Functions.cancelPeriodicSync()
                     true
@@ -168,9 +164,6 @@ class SettingsActivity : AppCompatActivity(),
                 onPreferenceChangeListener = Preference.OnPreferenceChangeListener { preference, newValue ->
                     Functions.schedulePeriodicSync(TimeUnit.DAYS.toMillis(newValue.toString().
                         toLong()), PeriodicWorkRequest.MIN_PERIODIC_FLEX_MILLIS)
-                    Functions.schedulePeriodicSyncReminder(TimeUnit.DAYS.toMillis(
-                        Constants.SYNC_REMINDER_NOTIFICATION_INTERVAL), PeriodicWorkRequest.MIN_PERIODIC_FLEX_MILLIS,
-                        TimeUnit.DAYS.toMillis(1))
                     preference.summary = newValue.toString()
                     true
                 }

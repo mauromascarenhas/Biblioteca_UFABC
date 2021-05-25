@@ -303,7 +303,7 @@ class MainActivity : AppCompatActivity(), ReservationsRecyclerFragment.Reservati
                     setMessage(getString(R.string.dialog_permission_message,
                         getString(R.string.app_name)))
                     setPositiveButton(R.string.dialog_button_yes, ({ _, _ ->
-                        if (Build.MANUFACTURER.toLowerCase(Locale.getDefault()) == "xiaomi"){
+                        if (Build.MANUFACTURER.lowercase(Locale.getDefault()) == "xiaomi"){
                             try {
                                 startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).
                                     setData(Uri.parse("package:$packageName")))

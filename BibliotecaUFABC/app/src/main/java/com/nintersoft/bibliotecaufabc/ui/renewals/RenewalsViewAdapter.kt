@@ -51,8 +51,8 @@ class RenewalsViewAdapter : RecyclerView.Adapter<RenewalsViewAdapter.RenewalBook
         holder.bookCover?.setImageResource(Constants.
             BOOK_COVER_PLACEHOLDERS[position % Constants.BOOK_COVER_PLACEHOLDERS.size])
         holder.date?.text = AppContext.context?.getString(R.string.card_renewal_limit_date_text,
-            DateFormat.getDateInstance(DateFormat.FULL, Locale.getDefault()).format(book?.date!!).
-                capitalize(Locale.getDefault()))
+            DateFormat.getDateInstance(DateFormat.FULL, Locale.getDefault()).format(book?.date!!)
+                .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
         holder.title?.text = book?.title
         holder.library?.text = book?.library
         holder.patrimony?.text = book?.patrimony

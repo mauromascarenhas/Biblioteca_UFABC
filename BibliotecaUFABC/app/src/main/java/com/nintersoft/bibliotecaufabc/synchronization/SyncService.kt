@@ -97,7 +97,6 @@ class SyncService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Functions.logMsg("SYNC_SCHEDULE_WORKER_SERVICE",  "starting...")
         status = LStatus.RUNNING
         return if (dataSource == null) {
             setStatus(LStatus.FINISHED_FAILURE)

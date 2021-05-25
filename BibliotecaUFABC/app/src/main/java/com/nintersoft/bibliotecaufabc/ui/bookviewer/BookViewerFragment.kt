@@ -171,7 +171,7 @@ class BookViewerFragment : Fragment() {
                 media.data.forEach {
                     bookDetailsLayout.addView(TextView(activity).apply {
                         text = getString(R.string.lbl_book_viewer_media_action,
-                            it.first.toUpperCase(Locale.getDefault()))
+                            it.first.uppercase(Locale.getDefault()))
                         setTextSize(TypedValue.COMPLEX_UNIT_PX, dSize)
                         setTextColor(ContextCompat.getColor(context, R.color.colorLink))
                         if (it.second.isNotEmpty()){
