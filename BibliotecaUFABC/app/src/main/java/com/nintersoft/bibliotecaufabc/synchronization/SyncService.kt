@@ -5,9 +5,7 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.graphics.PixelFormat
-import android.os.Build
-import android.os.Handler
-import android.os.IBinder
+import android.os.*
 import android.provider.Settings
 import android.view.Gravity
 import android.view.WindowManager
@@ -16,7 +14,6 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import com.nintersoft.bibliotecaufabc.R
 import com.nintersoft.bibliotecaufabc.global.Constants
 import com.nintersoft.bibliotecaufabc.global.Functions
@@ -35,23 +32,16 @@ class SyncService : Service() {
             STOPPED
         }
 
-        private val _status = MutableLiveData<LStatus>().apply { value = LStatus.STOPPED }
-        val status : LiveData<LStatus> = _status
+        var status : LStatus = LStatus.STOPPED
+        private val _observableStatus = MutableLiveData<LStatus>().apply { value = LStatus.STOPPED }
+        val observableStatus = _observableStatus as LiveData<LStatus>
     }
 
     private var dataSource : WebView? = null
     private var windowManager : WindowManager? = null
-    private var isScheduled = true
-
-    private val selfObs : Observer<LStatus> = Observer { st ->
-        when (st) {
-            LStatus.FINISHED_FAILURE, LStatus.FINISHED_SUCCESS -> finish()
-            else -> return@Observer
-        }
-    }
 
     private var mHandler : Handler? = null
-    private val killService = Runnable { _status.value = LStatus.FINISHED_FAILURE }
+    private val killService = Runnable { finish() }
     private val errorChecker = Runnable {
         if (dataSource?.url?.contains(Constants.URL_LIBRARY_LOGIN_P) == true)
             checkForErrors()
@@ -107,29 +97,27 @@ class SyncService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        _status.value = LStatus.RUNNING
-        _status.observeForever(selfObs)
+        Functions.logMsg("SYNC_SCHEDULE_WORKER_SERVICE",  "starting...")
+        status = LStatus.RUNNING
         return if (dataSource == null) {
-            stopSelf()
+            setStatus(LStatus.FINISHED_FAILURE)
             START_NOT_STICKY
         } else {
-            isScheduled = intent?.
-            getBooleanExtra(Constants.SYNC_INTENT_SCHEDULED, true) ?: true
             startForeground(Constants.SYNC_NOTIFICATION_ID, createSyncNotification())
             dataSource?.loadUrl(Constants.URL_LIBRARY_RENEWAL)
+            killLater()
             super.onStartCommand(intent, flags, startId)
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-
-        _status.value = LStatus.STOPPED
+        setStatus(LStatus.STOPPED)
         if (dataSource != null) windowManager?.removeView(dataSource)
         mHandler?.removeCallbacks(killService)
     }
 
-    fun killLater(){ mHandler?.postDelayed(killService, 180000) }
+    private fun killLater(){ mHandler?.postDelayed(killService, 180000) }
 
     fun scheduleChecking(){ mHandler?.postDelayed(errorChecker, 1000) }
 
@@ -144,7 +132,7 @@ class SyncService : Service() {
                     finish()
                 }
                 else mHandler?.postDelayed(errorChecker, 250)
-            } catch (_ : JSONException) { _status.value = LStatus.FINISHED_FAILURE }
+            } catch (_ : JSONException) { setStatus(LStatus.FINISHED_FAILURE) }
         }))
     }
 
@@ -163,11 +151,15 @@ class SyncService : Service() {
         }.build()
     }
 
-    fun setStatus(st : LStatus) { _status.value = st }
+    fun setStatus(st : LStatus) {
+        status = st
+        _observableStatus.value = st
+        if (status == LStatus.FINISHED_SUCCESS ||
+                status == LStatus.FINISHED_FAILURE) finish()
+    }
 
     private fun finish(){
-        _status.value = LStatus.STOPPED
-        _status.removeObserver(selfObs)
+        setStatus(LStatus.STOPPED)
         stopForeground(true)
         stopSelf()
     }

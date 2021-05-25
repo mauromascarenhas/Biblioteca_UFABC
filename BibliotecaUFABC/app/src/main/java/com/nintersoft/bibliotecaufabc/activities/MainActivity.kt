@@ -1,5 +1,6 @@
 package com.nintersoft.bibliotecaufabc.activities
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
@@ -176,6 +177,7 @@ class MainActivity : AppCompatActivity(), ReservationsRecyclerFragment.Reservati
         loadingAlert.show()
     }
 
+    @SuppressLint("ShowToast")
     private fun configureObservers(){
         homeViewModel.loginStatus.observe(this, {
             when (it){
@@ -262,7 +264,7 @@ class MainActivity : AppCompatActivity(), ReservationsRecyclerFragment.Reservati
         else if (!homeViewModel.hasRequestedSync.value!!) {
             setSyncSchedule()
 
-            if (SyncService.status.value == SyncService.Companion.LStatus.STOPPED)
+            if (SyncService.status == SyncService.Companion.LStatus.STOPPED)
                 ContextCompat.startForegroundService(this,
                     Intent(this, SyncService::class.java).
                         putExtra(Constants.SYNC_INTENT_SCHEDULED, false))
@@ -294,7 +296,7 @@ class MainActivity : AppCompatActivity(), ReservationsRecyclerFragment.Reservati
     }
 
     private fun startPowerSavingSettings(){
-        Constants.POWER_MANAGER_INTENTS.forEach {
+        for (it in Constants.POWER_MANAGER_INTENTS) {
             if (Functions.isCallable(it)){
                 AlertDialog.Builder(this).apply {
                     setTitle(getString(R.string.dialog_permission_title, Build.MANUFACTURER))
@@ -311,7 +313,7 @@ class MainActivity : AppCompatActivity(), ReservationsRecyclerFragment.Reservati
                     }))
                     setNegativeButton(R.string.dialog_button_no, null)
                 }.create().show()
-                return@forEach
+                break
             }
         }
     }

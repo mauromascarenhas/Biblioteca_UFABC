@@ -62,13 +62,9 @@ class SyncWebClient(private val context : Context)
 
                 renewalPageFinished = 0
                 loginServicesFinished = 0
+                (context as SyncService).scheduleChecking()
                 val script = "${Functions.scriptFromAssets("js/login_scp.js")}\nperformLogin('$uLogin','$uPassword');"
                 view?.evaluateJavascript(script, null)
-
-                with (context as SyncService) {
-                    scheduleChecking()
-                    killLater()
-                }
             }
             url.contains(Constants.URL_LIBRARY_SERVICES) -> {
                 if (loginServicesFinished < 1){

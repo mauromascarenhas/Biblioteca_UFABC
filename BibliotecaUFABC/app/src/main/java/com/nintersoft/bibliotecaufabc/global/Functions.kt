@@ -26,10 +26,14 @@ import com.nintersoft.bibliotecaufabc.model.search.BookSearch
 import com.nintersoft.bibliotecaufabc.notifications.NotificationDisplay
 import com.nintersoft.bibliotecaufabc.notifications.SyncNotificationDisplay
 import com.nintersoft.bibliotecaufabc.synchronization.SyncWorker
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
@@ -246,6 +250,8 @@ object Functions {
         val periodicN = if (periodic < PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS)
             PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS else periodic
 
+        logMsg("SYNC_SCHEDULE_REQ", "Flex(min): ${TimeUnit.MILLISECONDS.toMinutes(flexN)}; Interval(min): ${TimeUnit.MILLISECONDS.toMinutes(periodicN)}")
+
         WorkManager.getInstance(AppContext.context!!).enqueueUniquePeriodicWork(
             Constants.WORK_SYNC_SERVICE_WORKER,
             ExistingPeriodicWorkPolicy.REPLACE,
@@ -255,6 +261,14 @@ object Functions {
                 setConstraints(Constants.SYNC_CONSTRAINTS).
                 build()
         )
+    }
+
+    fun logMsg(id : String, msg : String) {
+        GlobalScope.launch(Dispatchers.Main) {
+            AppContext.context?.getSharedPreferences("LOG", Context.MODE_PRIVATE)?.edit()?.also {
+                it.putString("$id : ${SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault()).format(Date())}", msg)
+            }?.apply()
+        }
     }
 
     /**
@@ -318,6 +332,7 @@ object Functions {
         val c = AppContext.context!!
         WorkManager.getInstance(c).enqueue(OneTimeWorkRequest.
             Builder(NotificationDisplay::class.java).apply {
+                addTag(Constants.WORK_RENEWAL_NOTIFICATION_TAG)
                 setInputData(Data.Builder().apply {
                     putInt(Constants.NOTIFICATION_ID, notificationId)
                     putString(Constants.NOTIFICATION_MESSAGE, message)
