@@ -4,7 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/searchScroll"
+    android:id="@+id/searchScrollP"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".activities.SearchActivity"
-    tools:showIn="@layout/activity_search"/>
+    tools:showIn="@layout/activity_search">
+
+    <androidx.fragment.app.FragmentContainerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/searchScroll"
+        />
+
+</androidx.core.widget.NestedScrollView>

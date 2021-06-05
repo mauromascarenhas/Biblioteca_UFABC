@@ -11,8 +11,8 @@ android {
         applicationId "com.nintersoft.bibliotecaufabc"
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode 10
-        versionName '2.0.1b'
+        versionCode 11
+        versionName '2.1.27'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true

@@ -185,7 +185,7 @@ class SettingsActivity : AppCompatActivity(),
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.pref_privacy, rootKey)
             bindSummaryToValue(
-                findPreference<ListPreference>(getString(R.string.key_privacy_login_username))!!)
+                findPreference<EditTextPreference>(getString(R.string.key_privacy_login_username))!!)
 
             val hasPassword = PreferenceManager.getDefaultSharedPreferences(context?.applicationContext)
                 .getBoolean(getString(R.string.key_privacy_store_password), true)
