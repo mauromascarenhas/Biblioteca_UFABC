@@ -19,8 +19,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.nintersoft.bibliotecaufabc.R
+import com.nintersoft.bibliotecaufabc.activities.BookViewerActivity
 import com.nintersoft.bibliotecaufabc.activities.LoginActivity
-import com.nintersoft.bibliotecaufabc.global.Constants
 import kotlinx.android.synthetic.main.fragment_book_viewer.*
 import org.json.JSONException
 import org.json.JSONObject
@@ -67,8 +67,8 @@ class BookViewerFragment : Fragment() {
         listener = null
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         buildLate()
         setListeners()
     }
@@ -257,9 +257,8 @@ class BookViewerFragment : Fragment() {
                                 setMessage(R.string.dialog_warning_message_user_disconnected)
                                 setPositiveButton(R.string.dialog_button_yes, ({_ ,_ ->
                                     showLoadingAlert()
-                                    activity?.startActivityForResult(Intent(activity,
-                                        LoginActivity::class.java),
-                                        Constants.ACTIVITY_LOGIN_REQUEST_CODE)
+                                    (activity as BookViewerActivity?)?.openLoginActivity
+                                        ?.launch(Intent(activity, LoginActivity::class.java))
                                 }))
                                 setNegativeButton(R.string.dialog_button_cancel, null)
                             }.create().show()

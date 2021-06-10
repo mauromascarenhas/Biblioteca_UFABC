@@ -124,8 +124,8 @@ class HomeFragment : Fragment() {
     @SuppressLint("QueryPermissionsNeeded")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId){
-            R.id.login -> activity?.startActivityForResult(Intent(context,
-                LoginActivity::class.java), Constants.ACTIVITY_LOGIN_REQUEST_CODE)
+            R.id.login -> (activity as MainActivity?)?.openLoginActivity
+                ?.launch(Intent(context, LoginActivity::class.java))
             R.id.refresh -> listener?.onRequestRefresh()
             R.id.sign_out -> {
                 item.isVisible = false

@@ -1,6 +1,5 @@
 package com.nintersoft.bibliotecaufabc.activities
 
-import android.app.Activity
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
@@ -13,6 +12,7 @@ import android.view.inputmethod.EditorInfo
 import android.webkit.WebView
 import android.widget.EditText
 import android.widget.LinearLayout
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -38,6 +38,30 @@ class SearchActivity : AppCompatActivity() {
     private var dataSource : WebView? = null
     private lateinit var searchViewModel : SearchViewModel
     private lateinit var messageViewModel : MessageViewModel
+
+    @Suppress("UNCHECKED_CAST")
+    private val openSearchFilterActivity = registerForActivityResult(ActivityResultContracts
+        .StartActivityForResult()){ result ->
+        if (result.resultCode == RESULT_OK && result.data != null){
+            with(result.data!!){
+                searchViewModel.setSearchField(getIntExtra(Constants.SEARCH_FILTER_FIELD, 0))
+                searchViewModel.setSearchFilter(getSerializableExtra(Constants.SEARCH_FILTER_TYPE)
+                        as ArrayList<Boolean>)
+                searchViewModel.setLibraryFilters(getSerializableExtra(Constants.SEARCH_FILTER_LIBRARY)
+                        as ArrayList<Boolean>)
+            }
+
+            AlertDialog.Builder(this).apply {
+                setTitle(R.string.dialog_filter_changed_title)
+                setMessage(R.string.dialog_filter_changed_message)
+                setNegativeButton(R.string.dialog_button_no, null)
+                setPositiveButton(R.string.dialog_button_yes, ({ _, _ ->
+                    performNewSearch(searchViewModel.query.value!!)
+                }))
+            }.create().show()
+        }
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,31 +89,6 @@ class SearchActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    @Suppress("UNCHECKED_CAST")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == Constants.ACTIVITY_SEARCH_FILTER_REQUEST_CODE
-                && resultCode == Activity.RESULT_OK && data != null){
-            with(data){
-                searchViewModel.setSearchField(getIntExtra(Constants.SEARCH_FILTER_FIELD, 0))
-                searchViewModel.setSearchFilter(getSerializableExtra(Constants.SEARCH_FILTER_TYPE)
-                    as ArrayList<Boolean>)
-                searchViewModel.setLibraryFilters(getSerializableExtra(Constants.SEARCH_FILTER_LIBRARY)
-                        as ArrayList<Boolean>)
-            }
-
-            AlertDialog.Builder(this).apply {
-                setTitle(R.string.dialog_filter_changed_title)
-                setMessage(R.string.dialog_filter_changed_message)
-                setNegativeButton(R.string.dialog_button_no, null)
-                setPositiveButton(R.string.dialog_button_yes, ({ _, _ ->
-                    performNewSearch(searchViewModel.query.value!!)
-                }))
-            }.create().show()
-        }
-    }
-
     private fun configureWebView(){
         dataSource = WebView(this)
         Functions.configureWebView(dataSource!!, SearchWebClient(searchViewModel))
@@ -111,7 +110,7 @@ class SearchActivity : AppCompatActivity() {
             filters.putExtra(Constants.SEARCH_FILTER_TYPE, searchViewModel.searchFilter.value)
             filters.putExtra(Constants.SEARCH_FILTER_FIELD, searchViewModel.searchField.value!!)
             filters.putExtra(Constants.SEARCH_FILTER_LIBRARY, searchViewModel.searchLibrary.value)
-            startActivityForResult(filters, Constants.ACTIVITY_SEARCH_FILTER_REQUEST_CODE)
+            openSearchFilterActivity.launch(filters)
         }
 
         btn_more.setOnClickListener{

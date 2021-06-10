@@ -61,10 +61,10 @@ class SearchViewAdapter (viewModel : SearchViewModel):
                 BOOK_COVER_PLACEHOLDERS[position % Constants.BOOK_COVER_PLACEHOLDERS.size])).
                 into(holder.bookCover!!)
 
-        holder.card?.setOnClickListener { _clickedBook.value = book }
+        holder.card?.setOnClickListener { _clickedBook.value = book!! }
 
         holder.card?.setOnLongClickListener {
-            _selectedBook.value = book
+            _selectedBook.value = book!!
             true
         }
 

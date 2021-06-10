@@ -59,16 +59,12 @@ object Constants {
     const val SYNC_EXECUTIONER_FIRST_DELAY_MIN : Long = 15
     const val SYNC_REMINDER_NOTIFICATION_INTERVAL: Long = 5
 
-    const val ACTIVITY_LOGIN_REQUEST_CODE = 11
     const val ACTIVITY_RENEWAL_REQUEST_CODE = 13
-    const val ACTIVITY_SEARCH_FILTER_REQUEST_CODE = 15
 
     const val SYNC_NOTIFICATION_ID = 9000
     const val SYNC_NOTIFICATION_UPDATE_ID = 9001
     const val SYNC_NOTIFICATION_REVOKED_ID = 9002
     const val SYNC_NOTIFICATION_REMINDER_ID = 9003
-
-    const val SYNC_PERMISSION_REQUEST_ID = 10001
 
     val BOOK_COVER_PLACEHOLDERS = listOf(R.drawable.ic_book_cover_fill_01,
         R.drawable.ic_book_cover_fill_02, R.drawable.ic_book_cover_fill_03)

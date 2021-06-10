@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.webkit.CookieManager
 import android.webkit.WebView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -59,6 +60,32 @@ class MainActivity : AppCompatActivity(), ReservationsRecyclerFragment.Reservati
 
     private val prefListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
         if(key == getString(R.string.key_general_share_app_enabled)) invalidateOptionsMenu()
+    }
+
+    val openLoginActivity = registerForActivityResult(ActivityResultContracts
+        .StartActivityForResult()){ result ->
+        if (result.resultCode == Activity.RESULT_OK){
+            val user = result.data?.getStringExtra(Constants.CONNECTED_STATUS_USER_NAME)
+            if (!user.isNullOrEmpty()){
+                homeViewModel.defineLoginStatus(true)
+                homeViewModel.defineConnectedUserName(user)
+            }
+        }
+    }
+    private val openSyncPermissionRequest = registerForActivityResult(ActivityResultContracts
+        .StartActivityForResult()){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            if (!Settings.canDrawOverlays(this))
+                AlertDialog.Builder(this).apply {
+                    setTitle(R.string.notification_sync_denied_title)
+                    setMessage(R.string.notification_sync_denied_message)
+                    setPositiveButton(R.string.dialog_button_ok, null)
+                }.create().show()
+            else {
+                startPowerSavingSettings()
+                setSyncSchedule()
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -110,35 +137,6 @@ class MainActivity : AppCompatActivity(), ReservationsRecyclerFragment.Reservati
             dataSource?.clearHistory()
         }
         super.onDestroy()
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode){
-            Constants.ACTIVITY_LOGIN_REQUEST_CODE -> {
-                if (resultCode == Activity.RESULT_OK){
-                    val user = data?.getStringExtra(Constants.CONNECTED_STATUS_USER_NAME)
-                    if (!user.isNullOrEmpty()){
-                        homeViewModel.defineLoginStatus(true)
-                        homeViewModel.defineConnectedUserName(user)
-                    }
-                }
-            }
-            Constants.SYNC_PERMISSION_REQUEST_ID -> {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                    if (!Settings.canDrawOverlays(this))
-                        AlertDialog.Builder(this).apply {
-                            setTitle(R.string.notification_sync_denied_title)
-                            setMessage(R.string.notification_sync_denied_message)
-                            setPositiveButton(R.string.dialog_button_ok, null)
-                        }.create().show()
-                    else {
-                        startPowerSavingSettings()
-                        setSyncSchedule()
-                    }
-                }
-            }
-        }
     }
 
     override fun onRequestRefresh() {
@@ -197,10 +195,7 @@ class MainActivity : AppCompatActivity(), ReservationsRecyclerFragment.Reservati
                     if (loadingAlert.isShowing) loadingAlert.dismiss()
                     if (prefs.getBoolean(getString(R.string.key_privacy_auto_login), true) &&
                             !homeViewModel.hasRequestedLogin.value!!) {
-                        startActivityForResult(
-                            Intent(this, LoginActivity::class.java),
-                            Constants.ACTIVITY_LOGIN_REQUEST_CODE
-                        )
+                        openLoginActivity.launch(Intent(this, LoginActivity::class.java))
                         homeViewModel.hasRequestedLogin.value = true
                     }
                 }
@@ -256,7 +251,7 @@ class MainActivity : AppCompatActivity(), ReservationsRecyclerFragment.Reservati
                     Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                         Uri.parse("package:$packageName")).also {
                         if (packageManager.resolveActivity(it, PackageManager.MATCH_DEFAULT_ONLY) != null)
-                            startActivityForResult(it, Constants.SYNC_PERMISSION_REQUEST_ID)
+                            openSyncPermissionRequest.launch(it)
                     }
                 }))
             }.create().show()

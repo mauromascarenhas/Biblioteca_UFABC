@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.nintersoft.bibliotecaufabc.R
 import com.nintersoft.bibliotecaufabc.activities.LoginActivity
+import com.nintersoft.bibliotecaufabc.activities.MainActivity
 import com.nintersoft.bibliotecaufabc.global.Constants
 import com.nintersoft.bibliotecaufabc.global.Functions
 import com.nintersoft.bibliotecaufabc.model.AppContext
@@ -128,9 +129,8 @@ class RenewalsFragment : Fragment() {
                         setTitle(R.string.dialog_warning_title)
                         setMessage(R.string.dialog_warning_message_must_be_connected)
                         setPositiveButton(R.string.dialog_button_yes, ({ _, _ ->
-                            activity?.startActivityForResult(
-                                Intent(requireActivity(), LoginActivity::class.java),
-                                Constants.ACTIVITY_LOGIN_REQUEST_CODE)
+                            (activity as MainActivity?)?.openLoginActivity
+                                ?.launch(Intent(requireActivity(), LoginActivity::class.java))
                         }))
                         setNegativeButton(R.string.dialog_button_no, null)
                     }.create().show()

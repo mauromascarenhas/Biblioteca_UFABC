@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.MenuItem
 import android.webkit.WebView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -36,6 +37,25 @@ class BookViewerActivity : AppCompatActivity(), BookViewerFragment.ReservationEv
     private lateinit var messageViewModel: MessageViewModel
     private lateinit var bookViewerViewModel: BookViewerViewModel
 
+    val openLoginActivity = registerForActivityResult(ActivityResultContracts
+        .StartActivityForResult()){ result ->
+        if (result.resultCode == Activity.RESULT_OK && result.data != null){
+            detailsWebClient?.resetCounters()
+
+            bookViewerViewModel.setLoginRequest(true)
+            bookViewerViewModel.setReservationRequest(true)
+
+            dataSource?.loadUrl(bookViewerViewModel.bookURL.value!!)
+            Snackbar.make(bookViewerParent,
+                getString(R.string.snack_message_connected,
+                    result.data!!.getStringExtra(Constants.CONNECTED_STATUS_USER_NAME)),
+                Snackbar.LENGTH_LONG).show()
+
+            loggedInAs.value = result.data!!.getStringExtra(Constants.CONNECTED_STATUS_USER_NAME)
+        }
+        else bookViewerViewModel.setLoginCancelled(true)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_book_viewer)
@@ -60,28 +80,6 @@ class BookViewerActivity : AppCompatActivity(), BookViewerFragment.ReservationEv
                 true
             }
             else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == Constants.ACTIVITY_LOGIN_REQUEST_CODE){
-            if (resultCode == Activity.RESULT_OK && data != null){
-                detailsWebClient?.resetCounters()
-
-                bookViewerViewModel.setLoginRequest(true)
-                bookViewerViewModel.setReservationRequest(true)
-
-                dataSource?.loadUrl(bookViewerViewModel.bookURL.value!!)
-                Snackbar.make(bookViewerParent,
-                    getString(R.string.snack_message_connected,
-                        data.getStringExtra(Constants.CONNECTED_STATUS_USER_NAME)),
-                    Snackbar.LENGTH_LONG).show()
-
-                loggedInAs.value = data.getStringExtra(Constants.CONNECTED_STATUS_USER_NAME)
-            }
-            else bookViewerViewModel.setLoginCancelled(true)
         }
     }
 
@@ -112,8 +110,7 @@ class BookViewerActivity : AppCompatActivity(), BookViewerFragment.ReservationEv
                 commitAllowingStateLoss()
             }
             if (bookViewerViewModel.loginCancelled.value!!){
-                startActivityForResult(Intent(this, LoginActivity::class.java),
-                    Constants.ACTIVITY_LOGIN_REQUEST_CODE)
+                openLoginActivity.launch(Intent(this, LoginActivity::class.java))
                 bookViewerViewModel.setLoginCancelled(false)
             }
             else dataSource?.reload()
@@ -129,8 +126,7 @@ class BookViewerActivity : AppCompatActivity(), BookViewerFragment.ReservationEv
                 commitAllowingStateLoss()
             }
             if (bookViewerViewModel.loginCancelled.value!!){
-                startActivityForResult(Intent(this, LoginActivity::class.java),
-                    Constants.ACTIVITY_LOGIN_REQUEST_CODE)
+                openLoginActivity.launch(Intent(this, LoginActivity::class.java))
                 bookViewerViewModel.setLoginCancelled(false)
             }
             else dataSource?.reload()
